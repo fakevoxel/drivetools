@@ -53,5 +53,5 @@
         "Temp/": true
     },
     "dotnet.preferCSharpExtension": true,
-    "dotnet.defaultSolution": "frcdashboard.sln"
+    "dotnet.defaultSolution": "drivetools.sln"
 }
