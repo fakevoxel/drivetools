@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>NativeLibraryUtilities</id>
+    <version>1.0.3</version>
+    <title>Native Library Utilities</title>
+    <authors>RobotDotNet</authors>
+    <owners>RobotDotNet</owners>
+    <licenseUrl>https://github.com/robotdotnet/NativeLibraryUtilities/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/robotdotnet/NativeLibraryUtilities</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Utility library for interfacing with native libraries.</description>
+    <summary>Utility library for interfacing with native libraries.</summary>
+    <copyright>Copyright 2016 RobotDotNet</copyright>
+    <tags>Native,Library,Delegates</tags>
+    <dependencies>
+      <group targetFramework=".NETFramework3.5" />
+      <group targetFramework=".NETFramework4.5" />
+      <group targetFramework=".NETStandard1.5">
+        <dependency id="System.Linq" version="[4.1.0, )" />
+        <dependency id="System.Runtime" version="[4.1.0, )" />
+        <dependency id="System.Runtime.Extensions" version="[4.1.0, )" />
+        <dependency id="System.IO.FileSystem" version="[4.0.1, )" />
+        <dependency id="System.Runtime.InteropServices" version="[4.1.0, )" />
+        <dependency id="System.Runtime.InteropServices.RuntimeInformation" version="[4.0.0, )" />
+        <dependency id="System.Reflection.Extensions" version="[4.0.1, )" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

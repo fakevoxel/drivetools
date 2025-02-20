@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>FRC.CameraServer</id>
+    <version>1.0.2</version>
+    <title>FRC CameraServer</title>
+    <authors>RobotDotNet</authors>
+    <owners>RobotDotNet</owners>
+    <licenseUrl>https://github.com/robotdotnet/CameraServer/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/robotdotnet/CameraServer</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>CameraServer libraries built for FRC using the cscore library</description>
+    <summary>CameraServer libraries built for FRC using the cscore library</summary>
+    <copyright>Copyright 2016 RobotDotNet</copyright>
+    <tags>WPILib,FRC,FIRST,RoboRio</tags>
+    <dependencies>
+      <group targetFramework=".NETFramework4.5">
+        <dependency id="FRC.OpenCvSharp" version="[1.0.3, )" />
+      </group>
+      <group targetFramework=".NETStandard1.5">
+        <dependency id="System.Runtime" version="[4.1.0, )" />
+        <dependency id="System.Threading" version="[4.0.11, )" />
+        <dependency id="FRC.OpenCvSharp" version="[1.0.3, )" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>

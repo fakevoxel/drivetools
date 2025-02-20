@@ -1,0 +1,72 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Xml.Schema;
+using UnityEngine;
+using UnityEngine.UI;
+
+// SETUP:
+// you need a gameobject with this class and an image class
+// you need the 0th child to have an image class
+// for this object anchor AND pivot have to be middle-left
+// for the child (handle) they have to be middle-center
+public class UI_Slider : MonoBehaviour
+{   
+    // The resulting value of the slider
+    public float value;
+    public int buttonToLookFor;
+
+    [Space(6)]
+    [Header("Color Settings")]
+    public bool lerpColor;
+    public Color zeroColor;
+    public Color oneColor;
+
+    private Vector2 defaultScale;
+    private Transform handleTransform;
+    private bool isHandleHeld;
+
+    void Start() {
+        defaultScale = GetComponent<RectTransform>().sizeDelta;
+        handleTransform = transform.GetChild(0);
+    }
+
+    void Awake() {
+        if (GetComponent<UI_Value>() != null) {GetComponent<UI_Value>().value = value.ToString();}
+    }
+
+    void Update() {
+        if (GetComponent<UI_Value>() != null) {
+            if (!string.IsNullOrEmpty(GetComponent<UI_Value>().setValue)) {
+                SetValue(GetComponent<UI_Value>().setValue);
+                GetComponent<UI_Value>().setValue = "";
+            }
+        }
+        if (CanvasUtils.IsCursorInteract(handleTransform.gameObject, true)) {
+            isHandleHeld = true;
+        }
+        
+        if (Input.GetMouseButton(buttonToLookFor) && isHandleHeld) {
+            handleTransform.position = new Vector3(Mathf.Clamp(Input.mousePosition.x, transform.position.x, transform.position.x + defaultScale.x), transform.position.y, 0);
+        }
+        else {
+            isHandleHeld = false;
+        }
+        value = (handleTransform.position.x - transform.position.x) / defaultScale.x;
+        if (GetComponent<UI_Value>() != null) {GetComponent<UI_Value>().value = value.ToString();}
+
+        if (lerpColor) {
+            GetComponent<Image>().color = Color.Lerp(zeroColor, oneColor, Mathf.Min(value, 1));
+        }
+    }
+
+    public void SetValue(float _input) {
+        handleTransform.position = new Vector3(transform.position.x + defaultScale.x * _input, transform.position.y, 0);
+    }
+
+    void SetValue(string _value) {
+        float trueValue = float.Parse(_value);
+
+        handleTransform.position = new Vector3(trueValue * defaultScale.x + transform.position.x, handleTransform.position.y, handleTransform.position.z);
+    }
+}
