@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -33,9 +31,48 @@ public class Node_Double : MonoBehaviour
 
         xPadding = 30;
         yPadding = 30;
+    }
 
-        CanvasUtils.SearchChildrenForName(gameObject, "edit button").GetComponent<UI_Button>().onPress.AddListener(
-            () => UIManager.Instance.OpenNodeConfig(interact)
+    // populating the right-click widget with options for this node
+    public void PopulateRightClickMenu() {
+        CanvasUtils.DestroyChildren(UIManager.Instance.nodeOptionsWidget.transform.GetChild(0).gameObject);
+
+        RectTransform bgTransform = UIManager.Instance.nodeOptionsWidget.transform.GetChild(0).GetComponent<RectTransform>();
+
+        // this could be more modular, but I don't care rn
+        // TODO: ?
+
+        // we're using a size of 200 x 60 for each option, so with two options (right now) we have 200 x 120
+        bgTransform.sizeDelta = new Vector2(200, 120);
+
+        GameObject editButton = Instantiate(UIPrefabs.Instance.textButtonPrefab, Vector3.zero, Quaternion.identity);
+
+        editButton.transform.SetParent(bgTransform);
+
+        editButton.GetComponent<TextMeshProUGUI>().text = "edit";
+
+        // moving the button to the right spot on the widget
+        editButton.transform.localPosition = 
+        new Vector3(bgTransform.sizeDelta.x / 2, bgTransform.sizeDelta.y / -2, 0) // the centre of the element
+        + new Vector3(0, bgTransform.sizeDelta.y / 4, 0); // the offset vector
+
+        editButton.transform.GetChild(0).GetComponent<UI_Button>().onPress.AddListener(
+            () => UIManager.Instance.OpenNodeConfig(GetComponent<NodeInteractionHandler>())
+        );
+
+        GameObject deleteButton = Instantiate(UIPrefabs.Instance.textButtonPrefab, Vector3.zero, Quaternion.identity);
+
+        deleteButton.transform.SetParent(bgTransform);
+
+        deleteButton.GetComponent<TextMeshProUGUI>().text = "delete";
+
+        // moving the button to the right spot on the widget
+        deleteButton.transform.localPosition = 
+        new Vector3(bgTransform.sizeDelta.x / 2, bgTransform.sizeDelta.y / -2, 0) // the centre of the element
+        + new Vector3(0, -bgTransform.sizeDelta.y / 4, 0); // the offset vector
+
+        deleteButton.transform.GetChild(0).GetComponent<UI_Button>().onPress.AddListener(
+            () => UIManager.Instance.DeleteNode(gameObject)
         );
     }
 

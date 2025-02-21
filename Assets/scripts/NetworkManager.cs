@@ -57,8 +57,11 @@ public class NetworkManager : MonoBehaviour
         for (int i = 0; i < UIManager.Instance.activeNodes.Count; i++) {
             NodeInteractionHandler comp = UIManager.Instance.activeNodes[i].GetComponent<NodeInteractionHandler>();
 
-            if (comp.nodeType == 0) {
+            if (comp.nodeType == (int)NodeType.Double) {
                 comp.GetComponent<Node_Double>().UpdateData();
+            }
+            else if (comp.nodeType == (int)NodeType.Graph) {
+                comp.GetComponent<Node_Graph>().UpdateData();
             }
         }
     }   

@@ -40,27 +40,21 @@ public class UIManager : MonoBehaviour
     public GameObject settingsWindow; // the window for changing settings like FRC team number
     public GameObject nodeWindow; // the window for spawning new nodes
     public GameObject configWindow; // the window for configuring a node's data, like source string
+    public GameObject nodeOptionsWidget;
 
     // container object
     public Transform canvasTransform;
     public Transform layoutContainer;
-    
-    // element prefabs
-    public GameObject previewNodePrefab;
-    public GameObject layoutPrefab;
-
-    // UI component prefabs
-    // these are used as an easy way to set up dynamic UI
-    public GameObject textPrefab;
-    public GameObject inputFieldPrefab;
-    public GameObject buttonPrefab;
-    public GameObject graphPointPrefab;
 
     public int activeLayoutIndex;
     public List<GameObject> activeNodes;
     public Transform activeNodeContainer;
 
     public GameObject previewNode;
+
+    void Start() {
+        CloseRightClickMenu();
+    }
 
     // don't usually use the update function in this project,
     // because I want to be able to control when logic is run
@@ -90,6 +84,8 @@ public class UIManager : MonoBehaviour
     void PopulateNodeData() {
         AppData.Instance.layouts[activeLayoutIndex].doubleNodes = new NodeData_Double[]{};
         for (int i = 0; i < activeNodes.Count; i++) {
+            if (activeNodes[i] == null) {continue;}
+
             GameObject currentNode = activeNodes[i];
 
             if (currentNode.GetComponent<Node_Double>() != null) {
@@ -106,10 +102,40 @@ public class UIManager : MonoBehaviour
         }
     }
 
+    // opens a little widget that allows you to select options for the node,
+    // usually "delete" "edit" and "track"
+    public void OpenRightClickMenu(NodeInteractionHandler node) {
+        nodeOptionsWidget.SetActive(true);
+
+        nodeOptionsWidget.transform.position = Input.mousePosition;
+
+        if (node.nodeType == (int)NodeType.Double) {
+            // if its a double type, fill out the options menu with double stuff
+            node.GetComponent<Node_Double>().PopulateRightClickMenu();
+        }
+        else if (node.nodeType == (int)NodeType.Graph) {
+            // if its a double type, fill out the options menu with double stuff
+            node.GetComponent<Node_Graph>().PopulateRightClickMenu();
+        }
+    }
+
+    public void CloseRightClickMenu() {
+        nodeOptionsWidget.SetActive(false);
+    }
+
     // Adding a new node to the active nodes list
     // the .Add() call here is wrapped into another function so future logic can be easily added
     public void AddNodeToList(GameObject nodeToAdd) {
         activeNodes.Add(nodeToAdd);
+    }
+
+    public void DeleteNode(GameObject obj) {
+        activeNodes.Remove(obj);
+        Destroy(obj);
+
+        RefreshAppData();
+
+        CloseRightClickMenu();
     }
 
     // Spawning a new node manually, no data is available except the node's type
@@ -180,6 +206,8 @@ public class UIManager : MonoBehaviour
 
     // opening and setting up the configuration UI for a given node
     public void OpenNodeConfig(NodeInteractionHandler comp) {
+        CloseRightClickMenu();
+
         configWindow.SetActive(true);
         if (comp.nodeType == (int)NodeType.Double) {
             // double nodes are simple, they only have a source string and a title
@@ -189,7 +217,7 @@ public class UIManager : MonoBehaviour
             CanvasUtils.DestroyChildren(configWindow.transform.GetChild(4).gameObject);
 
             // create an input field for the source string
-            GameObject sourceInput = Instantiate(inputFieldPrefab, Vector3.zero, Quaternion.identity);
+            GameObject sourceInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
 
             // parent it to the window
             sourceInput.transform.SetParent(configWindow.transform.GetChild(4));
@@ -202,10 +230,20 @@ public class UIManager : MonoBehaviour
             sourceInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
                 comp.GetComponent<Node_Double>().SetSourceString); // this syntax is interesting, I supply the function without () and unity knows to give it the final string as a parameter
 
+        } else if (comp.nodeType == (int)NodeType.Graph) {
+            CanvasUtils.DestroyChildren(configWindow.transform.GetChild(4).gameObject);
+
+            GameObject testModeButton = Instantiate(UIPrefabs.Instance.buttonPrefab, Vector3.zero, Quaternion.identity);
+            testModeButton.transform.SetParent(configWindow.transform.GetChild(4));
+            testModeButton.transform.localPosition = new Vector3(0, 0, 0);
+            testModeButton.GetComponent<UI_Button>().onPress.AddListener(
+                    () => comp.GetComponent<Node_Graph>().ToggleTestMode()
+                );
+            
         } else if (comp.nodeType == (int)NodeType.Field2D) {
             CanvasUtils.DestroyChildren(configWindow.transform.GetChild(4).gameObject);
             
-            GameObject addRobotButton = Instantiate(buttonPrefab, Vector3.zero, Quaternion.identity);
+            GameObject addRobotButton = Instantiate(UIPrefabs.Instance.buttonPrefab, Vector3.zero, Quaternion.identity);
             addRobotButton.transform.SetParent(configWindow.transform.GetChild(4));
             addRobotButton.transform.localPosition = new Vector3(0, 0, 0);
             addRobotButton.GetComponent<UI_Button>().onPress.AddListener(
@@ -213,19 +251,19 @@ public class UIManager : MonoBehaviour
                 );
 
             for (int i = 0; i < comp.GetComponent<Node_Field2D>().robots.Count; i++) {
-                GameObject xInput = Instantiate(inputFieldPrefab, Vector3.zero, Quaternion.identity);
+                GameObject xInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
                 xInput.transform.SetParent(configWindow.transform.GetChild(4));
                 xInput.transform.localPosition = new Vector3(0, 0, 0);
                 xInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
                     (value) => comp.GetComponent<Node_Field2D>().SetX(value, 0)
                 );
-                GameObject yInput = Instantiate(inputFieldPrefab, Vector3.zero, Quaternion.identity);
+                GameObject yInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
                 yInput.transform.SetParent(configWindow.transform.GetChild(4));
                 yInput.transform.localPosition = new Vector3(0, -100, 0);
                 yInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
                     (value) => comp.GetComponent<Node_Field2D>().SetY(value, 0)
                 );
-                GameObject zInput = Instantiate(inputFieldPrefab, Vector3.zero, Quaternion.identity);
+                GameObject zInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
                 zInput.transform.SetParent(configWindow.transform.GetChild(4));
                 zInput.transform.localPosition = new Vector3(0, -200, 0);
                 zInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
@@ -237,7 +275,9 @@ public class UIManager : MonoBehaviour
 
     public void UpdateActiveLayout() {
         for (int i = 0; i < activeNodes.Count; i++) {
-            activeNodes[i].GetComponent<NodeInteractionHandler>().Refresh();
+            if (activeNodes[i] != null) {
+                activeNodes[i].GetComponent<NodeInteractionHandler>().Refresh();
+            }
         }
     }
 
@@ -286,7 +326,7 @@ public class UIManager : MonoBehaviour
             DashboardLayout layout = AppData.Instance.layouts[layoutIndex];
 
             // create a container object for the layout with that layout's name
-            GameObject layoutObject = Instantiate(layoutPrefab, Vector3.zero, Quaternion.identity);
+            GameObject layoutObject = Instantiate(UIPrefabs.Instance.layoutPrefab, Vector3.zero, Quaternion.identity);
             // set the parent to the canvas
             layoutObject.transform.SetParent(layoutContainer);
             // set the name
@@ -342,6 +382,7 @@ public class UIManager : MonoBehaviour
     public Vector3[] GetEdgePoints(int edgeType) {
         List<Vector3> points = new List<Vector3>();
         for (int i = 0; i < activeNodes.Count; i++) {
+            if (activeNodes[i] == null) {continue;}
             if (edgeType == 0) {
                 points.Add(activeNodes[i].GetComponent<NodeInteractionHandler>().leftEdge);
             }
@@ -361,6 +402,7 @@ public class UIManager : MonoBehaviour
     public Transform[] GetAlignedEdgeObjects(int edgeType, Vector3 edgePos) {
         List<Transform> objects = new List<Transform>();
         for (int i = 0; i < activeNodes.Count; i++) {
+            if (activeNodes[i] == null) {continue;}
             NodeInteractionHandler component = activeNodes[i].GetComponent<NodeInteractionHandler>();
 
             if (edgeType == 0) {
@@ -454,7 +496,7 @@ public class UIManager : MonoBehaviour
 
     public void DrawPreviewNode(Vector3 pos, Vector2 size) {
         if (previewNode == null) {
-            previewNode = Instantiate(previewNodePrefab, Vector3.zero, Quaternion.identity);
+            previewNode = Instantiate(UIPrefabs.Instance.previewNodePrefab, Vector3.zero, Quaternion.identity);
             previewNode.transform.SetParent(activeNodeContainer.parent);
 
             previewNode.transform.SetSiblingIndex(0);

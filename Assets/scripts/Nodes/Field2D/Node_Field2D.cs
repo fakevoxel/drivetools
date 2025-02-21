@@ -33,10 +33,6 @@ public class Node_Field2D : MonoBehaviour
         interact.nodeName = name;
         interact.nodeType = (int)NodeType.Field2D;
 
-        CanvasUtils.SearchChildrenForName(gameObject, "edit button").GetComponent<UI_Button>().onPress.AddListener(
-            () => UIManager.Instance.OpenNodeConfig(interact)
-        );
-
         fieldImage.GetComponent<RectTransform>().sizeDelta = new Vector2(fieldTexture.texture.width, fieldTexture.texture.height);
     }
 
@@ -60,7 +56,7 @@ public class Node_Field2D : MonoBehaviour
 
                 // x axis (display in meters)
                 TextMeshProUGUI xReadout = Instantiate(
-                    UIManager.Instance.textPrefab, 
+                    UIPrefabs.Instance.textPrefab, 
                     Vector3.zero, 
                     Quaternion.identity).GetComponent<TextMeshProUGUI>();
                 xReadout.transform.position = interact.bottomLeftTransform.position + 
@@ -69,7 +65,7 @@ public class Node_Field2D : MonoBehaviour
 
                 // y axis (display in meters)
                 TextMeshProUGUI yReadout = Instantiate(
-                    UIManager.Instance.textPrefab, 
+                    UIPrefabs.Instance.textPrefab, 
                     Vector3.zero, 
                     Quaternion.identity).GetComponent<TextMeshProUGUI>();
                 yReadout.transform.position = interact.bottomLeftTransform.position + 
@@ -78,7 +74,7 @@ public class Node_Field2D : MonoBehaviour
 
                 // rotation (display in degrees)
                 TextMeshProUGUI rotReadout = Instantiate(
-                    UIManager.Instance.textPrefab, 
+                    UIPrefabs.Instance.textPrefab, 
                     Vector3.zero, 
                     Quaternion.identity).GetComponent<TextMeshProUGUI>();
                 rotReadout.transform.position = interact.bottomLeftTransform.position + 

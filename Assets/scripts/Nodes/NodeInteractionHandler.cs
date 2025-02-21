@@ -74,11 +74,19 @@ public class NodeInteractionHandler : MonoBehaviour
         }
 
         // being "held" means the node is being dragged around
-        if (Input.GetMouseButtonDown(0) && CanvasUtils.IsCursorInteract(backgroundTransform.gameObject, true)) {
-            Grab();
-            // doing this here, not inside of grab() because if the node is grabbed the offsets should just be zero
-            offsetFromCursor = transform.position - Input.mousePosition;
-            offsetFromCursorRaw = transform.position - Input.mousePosition;
+        if (CanvasUtils.IsCursorInteract(gameObject, true)) {
+            if (Input.GetMouseButtonDown(0)) {
+                Grab();
+                // doing this here, not inside of grab() because if the node is grabbed the offsets should just be zero
+                offsetFromCursor = transform.position - Input.mousePosition;
+                offsetFromCursorRaw = transform.position - Input.mousePosition;
+            }
+            else if (Input.GetMouseButtonDown(1)) {
+                // open a little widget with right-click options,
+                // usually "edit" "delete" and "track"
+
+                UIManager.Instance.OpenRightClickMenu(this);
+            }
         }
 
         if (Input.GetMouseButtonDown(0) && CanvasUtils.IsCursorInteract(leftEdgeTransform.gameObject, true)) {
@@ -151,6 +159,8 @@ public class NodeInteractionHandler : MonoBehaviour
             // TODO: show to the user when connection has been lost
             confirmedConnectionLoss = true;
         }
+
+        GetComponent<RectTransform>().sizeDelta = backgroundTransform.GetComponent<RectTransform>().sizeDelta;
     }
 
     // called when a hold type of 1 is triggered
