@@ -45,6 +45,7 @@ public class UIManager : MonoBehaviour
     // container object
     public Transform canvasTransform;
     public Transform layoutContainer;
+    public GameObject layoutTabsObject;
 
     public int activeLayoutIndex;
     public List<GameObject> activeNodes;
@@ -65,6 +66,15 @@ public class UIManager : MonoBehaviour
 
         // handle node interations for the active layout
         layoutTabs.HandleInteract();
+
+        canvasTransform.GetChild(0).GetComponent<RectTransform>().sizeDelta = 
+        canvasTransform.GetComponent<RectTransform>().sizeDelta * 1.25f;
+
+        layoutTabsObject.transform.GetChild(0).position = new Vector3(
+            Screen.width/2, Screen.height, 0
+        );
+        layoutTabsObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = 
+        new Vector2(canvasTransform.GetComponent<RectTransform>().sizeDelta.x * 1.25f, 100);
     }
     
     // I'm actually why not sure why this function is wrapped into another function

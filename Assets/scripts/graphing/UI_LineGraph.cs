@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI.Extensions;
 using TMPro;
+using System.Linq.Expressions;
 
 // this requires a LineRenderer component
 // this only plots in 2D, obviously
@@ -78,12 +79,18 @@ public class UI_LineGraph : MonoBehaviour
 
     // display the coordinates of whatever point they're hovering over to the user
     public void ShowPointData(int i) {
+        pointDataWidget.SetActive(true);
+        
         Transform pointTransform = pointContainer.GetChild(i);
 
         pointDataWidget.transform.position = new Vector3(pointTransform.position.x, pointTransform.position.y, 0);
 
-        pointDataWidget.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = points[i].x.ToString();
-        pointDataWidget.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = points[i].y.ToString();
+        pointDataWidget.transform.GetChild(1).GetComponent<TextMeshProUGUI>().text = 
+        "(" + points[i].x.ToString() + ", " + points[i].y.ToString() + ")";
+    }
+    
+    public void HidePointData() {
+        pointDataWidget.SetActive(false);
     }
 
     // re-draws all the points on the graph
@@ -96,6 +103,9 @@ public class UI_LineGraph : MonoBehaviour
             GameObject newPoint = Instantiate(pointPrefab, Vector3.zero, Quaternion.identity);
 
             newPoint.transform.SetParent(pointContainer.transform);
+            
+            newPoint.GetComponent<UI_GraphPoint>().parentGraph = this;
+            newPoint.GetComponent<UI_GraphPoint>().pointIndex = i;
 
             // gotta multiply this by a scale factor
             newPoint.transform.position = pointContainer.position +

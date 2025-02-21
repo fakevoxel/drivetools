@@ -81,6 +81,29 @@ public class CanvasUtils : MonoBehaviour
         if (inputObject == UIManager.Instance.canvasTransform.gameObject) { return true; }
 
         return false; // this should happen if the cursor isn't in the bounding box of the object at all
+    }   
+
+    // Detect whether the cursor is interacting with a supplied object,
+    // while ALSO IGNORING CERtAIN GAMEOBJECTS
+    public static bool IsCursorInteract(GameObject inputObject, bool ignoreChildren, List<GameObject> ignoreObjects) {
+        RectTransform[] canvasObjects = UIManager.Instance.canvasTransform.GetComponentsInChildren<RectTransform>();
+
+        // loop backwards through the canvas objects
+        // only works if they are organized in order
+        for (int i = canvasObjects.Length - 1; i > 0; i--) {
+            if (canvasObjects[i].gameObject == inputObject && IsCursorInBounds(inputObject, false)) {
+                return true; // if we reach the input return true
+            }
+            else if (canvasObjects[i].gameObject.activeSelf && IsCursorInBounds(canvasObjects[i].gameObject, false) && canvasObjects[i].gameObject.GetComponent<Image>() != null) {
+                if (ignoreChildren && canvasObjects[i].transform.IsChildOf(inputObject.transform)) { continue; }
+                if (ignoreObjects.Contains(canvasObjects[i].gameObject)) {continue;}
+                return false;
+            }
+        }
+
+        if (inputObject == UIManager.Instance.canvasTransform.gameObject) { return true; }
+
+        return false; // this should happen if the cursor isn't in the bounding box of the object at all
     }
 
     // Detect whether the cursor is within the bounds of a supplied object

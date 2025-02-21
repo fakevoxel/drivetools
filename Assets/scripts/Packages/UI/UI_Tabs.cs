@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -32,6 +30,8 @@ public class UI_Tabs : MonoBehaviour
             newTab.transform.localPosition = Vector3.right * i * spacing;
 
             tabObjects[i] = newTab;
+
+            newTab.transform.localScale = Vector3.one;
         }
     }
 
