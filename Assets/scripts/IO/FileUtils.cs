@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.IO;
 using System;
+using System.Diagnostics;
 
 public class FileUtils : MonoBehaviour
 {
@@ -30,10 +31,14 @@ public class FileUtils : MonoBehaviour
     }
 
     // sets this application as the default driverstation
-    public static void SetAsDefaultDriverstation() {
+    public void SetAsDefaultDriverstation() {
         FileUtils.ModifyTxtWithNoSurprises(
             "C:/Users/Public/Documents/FRC/FRC DS Data Storage.ini", 
             3, 
             FileUtils.RemoveLastDirectory("DashboardCmdLine = " + Application.dataPath) + "Drivetools.exe");
+    }
+
+    public void OpenDirectory(string directory) {
+        Process.Start(directory);
     }
 }
