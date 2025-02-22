@@ -300,6 +300,8 @@ public class UIManager : MonoBehaviour
         // setting up the layout tabs
         layoutTabs.InitializeTabs(AppData.Instance.layouts.Count, AppData.layoutTabSpacing);
 
+        layoutTabs.onChangeTabs = SwitchToLayout; 
+
         LoadAllLayouts();
 
         Application.targetFrameRate = AppData.Instance.targetFrameRate;

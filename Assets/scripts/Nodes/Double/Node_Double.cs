@@ -43,7 +43,10 @@ public class Node_Double : MonoBehaviour
         // TODO: ?
 
         // we're using a size of 200 x 60 for each option, so with two options (right now) we have 200 x 120
-        bgTransform.sizeDelta = new Vector2(200, 120);
+        bgTransform.sizeDelta = new Vector2(200, 180);
+
+        // button to open the config menu for this node
+        // ----------------------------------
 
         GameObject editButton = Instantiate(UIPrefabs.Instance.textButtonPrefab, Vector3.zero, Quaternion.identity);
 
@@ -53,12 +56,15 @@ public class Node_Double : MonoBehaviour
 
         // moving the button to the right spot on the widget
         editButton.transform.localPosition = 
-        new Vector3(bgTransform.sizeDelta.x / 2, bgTransform.sizeDelta.y / -2, 0) // the centre of the element
-        + new Vector3(0, bgTransform.sizeDelta.y / 4, 0); // the offset vector
+        new Vector3(bgTransform.sizeDelta.x / 2, 0, 0) // the top-centre of the element
+        + new Vector3(0, -bgTransform.sizeDelta.y / 3 * 0, 0); // the offset vector
 
         editButton.transform.GetChild(0).GetComponent<UI_Button>().onPress.AddListener(
             () => UIManager.Instance.OpenNodeConfig(GetComponent<NodeInteractionHandler>())
         );
+
+        // button to delete this node
+        // ----------------------------------
 
         GameObject deleteButton = Instantiate(UIPrefabs.Instance.textButtonPrefab, Vector3.zero, Quaternion.identity);
 
@@ -68,10 +74,28 @@ public class Node_Double : MonoBehaviour
 
         // moving the button to the right spot on the widget
         deleteButton.transform.localPosition = 
-        new Vector3(bgTransform.sizeDelta.x / 2, bgTransform.sizeDelta.y / -2, 0) // the centre of the element
-        + new Vector3(0, -bgTransform.sizeDelta.y / 4, 0); // the offset vector
+        new Vector3(bgTransform.sizeDelta.x / 2, 0, 0) // the top-centre of the element
+        + new Vector3(0, -bgTransform.sizeDelta.y / 3 * 1, 0); // the offset vector
 
         deleteButton.transform.GetChild(0).GetComponent<UI_Button>().onPress.AddListener(
+            () => UIManager.Instance.DeleteNode(gameObject)
+        );
+
+        // button to toggle tracking of this node
+        // ----------------------------------
+
+        GameObject trackButton = Instantiate(UIPrefabs.Instance.textButtonPrefab, Vector3.zero, Quaternion.identity);
+
+        trackButton.transform.SetParent(bgTransform);
+
+        trackButton.GetComponent<TextMeshProUGUI>().text = "track";
+
+        // moving the button to the right spot on the widget
+        trackButton.transform.localPosition = 
+        new Vector3(bgTransform.sizeDelta.x / 2, 0, 0) // the top-centre of the element
+        + new Vector3(0, -bgTransform.sizeDelta.y / 3 * 2, 0); // the offset vector
+
+        trackButton.transform.GetChild(0).GetComponent<UI_Button>().onPress.AddListener(
             () => UIManager.Instance.DeleteNode(gameObject)
         );
     }

@@ -9,6 +9,9 @@ public class GenericNodeData
     public double posX, posY;
     // SIZE OF NODE FROM BOTTOM LEFT CORNER
     public double sizeX, sizeY;
+    
+    // whether the node is currently set to be tracked
+    public bool isFlagged;
 
     public GenericNodeData(double posX, double posY, double sizeX, double sizeY) {
         this.posX = posX;

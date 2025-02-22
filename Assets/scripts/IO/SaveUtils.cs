@@ -5,7 +5,7 @@ using UnityEngine;
 public class SaveUtils : MonoBehaviour
 {
     public static string saveDirectory = Application.persistentDataPath;
-    public static string buildVersion = "0.1";
+    public static string buildVersion = "2025.0.1";
 
     public static void SavePreferences(PersistentSettings _prefs)
     {

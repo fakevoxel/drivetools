@@ -14,6 +14,10 @@ public class UI_Tabs : MonoBehaviour
     public int selectedTab;
     public int buttonToLookFor; // left, right, or middle click
 
+    public UnityAction<int> onChangeTabs;
+
+    public bool runOnUpdate;
+
     [Space(6)]
     [Header("Color Settings")]
     public bool colorSwitch; // whether to switch colors when pressed
@@ -21,7 +25,23 @@ public class UI_Tabs : MonoBehaviour
     public Color hoverColor;
     public Color selectedColor;
 
+    void Start() {
+        // we call this event here in case anything has been done in the editor,
+        // this will return the tabs to their default state
+        if (onChangeTabs != null) {
+            onChangeTabs.Invoke(selectedTab);
+        }
+    }
+
+    void Update() {
+        if (runOnUpdate) {
+            HandleInteract();
+        }
+    }
+
     public void InitializeTabs(int count, float spacing) {
+        CanvasUtils.DestroyChildren(gameObject);
+
         tabObjects = new GameObject[count];
 
         for (int i = 0; i < count; i++) {
@@ -44,6 +64,10 @@ public class UI_Tabs : MonoBehaviour
 
             if (isPressed) { // is the button pressed
                 selectedTab = i;
+
+                if (onChangeTabs != null) {
+                    onChangeTabs.Invoke(i);
+                }
             }
         }
 
