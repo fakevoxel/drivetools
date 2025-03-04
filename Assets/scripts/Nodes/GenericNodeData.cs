@@ -11,14 +11,16 @@ public class GenericNodeData
     public double sizeX, sizeY;
     
     // whether the node is currently set to be tracked
-    public bool isFlagged;
+    public bool isTracked;
 
-    public GenericNodeData(double posX, double posY, double sizeX, double sizeY) {
+    public GenericNodeData(double posX, double posY, double sizeX, double sizeY, bool isTracked) {
         this.posX = posX;
         this.posY = posY;
 
         this.sizeX = sizeX;
         this.sizeY = sizeY;
+
+        this.isTracked = isTracked;
     }
 
     public Vector2 GetPosition() {

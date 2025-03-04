@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Xml.Schema;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 // SETUP:
@@ -21,6 +18,8 @@ public class UI_Slider : MonoBehaviour
     public bool lerpColor;
     public Color zeroColor;
     public Color oneColor;
+
+    public UnityEvent onUpdateSlider;
 
     private Vector2 defaultScale;
     private Transform handleTransform;
@@ -42,17 +41,28 @@ public class UI_Slider : MonoBehaviour
                 GetComponent<UI_Value>().setValue = "";
             }
         }
-        if (CanvasUtils.IsCursorInteract(handleTransform.gameObject, true)) {
+        if (CanvasUtils.IsCursorInteract(handleTransform.gameObject, true) && Input.GetMouseButtonDown(buttonToLookFor)) {
             isHandleHeld = true;
         }
         
         if (Input.GetMouseButton(buttonToLookFor) && isHandleHeld) {
-            handleTransform.position = new Vector3(Mathf.Clamp(Input.mousePosition.x, transform.position.x, transform.position.x + defaultScale.x), transform.position.y, 0);
+            Vector3 newPosition = 
+            Vector3.Lerp(transform.position, 
+            transform.position + transform.right * defaultScale.x, 
+            Mathf.Clamp(Vector3.Project((Vector3)Input.mousePosition - transform.position, transform.right).magnitude / defaultScale.x, 0, 1));
+
+            if (Vector3.Dot(Vector3.Project((Vector3)Input.mousePosition - transform.position, transform.right), transform.right) < 0) {
+                newPosition = transform.position;
+            }
+
+            handleTransform.position = newPosition;
+
+            onUpdateSlider.Invoke();
         }
         else {
             isHandleHeld = false;
         }
-        value = (handleTransform.position.x - transform.position.x) / defaultScale.x;
+        value = (handleTransform.position - transform.position).magnitude / defaultScale.x;
         if (GetComponent<UI_Value>() != null) {GetComponent<UI_Value>().value = value.ToString();}
 
         if (lerpColor) {

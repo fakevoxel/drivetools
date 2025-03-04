@@ -8,6 +8,19 @@ using UnityEngine.UI;
 // This class can be referenced by any other script in the project
 public class CanvasUtils : MonoBehaviour
 {   
+    public static List<GameObject> GetImageObjectsInChildren(GameObject parent, bool inclueParent) {
+        List<GameObject> toReturn = new List<GameObject>();
+        if (inclueParent) {toReturn.Add(parent);}
+
+        Image[] imagesComponents = parent.GetComponentsInChildren<Image>();
+
+        for (int i = 0; i < imagesComponents.Length; i++) {
+            toReturn.Add(imagesComponents[i].gameObject);
+        }
+
+        return toReturn;
+    }
+
     // -- CHILD FUNCTIONS -- //
     // Changing data of all children
 
@@ -97,6 +110,7 @@ public class CanvasUtils : MonoBehaviour
             else if (canvasObjects[i].gameObject.activeSelf && IsCursorInBounds(canvasObjects[i].gameObject, false) && canvasObjects[i].gameObject.GetComponent<Image>() != null) {
                 if (ignoreChildren && canvasObjects[i].transform.IsChildOf(inputObject.transform)) { continue; }
                 if (ignoreObjects.Contains(canvasObjects[i].gameObject)) {continue;}
+                Debug.Log(canvasObjects[i].gameObject.name);
                 return false;
             }
         }
@@ -104,6 +118,35 @@ public class CanvasUtils : MonoBehaviour
         if (inputObject == UIManager.Instance.canvasTransform.gameObject) { return true; }
 
         return false; // this should happen if the cursor isn't in the bounding box of the object at all
+    }
+
+    // Detect whether the cursor is interacting with a supplied object,
+    // THIS ONE WORKS WITH MANY OBJECTS, AND REQUIRES ONE OF THEM
+    public static bool IsCursorInteractOR(List<GameObject> inputObjects, bool ignoreChildren) {
+        bool isInteracting = false;
+
+        for (int i = 0; i < inputObjects.Count; i++) {
+            if (IsCursorInteract(inputObjects[i], ignoreChildren)) {
+                isInteracting = true;
+                break;
+            }
+        }
+
+        return isInteracting;
+    }
+    // Detect whether the cursor is interacting with a supplied object,
+    // THIS ONE WORKS WITH MANY OBJECTS, AND REQUIRES THEM ALL
+    public static bool IsCursorInteractAND(List<GameObject> inputObjects, bool ignoreChildren) {
+        bool isInteracting = true;
+
+        for (int i = 0; i < inputObjects.Count; i++) {
+            if (!IsCursorInteract(inputObjects[i], ignoreChildren)) {
+                isInteracting = false;
+                break;
+            }
+        }
+
+        return isInteracting;
     }
 
     // Detect whether the cursor is within the bounds of a supplied object

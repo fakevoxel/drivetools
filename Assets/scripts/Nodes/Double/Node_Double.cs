@@ -96,7 +96,7 @@ public class Node_Double : MonoBehaviour
         + new Vector3(0, -bgTransform.sizeDelta.y / 3 * 2, 0); // the offset vector
 
         trackButton.transform.GetChild(0).GetComponent<UI_Button>().onPress.AddListener(
-            () => UIManager.Instance.DeleteNode(gameObject)
+            () => interact.ToggleTrack()
         );
     }
 
@@ -124,7 +124,8 @@ public class Node_Double : MonoBehaviour
             transform.position.x,
             transform.position.y,
             transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.x,
-            transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.y
+            transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.y,
+            interact.isNodeTracked
         );
     }
 

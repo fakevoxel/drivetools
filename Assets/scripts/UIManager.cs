@@ -11,6 +11,7 @@ public enum NodeType {
     Compass,
     Field2D,
     Graph,
+    ImageDisplay,
 }
 
 public class UIManager : MonoBehaviour
@@ -124,8 +125,10 @@ public class UIManager : MonoBehaviour
             node.GetComponent<Node_Double>().PopulateRightClickMenu();
         }
         else if (node.nodeType == (int)NodeType.Graph) {
-            // if its a double type, fill out the options menu with double stuff
             node.GetComponent<Node_Graph>().PopulateRightClickMenu();
+        }
+        else if (node.nodeType == (int)NodeType.Compass) {
+            node.GetComponent<Node_Compass>().PopulateRightClickMenu();
         }
     }
 
@@ -146,6 +149,14 @@ public class UIManager : MonoBehaviour
         RefreshAppData();
 
         CloseRightClickMenu();
+    }
+
+    public void TrackAllNodes() {
+        for (int i = 0; i < activeNodes.Count; i++) {
+            if (!activeNodes[i].GetComponent<NodeInteractionHandler>().isNodeTracked) {
+                activeNodes[i].GetComponent<NodeInteractionHandler>().ToggleTrack();
+            }
+        }
     }
 
     // Spawning a new node manually, no data is available except the node's type
@@ -183,7 +194,7 @@ public class UIManager : MonoBehaviour
     // Spawwning and placing a node programatically
     // this AVOIDS placing it on the cursor like would happen when you spawn it manually
     // this version of the function in particular is used when loading nodes from disk, because all the info is there
-    public void SpawnAndPlaceNewNode(int type, Vector2 pos, Vector2 size, string sourceString, GameObject parent) {
+    public void SpawnAndPlaceNewNode(int type, Vector2 pos, Vector2 size, string sourceString, bool isTracked, GameObject parent) {
         GameObject newNode = null;
 
         newNode = Instantiate(AppData.Instance.GetPrefabObject(type), Vector3.zero, Quaternion.identity);
@@ -198,6 +209,8 @@ public class UIManager : MonoBehaviour
         newNode.transform.position = pos;
 
         newNode.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = size;
+
+        newNode.GetComponent<NodeInteractionHandler>().isNodeTracked = isTracked;
     }
 
     // Checking if a node exists with a certain source string
@@ -218,13 +231,13 @@ public class UIManager : MonoBehaviour
     public void OpenNodeConfig(NodeInteractionHandler comp) {
         CloseRightClickMenu();
 
+        // clear all the children in the config window so we don't duplicate UI objects
+        CanvasUtils.DestroyChildren(configWindow.transform.GetChild(4).gameObject);
+
         configWindow.SetActive(true);
         if (comp.nodeType == (int)NodeType.Double) {
             // double nodes are simple, they only have a source string and a title
             // TODO: add the title
-
-            // clear all the children in the config window so we don't duplicate UI objects
-            CanvasUtils.DestroyChildren(configWindow.transform.GetChild(4).gameObject);
 
             // create an input field for the source string
             GameObject sourceInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
@@ -238,11 +251,9 @@ public class UIManager : MonoBehaviour
             sourceInput.GetComponent<TMP_InputField>().text = comp.GetComponent<Node_Double>().sourceString;
             // when the user finishes editing, change the source string of the double node
             sourceInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
-                comp.GetComponent<Node_Double>().SetSourceString); // this syntax is interesting, I supply the function without () and unity knows to give it the final string as a parameter
+            comp.GetComponent<Node_Double>().SetSourceString); // this syntax is interesting, I supply the function without () and unity knows to give it the final string as a parameter
 
         } else if (comp.nodeType == (int)NodeType.Graph) {
-            CanvasUtils.DestroyChildren(configWindow.transform.GetChild(4).gameObject);
-
             GameObject testModeButton = Instantiate(UIPrefabs.Instance.buttonPrefab, Vector3.zero, Quaternion.identity);
             testModeButton.transform.SetParent(configWindow.transform.GetChild(4));
             testModeButton.transform.localPosition = new Vector3(0, 0, 0);
@@ -251,8 +262,6 @@ public class UIManager : MonoBehaviour
                 );
             
         } else if (comp.nodeType == (int)NodeType.Field2D) {
-            CanvasUtils.DestroyChildren(configWindow.transform.GetChild(4).gameObject);
-            
             GameObject addRobotButton = Instantiate(UIPrefabs.Instance.buttonPrefab, Vector3.zero, Quaternion.identity);
             addRobotButton.transform.SetParent(configWindow.transform.GetChild(4));
             addRobotButton.transform.localPosition = new Vector3(0, 0, 0);
@@ -280,6 +289,22 @@ public class UIManager : MonoBehaviour
                     (value) => comp.GetComponent<Node_Field2D>().SetRot(value, 0)
                 );
             }
+        } else if (comp.nodeType == (int)NodeType.Compass) {
+            // compass nodes are simple, they only have a source string
+
+            // create an input field for the source string
+            GameObject sourceInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
+
+            // parent it to the window
+            sourceInput.transform.SetParent(configWindow.transform.GetChild(4));
+            // zero it
+            sourceInput.transform.localPosition = new Vector3(0, 0, 0);
+            
+            // we set the text of the input field to show the user the current source string
+            sourceInput.GetComponent<TMP_InputField>().text = comp.GetComponent<Node_Compass>().sourceString;
+            // when the user finishes editing, change the source string of the double node
+            sourceInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
+            comp.GetComponent<Node_Compass>().SetSourceString); // this syntax is interesting, I supply the function without () and unity knows to give it the final string as a parameter
         }
     }
 
@@ -346,7 +371,7 @@ public class UIManager : MonoBehaviour
 
             for (int i = 0; i < AppData.Instance.layouts[layoutIndex].doubleNodes.Length; i++) {
                 NodeData_Double dataClass = AppData.Instance.layouts[layoutIndex].doubleNodes[i];
-                SpawnAndPlaceNewNode((int)NodeType.Double, dataClass.generic.GetPosition(), dataClass.generic.GetSize(), dataClass.sourceString, layoutObject);
+                SpawnAndPlaceNewNode((int)NodeType.Double, dataClass.generic.GetPosition(), dataClass.generic.GetSize(), dataClass.sourceString, dataClass.generic.isTracked, layoutObject);
             }
         }
     }

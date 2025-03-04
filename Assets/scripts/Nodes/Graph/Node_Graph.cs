@@ -52,7 +52,8 @@ public class Node_Graph : MonoBehaviour
             transform.position.x,
             transform.position.y,
             transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.x,
-            transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.y
+            transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.y,
+            interact.isNodeTracked
         );
     }
 
@@ -117,6 +118,24 @@ public class Node_Graph : MonoBehaviour
 
         deleteButton.transform.GetChild(0).GetComponent<UI_Button>().onPress.AddListener(
             () => UIManager.Instance.DeleteNode(gameObject)
+        );
+
+        // button to toggle tracking of this node
+        // ----------------------------------
+
+        GameObject trackButton = Instantiate(UIPrefabs.Instance.textButtonPrefab, Vector3.zero, Quaternion.identity);
+
+        trackButton.transform.SetParent(bgTransform);
+
+        trackButton.GetComponent<TextMeshProUGUI>().text = "track";
+
+        // moving the button to the right spot on the widget
+        trackButton.transform.localPosition = 
+        new Vector3(bgTransform.sizeDelta.x / 2, 0, 0) // the top-centre of the element
+        + new Vector3(0, -bgTransform.sizeDelta.y / 3 * 2, 0); // the offset vector
+
+        trackButton.transform.GetChild(0).GetComponent<UI_Button>().onPress.AddListener(
+            () => interact.ToggleTrack()
         );
     }
 

@@ -63,6 +63,9 @@ public class NetworkManager : MonoBehaviour
             else if (comp.nodeType == (int)NodeType.Graph) {
                 comp.GetComponent<Node_Graph>().UpdateData();
             }
+            else if (comp.nodeType == (int)NodeType.Compass) {
+                comp.GetComponent<Node_Compass>().UpdateData();
+            }
         }
     }   
 

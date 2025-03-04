@@ -29,6 +29,7 @@ public class NodeInteractionHandler : MonoBehaviour
     public double stickyTolerance;
 
     public int holdType; // not held, center, left edge, right, bottom, top
+    public bool isHoveringOverNode;
     public bool isHoldLocked;
     private Vector3 offsetFromCursor;
     private Vector3 offsetFromCursorRaw;
@@ -44,6 +45,9 @@ public class NodeInteractionHandler : MonoBehaviour
     private double timeWhenConnectionLost;
     private double timeToConfirmedLoss = 1.5;
 
+    // whether or not the node is flagged for recording
+    public bool isNodeTracked;
+
     void Awake() {
         backgroundTransform = CanvasUtils.SearchChildrenForName(gameObject, "bg");
 
@@ -56,6 +60,10 @@ public class NodeInteractionHandler : MonoBehaviour
         bottomLeftTransform = CanvasUtils.SearchChildrenForName(gameObject, "bottomLeftCorner");
         topRightTransform = CanvasUtils.SearchChildrenForName(gameObject, "topRightCorner");
         bottomRightTransform = CanvasUtils.SearchChildrenForName(gameObject, "bottomRightCorner");
+    }
+
+    public void ToggleTrack() {
+        isNodeTracked = !isNodeTracked;
     }
 
     public void SetName(string newName) {
@@ -71,10 +79,15 @@ public class NodeInteractionHandler : MonoBehaviour
         
         if (holdType == 1 || holdType == 0) {
             RefreshEdges();
-        }
+        }   
+
+        List<GameObject> objList = CanvasUtils.GetImageObjectsInChildren(UIManager.Instance.nodeOptionsWidget, true);
+        objList.Add(gameObject);
 
         // being "held" means the node is being dragged around
         if (CanvasUtils.IsCursorInteract(gameObject, true)) {
+            isHoveringOverNode = true;
+
             if (Input.GetMouseButtonDown(0)) {
                 Grab();
                 // doing this here, not inside of grab() because if the node is grabbed the offsets should just be zero
@@ -87,6 +100,14 @@ public class NodeInteractionHandler : MonoBehaviour
 
                 UIManager.Instance.OpenRightClickMenu(this);
             }
+        }
+        
+        if (!CanvasUtils.IsCursorInteractOR(objList, true)) {
+            if (isHoveringOverNode) {
+                UIManager.Instance.CloseRightClickMenu();
+            }
+
+            isHoveringOverNode = false;
         }
 
         if (Input.GetMouseButtonDown(0) && CanvasUtils.IsCursorInteract(leftEdgeTransform.gameObject, true)) {
@@ -206,7 +227,7 @@ public class NodeInteractionHandler : MonoBehaviour
         topRightTransform.position = transform.position + Vector3.right * rect.sizeDelta.x / 2 + Vector3.up * rect.sizeDelta.y / 2;
         bottomRightTransform.position = transform.position + Vector3.right * rect.sizeDelta.x / 2 - Vector3.up * rect.sizeDelta.y / 2;
 
-        backgroundTransform.GetComponent<Image>().color = confirmedConnectionLoss ? Color.red : Color.white;
+        backgroundTransform.GetComponent<Image>().color = isNodeTracked ? new Color(0, 0.34f, 0.84f, 1) : new Color(1,1,1,0.1f);
     }
 
     void HandleScale() {
