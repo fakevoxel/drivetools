@@ -1,7 +1,4 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using NetworkTables;
 using TMPro;
 using UnityEngine;
 
@@ -11,7 +8,7 @@ public enum NodeType {
     Compass,
     Field2D,
     Graph,
-    ImageDisplay,
+    ImageDisplay, // to be implemented
 }
 
 public class UIManager : MonoBehaviour
@@ -94,6 +91,8 @@ public class UIManager : MonoBehaviour
     // going through EVERY SINGLE active noded and populating its respective NodeData class
     void PopulateNodeData() {
         AppData.Instance.layouts[activeLayoutIndex].doubleNodes = new NodeData_Double[]{};
+        AppData.Instance.layouts[activeLayoutIndex].compassNodes = new NodeData_Compass[]{};
+
         for (int i = 0; i < activeNodes.Count; i++) {
             if (activeNodes[i] == null) {continue;}
 
@@ -110,6 +109,23 @@ public class UIManager : MonoBehaviour
 
                 AppData.Instance.layouts[activeLayoutIndex].doubleNodes = doubleNodeList.ToArray();
             }
+            if (currentNode.GetComponent<Node_Compass>() != null) {
+                List<NodeData_Compass> compassNodeList = new List<NodeData_Compass>();
+                for (int j = 0; j < AppData.Instance.layouts[activeLayoutIndex].compassNodes.Length; j++) {
+                    compassNodeList.Add(AppData.Instance.layouts[activeLayoutIndex].compassNodes[j]);
+                }
+
+                currentNode.GetComponent<Node_Compass>().PopulateDataClass();
+                compassNodeList.Add(currentNode.GetComponent<Node_Compass>().data);
+
+                AppData.Instance.layouts[activeLayoutIndex].compassNodes = compassNodeList.ToArray();
+            }
+        }
+    }
+
+    public void DeleteAllNodes() {
+        for (int i = 0; i < activeNodes.Count; i++) {
+            DeleteNode(activeNodes[i]);
         }
     }
 
@@ -124,11 +140,20 @@ public class UIManager : MonoBehaviour
             // if its a double type, fill out the options menu with double stuff
             node.GetComponent<Node_Double>().PopulateRightClickMenu();
         }
+        else if (node.nodeType == (int)NodeType.String) {
+            node.GetComponent<Node_String>().PopulateRightClickMenu();
+        }
         else if (node.nodeType == (int)NodeType.Graph) {
             node.GetComponent<Node_Graph>().PopulateRightClickMenu();
         }
+        else if (node.nodeType == (int)NodeType.Field2D) {
+            node.GetComponent<Node_Field2D>().PopulateRightClickMenu();
+        }
         else if (node.nodeType == (int)NodeType.Compass) {
             node.GetComponent<Node_Compass>().PopulateRightClickMenu();
+        }
+        else if (node.nodeType == (int)NodeType.ImageDisplay) {
+            node.GetComponent<Node_ImageDisplay>().PopulateRightClickMenu();
         }
     }
 
@@ -194,13 +219,17 @@ public class UIManager : MonoBehaviour
     // Spawwning and placing a node programatically
     // this AVOIDS placing it on the cursor like would happen when you spawn it manually
     // this version of the function in particular is used when loading nodes from disk, because all the info is there
-    public void SpawnAndPlaceNewNode(int type, Vector2 pos, Vector2 size, string sourceString, bool isTracked, GameObject parent) {
+    public void SpawnAndPlaceNewNode(int type, Vector2 pos, Vector2 size, string sourceString, string titleString, bool isTracked, GameObject parent) {
         GameObject newNode = null;
 
         newNode = Instantiate(AppData.Instance.GetPrefabObject(type), Vector3.zero, Quaternion.identity);
 
         if (type == (int)NodeType.Double) {
             newNode.GetComponent<Node_Double>().SetSourceString(sourceString);
+            newNode.GetComponent<Node_Double>().SetTitleString(titleString);
+        }
+        if (type == (int)NodeType.Compass) {
+            newNode.GetComponent<Node_Compass>().SetSourceString(sourceString);
         }
 
         newNode.transform.SetParent(parent.transform.GetChild(0));
@@ -236,8 +265,11 @@ public class UIManager : MonoBehaviour
 
         configWindow.SetActive(true);
         if (comp.nodeType == (int)NodeType.Double) {
-            // double nodes are simple, they only have a source string and a title
-            // TODO: add the title
+            comp.GetComponent<Node_Double>().PopulateConfigMenu(configWindow);
+        } else if (comp.nodeType == (int)NodeType.String) {
+            
+        } else if (comp.nodeType == (int)NodeType.Compass) {
+            // compass nodes are simple, they only have a source string
 
             // create an input field for the source string
             GameObject sourceInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
@@ -248,19 +280,10 @@ public class UIManager : MonoBehaviour
             sourceInput.transform.localPosition = new Vector3(0, 0, 0);
             
             // we set the text of the input field to show the user the current source string
-            sourceInput.GetComponent<TMP_InputField>().text = comp.GetComponent<Node_Double>().sourceString;
+            sourceInput.GetComponent<TMP_InputField>().text = comp.GetComponent<Node_Compass>().sourceString;
             // when the user finishes editing, change the source string of the double node
             sourceInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
-            comp.GetComponent<Node_Double>().SetSourceString); // this syntax is interesting, I supply the function without () and unity knows to give it the final string as a parameter
-
-        } else if (comp.nodeType == (int)NodeType.Graph) {
-            GameObject testModeButton = Instantiate(UIPrefabs.Instance.buttonPrefab, Vector3.zero, Quaternion.identity);
-            testModeButton.transform.SetParent(configWindow.transform.GetChild(4));
-            testModeButton.transform.localPosition = new Vector3(0, 0, 0);
-            testModeButton.GetComponent<UI_Button>().onPress.AddListener(
-                    () => comp.GetComponent<Node_Graph>().ToggleTestMode()
-                );
-            
+            comp.GetComponent<Node_Compass>().SetSourceString); // this syntax is interesting, I supply the function without () and unity knows to give it the final string as a parameter
         } else if (comp.nodeType == (int)NodeType.Field2D) {
             GameObject addRobotButton = Instantiate(UIPrefabs.Instance.buttonPrefab, Vector3.zero, Quaternion.identity);
             addRobotButton.transform.SetParent(configWindow.transform.GetChild(4));
@@ -289,22 +312,16 @@ public class UIManager : MonoBehaviour
                     (value) => comp.GetComponent<Node_Field2D>().SetRot(value, 0)
                 );
             }
-        } else if (comp.nodeType == (int)NodeType.Compass) {
-            // compass nodes are simple, they only have a source string
-
-            // create an input field for the source string
-            GameObject sourceInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
-
-            // parent it to the window
-            sourceInput.transform.SetParent(configWindow.transform.GetChild(4));
-            // zero it
-            sourceInput.transform.localPosition = new Vector3(0, 0, 0);
+        } else if (comp.nodeType == (int)NodeType.Graph) {
+            GameObject testModeButton = Instantiate(UIPrefabs.Instance.buttonPrefab, Vector3.zero, Quaternion.identity);
+            testModeButton.transform.SetParent(configWindow.transform.GetChild(4));
+            testModeButton.transform.localPosition = new Vector3(0, 0, 0);
+            testModeButton.GetComponent<UI_Button>().onPress.AddListener(
+                    () => comp.GetComponent<Node_Graph>().ToggleTestMode()
+                );
             
-            // we set the text of the input field to show the user the current source string
-            sourceInput.GetComponent<TMP_InputField>().text = comp.GetComponent<Node_Compass>().sourceString;
-            // when the user finishes editing, change the source string of the double node
-            sourceInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
-            comp.GetComponent<Node_Compass>().SetSourceString); // this syntax is interesting, I supply the function without () and unity knows to give it the final string as a parameter
+        } else if (comp.nodeType == (int)NodeType.ImageDisplay) {
+            comp.GetComponent<Node_ImageDisplay>().PopulateConfigMenu(configWindow);
         }
     }
 
@@ -371,7 +388,11 @@ public class UIManager : MonoBehaviour
 
             for (int i = 0; i < AppData.Instance.layouts[layoutIndex].doubleNodes.Length; i++) {
                 NodeData_Double dataClass = AppData.Instance.layouts[layoutIndex].doubleNodes[i];
-                SpawnAndPlaceNewNode((int)NodeType.Double, dataClass.generic.GetPosition(), dataClass.generic.GetSize(), dataClass.sourceString, dataClass.generic.isTracked, layoutObject);
+                SpawnAndPlaceNewNode((int)NodeType.Double, dataClass.generic.GetPosition(), dataClass.generic.GetSize(), dataClass.sourceString, dataClass.titleString, dataClass.generic.isTracked, layoutObject);
+            }
+            for (int i = 0; i < AppData.Instance.layouts[layoutIndex].compassNodes.Length; i++) {
+                NodeData_Compass dataClass = AppData.Instance.layouts[layoutIndex].compassNodes[i];
+                SpawnAndPlaceNewNode((int)NodeType.Compass, dataClass.generic.GetPosition(), dataClass.generic.GetSize(), dataClass.sourceString, "", dataClass.generic.isTracked, layoutObject);
             }
         }
     }
