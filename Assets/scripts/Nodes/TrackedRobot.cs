@@ -8,8 +8,6 @@ using UnityEngine;
 [System.Serializable]
 public class TrackedRobot
 {
-    public string name;
-    
     // x and y position of the bot, in meters
     public float xPos, yPos;
     // rotation of the robot, in radians
@@ -23,6 +21,16 @@ public class TrackedRobot
     // networktables locations for all the data
     public string xSource, ySource;
     public string rotSource;
+
+    // used when you want to define the variables later
+    public TrackedRobot() {
+    }
+
+    // sometimes this is easier to use
+    public TrackedRobot(float bumperWidth, float bumperThickness) {
+        this.bumperWidth = bumperWidth;
+        this.bumperThickness = bumperThickness;
+    }
 
     // creating a class without the source strings (useful if adding them in another part of the logic)
     public TrackedRobot(float xPos, float yPos, float rot, float bumperWidth, float bumperThickness) {

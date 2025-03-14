@@ -16,4 +16,8 @@ public class UI_ObjectSet
             objects[i].SetActive(false);
         }
     }
+
+    public UI_ObjectSet(GameObject[] objs) {
+        this.objects = objs;
+    }
 }

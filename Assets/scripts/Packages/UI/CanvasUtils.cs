@@ -12,7 +12,7 @@ public class CanvasUtils : MonoBehaviour
         List<GameObject> toReturn = new List<GameObject>();
         if (inclueParent) {toReturn.Add(parent);}
 
-        Image[] imagesComponents = parent.GetComponentsInChildren<Image>();
+        Image[] imagesComponents = parent.GetComponentsInChildren<Image>(true);
 
         for (int i = 0; i < imagesComponents.Length; i++) {
             toReturn.Add(imagesComponents[i].gameObject);
@@ -25,7 +25,7 @@ public class CanvasUtils : MonoBehaviour
     // Changing data of all children
 
     public static void SetTransparencyOfChildren(GameObject inputObject, float a, bool force) {
-        Image[] images = inputObject.GetComponentsInChildren<Image>();
+        Image[] images = inputObject.GetComponentsInChildren<Image>(true);
 
         for (int i = 0; i < images.Length; i++) {
             if (!force && images[i].color.a == 0) {
@@ -38,7 +38,7 @@ public class CanvasUtils : MonoBehaviour
     }
 
     public static void DestroyChildren(GameObject inputObject) {
-        Transform[] toDestroy = inputObject.GetComponentsInChildren<Transform>();
+        Transform[] toDestroy = inputObject.GetComponentsInChildren<Transform>(true);
         for (int i = toDestroy.Length - 1; i >= 0; i--) {
             if (toDestroy[i].gameObject != inputObject) {
                 Destroy(toDestroy[i].gameObject);
@@ -48,7 +48,7 @@ public class CanvasUtils : MonoBehaviour
     }
 
     public static void SetChildrenActive(GameObject inputObject, bool active) {
-        Transform[] toDestroy = inputObject.GetComponentsInChildren<Transform>();
+        Transform[] toDestroy = inputObject.GetComponentsInChildren<Transform>(true);
         for (int i = toDestroy.Length - 1; i >= 0; i--) {
             if (toDestroy[i].gameObject != inputObject) {
                 toDestroy[i].gameObject.SetActive(active);
@@ -58,7 +58,7 @@ public class CanvasUtils : MonoBehaviour
     }
 
     public static Transform SearchChildrenForName(GameObject inputObject, string name) {
-        Transform[] children = inputObject.GetComponentsInChildren<Transform>();
+        Transform[] children = inputObject.GetComponentsInChildren<Transform>(true);
 
         for (int i = 0; i < children.Length; i++) {
             if (children[i].gameObject.name == name) {

@@ -14,7 +14,7 @@ public class UI_Tabs : MonoBehaviour
     public int selectedTab;
     public int buttonToLookFor; // left, right, or middle click
 
-    public UnityAction<int> onChangeTabs;
+    public UnityEvent<int> onChangeTabs;
 
     public bool runOnUpdate;
 

@@ -175,6 +175,9 @@ public class NodeInteractionHandler : MonoBehaviour
         if (GetComponent<Node_Compass>() != null) {
             GetComponent<Node_Compass>().PositionUI();
         }
+        if (GetComponent<Node_ImageDisplay>() != null) {
+            GetComponent<Node_ImageDisplay>().PositionUI();
+        }
 
         if (connectionLoss && timeWhenConnectionLost < Time.time - timeToConfirmedLoss) {
             // TODO: show to the user when connection has been lost

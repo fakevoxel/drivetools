@@ -29,6 +29,26 @@ public class FileUtils : MonoBehaviour
         }
         return "";
     }
+    
+    public static string GetFileName(string path) {
+        int startIndex = 0;
+        for (int i = path.Length - 1; i >= 0; i--) {
+            if (path[i] == '/' || path[i] == '\\') {
+                startIndex = i + 1;
+                break;
+            }
+        }
+
+        int endIndex = 0;
+        for (int i = path.Length - 1; i >= 0; i--) {
+            if (path[i] == '.') {
+                endIndex = i;
+                break;
+            }
+        }
+
+        return path.Substring(startIndex, endIndex - startIndex);
+    }
 
     // sets this application as the default driverstation
     public void SetAsDefaultDriverstation() {

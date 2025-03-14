@@ -66,6 +66,9 @@ public class NetworkManager : MonoBehaviour
             else if (comp.nodeType == (int)NodeType.Compass) {
                 comp.GetComponent<Node_Compass>().UpdateData();
             }
+            else if (comp.nodeType == (int)NodeType.ImageDisplay) {
+                comp.GetComponent<Node_ImageDisplay>().UpdateData();
+            }
         }
     }   
 
@@ -95,7 +98,7 @@ public class NetworkManager : MonoBehaviour
         NetworkTable.SetClientMode();
         NetworkTable.SetTeam(AppData.Instance.teamNumber); 
         NetworkTable.SetIPAddress(AppData.Instance.robotRadioIP);
-        NetworkTable.SetDSClientEnabled(true);
+        NetworkTable.SetDSClientEnabled(false);
         NetworkTable.Initialize();
     }
 }

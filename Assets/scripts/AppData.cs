@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 
@@ -33,6 +34,7 @@ public class AppData : MonoBehaviour
     // variables
     public int targetFrameRate;
     public List<DashboardLayout> layouts;
+    public List<string> imageAssetDirectories;
     public int teamNumber;
     public string robotRadioIP;
 
@@ -116,7 +118,8 @@ public class AppData : MonoBehaviour
     public void WriteSettingsToDisk() {
         PersistentSettings prefs = new PersistentSettings(
             (ushort)teamNumber,
-            (ushort)targetFrameRate
+            (ushort)targetFrameRate,
+            imageAssetDirectories.ToArray()
         );
 
         SaveUtils.SavePreferences(prefs);
@@ -127,8 +130,11 @@ public class AppData : MonoBehaviour
         PersistentSettings prefs = SaveUtils.LoadPreferences();
         if (prefs == null) {return;}
 
-        teamNumber = prefs.teamNumber;
-        targetFrameRate = prefs.targetFrameRate;
+        SetTeamNumber(prefs.teamNumber);
+        UpdateTargetFrameRate(prefs.targetFrameRate);
+        imageAssetDirectories = prefs.imageAssetDirectories.ToList();
+       
+        AssetManager.Instance.PopulateAssets();
     }
 
     public void LoadLayoutFromDisk() {

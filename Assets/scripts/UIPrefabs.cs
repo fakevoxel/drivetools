@@ -32,4 +32,8 @@ public class UIPrefabs : MonoBehaviour
     public GameObject buttonPrefab;
     public GameObject graphPointPrefab;
     public GameObject textButtonPrefab;
+    public GameObject tabsPrefab;
+    public GameObject objectSetPrefab;
+    public GameObject elementListPrefab;
+    public GameObject imagePrefab;
 }

@@ -723,8 +723,14 @@ MonoBehaviour:
     sizeX: 0
     sizeY: 0
     isTracked: 0
-  robotWidth: 0.864
-  bumperWidth: 0.05
+  data:
+    generic:
+      posX: 0
+      posY: 0
+      sizeX: 0
+      sizeY: 0
+      isTracked: 0
+    robots: []
   robotColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   fieldTexture: {fileID: 21300000, guid: 6fe3102babc5c044b879a3176ca9755e, type: 3}
   interact: {fileID: 0}
@@ -733,6 +739,8 @@ MonoBehaviour:
   robots: []
   robotVisualContainer: {fileID: 5266821217434232117}
   robotReadoutContainer: {fileID: 268691490624407532}
+  defaultBumperWidth: 120
+  defaultBumperThickness: 5
 --- !u!1 &5140301210485579313
 GameObject:
   m_ObjectHideFlags: 0

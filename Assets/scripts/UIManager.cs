@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum NodeType {
     Double,
@@ -38,7 +40,9 @@ public class UIManager : MonoBehaviour
     public GameObject settingsWindow; // the window for changing settings like FRC team number
     public GameObject nodeWindow; // the window for spawning new nodes
     public GameObject configWindow; // the window for configuring a node's data, like source string
+    public GameObject loadFileWindow;
     public GameObject nodeOptionsWidget;
+    public GameObject assetManagerWindow;
 
     // container object
     public Transform canvasTransform;
@@ -50,6 +54,9 @@ public class UIManager : MonoBehaviour
     public Transform activeNodeContainer;
 
     public GameObject previewNode;
+
+    private UnityAction<string> toRunWithLoadedFile;
+    private UnityAction<string> toRunWithLoadedAsset;
 
     void Start() {
         CloseRightClickMenu();
@@ -74,6 +81,24 @@ public class UIManager : MonoBehaviour
         layoutTabsObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = 
         new Vector2(canvasTransform.GetComponent<RectTransform>().sizeDelta.x * 1.25f, 100);
     }
+
+    public void LoadFile(UnityAction<string> toRunAfterLoad) {
+        loadFileWindow.SetActive(true);
+        toRunWithLoadedFile = toRunAfterLoad;
+    }
+
+    public void PassLoadedFile(TMP_InputField input) {
+        string text = input.text;
+        
+        loadFileWindow.SetActive(false);
+        toRunWithLoadedFile.Invoke(text);
+    }
+    public void PassLoadedFile(string input) {
+        string text = input;
+        
+        loadFileWindow.SetActive(false);
+        toRunWithLoadedFile.Invoke(text);
+    }
     
     // I'm actually why not sure why this function is wrapped into another function
     public void SwitchActiveLayout() {
@@ -92,6 +117,10 @@ public class UIManager : MonoBehaviour
     void PopulateNodeData() {
         AppData.Instance.layouts[activeLayoutIndex].doubleNodes = new NodeData_Double[]{};
         AppData.Instance.layouts[activeLayoutIndex].compassNodes = new NodeData_Compass[]{};
+        AppData.Instance.layouts[activeLayoutIndex].graphNodes = new NodeData_Graph[]{};
+        AppData.Instance.layouts[activeLayoutIndex].stringNodes = new NodeData_String[]{};
+        AppData.Instance.layouts[activeLayoutIndex].imageDisplayNodes = new NodeData_ImageDisplay[]{};
+        AppData.Instance.layouts[activeLayoutIndex].field2DNodes = new NodeData_Field2D[]{};
 
         for (int i = 0; i < activeNodes.Count; i++) {
             if (activeNodes[i] == null) {continue;}
@@ -109,7 +138,7 @@ public class UIManager : MonoBehaviour
 
                 AppData.Instance.layouts[activeLayoutIndex].doubleNodes = doubleNodeList.ToArray();
             }
-            if (currentNode.GetComponent<Node_Compass>() != null) {
+            else if (currentNode.GetComponent<Node_Compass>() != null) {
                 List<NodeData_Compass> compassNodeList = new List<NodeData_Compass>();
                 for (int j = 0; j < AppData.Instance.layouts[activeLayoutIndex].compassNodes.Length; j++) {
                     compassNodeList.Add(AppData.Instance.layouts[activeLayoutIndex].compassNodes[j]);
@@ -119,6 +148,28 @@ public class UIManager : MonoBehaviour
                 compassNodeList.Add(currentNode.GetComponent<Node_Compass>().data);
 
                 AppData.Instance.layouts[activeLayoutIndex].compassNodes = compassNodeList.ToArray();
+            }
+            else if (currentNode.GetComponent<Node_ImageDisplay>() != null) {
+                List<NodeData_ImageDisplay> imageDisplayNodeList = new List<NodeData_ImageDisplay>();
+                for (int j = 0; j < AppData.Instance.layouts[activeLayoutIndex].imageDisplayNodes.Length; j++) {
+                    imageDisplayNodeList.Add(AppData.Instance.layouts[activeLayoutIndex].imageDisplayNodes[j]);
+                }
+
+                currentNode.GetComponent<Node_ImageDisplay>().PopulateDataClass();
+                imageDisplayNodeList.Add(currentNode.GetComponent<Node_ImageDisplay>().data);
+
+                AppData.Instance.layouts[activeLayoutIndex].imageDisplayNodes = imageDisplayNodeList.ToArray();
+            }
+            else if (currentNode.GetComponent<Node_Field2D>() != null) {
+                List<NodeData_Field2D> field2DNodeList = new List<NodeData_Field2D>();
+                for (int j = 0; j < AppData.Instance.layouts[activeLayoutIndex].field2DNodes.Length; j++) {
+                    field2DNodeList.Add(AppData.Instance.layouts[activeLayoutIndex].field2DNodes[j]);
+                }
+
+                currentNode.GetComponent<Node_Field2D>().PopulateDataClass();
+                field2DNodeList.Add(currentNode.GetComponent<Node_Field2D>().data);
+
+                AppData.Instance.layouts[activeLayoutIndex].field2DNodes = field2DNodeList.ToArray();
             }
         }
     }
@@ -219,18 +270,10 @@ public class UIManager : MonoBehaviour
     // Spawwning and placing a node programatically
     // this AVOIDS placing it on the cursor like would happen when you spawn it manually
     // this version of the function in particular is used when loading nodes from disk, because all the info is there
-    public void SpawnAndPlaceNewNode(int type, Vector2 pos, Vector2 size, string sourceString, string titleString, bool isTracked, GameObject parent) {
+    public GameObject SpawnAndPlaceNewNode(int type, Vector2 pos, Vector2 size, bool isTracked, GameObject parent) {
         GameObject newNode = null;
 
         newNode = Instantiate(AppData.Instance.GetPrefabObject(type), Vector3.zero, Quaternion.identity);
-
-        if (type == (int)NodeType.Double) {
-            newNode.GetComponent<Node_Double>().SetSourceString(sourceString);
-            newNode.GetComponent<Node_Double>().SetTitleString(titleString);
-        }
-        if (type == (int)NodeType.Compass) {
-            newNode.GetComponent<Node_Compass>().SetSourceString(sourceString);
-        }
 
         newNode.transform.SetParent(parent.transform.GetChild(0));
         AddNodeToList(newNode);
@@ -240,6 +283,8 @@ public class UIManager : MonoBehaviour
         newNode.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = size;
 
         newNode.GetComponent<NodeInteractionHandler>().isNodeTracked = isTracked;
+
+        return newNode;
     }
 
     // Checking if a node exists with a certain source string
@@ -285,6 +330,8 @@ public class UIManager : MonoBehaviour
             sourceInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
             comp.GetComponent<Node_Compass>().SetSourceString); // this syntax is interesting, I supply the function without () and unity knows to give it the final string as a parameter
         } else if (comp.nodeType == (int)NodeType.Field2D) {
+
+            // button to add a new robot
             GameObject addRobotButton = Instantiate(UIPrefabs.Instance.buttonPrefab, Vector3.zero, Quaternion.identity);
             addRobotButton.transform.SetParent(configWindow.transform.GetChild(4));
             addRobotButton.transform.localPosition = new Vector3(0, 0, 0);
@@ -292,26 +339,26 @@ public class UIManager : MonoBehaviour
                     () => comp.GetComponent<Node_Field2D>().AddTrackedRobot()
                 );
 
-            for (int i = 0; i < comp.GetComponent<Node_Field2D>().robots.Count; i++) {
-                GameObject xInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
-                xInput.transform.SetParent(configWindow.transform.GetChild(4));
-                xInput.transform.localPosition = new Vector3(0, 0, 0);
-                xInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
-                    (value) => comp.GetComponent<Node_Field2D>().SetX(value, 0)
-                );
-                GameObject yInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
-                yInput.transform.SetParent(configWindow.transform.GetChild(4));
-                yInput.transform.localPosition = new Vector3(0, -100, 0);
-                yInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
-                    (value) => comp.GetComponent<Node_Field2D>().SetY(value, 0)
-                );
-                GameObject zInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
-                zInput.transform.SetParent(configWindow.transform.GetChild(4));
-                zInput.transform.localPosition = new Vector3(0, -200, 0);
-                zInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
-                    (value) => comp.GetComponent<Node_Field2D>().SetRot(value, 0)
-                );
-            }
+            // for (int i = 0; i < comp.GetComponent<Node_Field2D>().robots.Count; i++) {
+            //     GameObject xInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
+            //     xInput.transform.SetParent(configWindow.transform.GetChild(4));
+            //     xInput.transform.localPosition = new Vector3(0, 0, 0);
+            //     xInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
+            //         (value) => comp.GetComponent<Node_Field2D>().SetX(value, 0)
+            //     );
+            //     GameObject yInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
+            //     yInput.transform.SetParent(configWindow.transform.GetChild(4));
+            //     yInput.transform.localPosition = new Vector3(0, -100, 0);
+            //     yInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
+            //         (value) => comp.GetComponent<Node_Field2D>().SetY(value, 0)
+            //     );
+            //     GameObject zInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
+            //     zInput.transform.SetParent(configWindow.transform.GetChild(4));
+            //     zInput.transform.localPosition = new Vector3(0, -200, 0);
+            //     zInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
+            //         (value) => comp.GetComponent<Node_Field2D>().SetRot(value, 0)
+            //     );
+            // }
         } else if (comp.nodeType == (int)NodeType.Graph) {
             GameObject testModeButton = Instantiate(UIPrefabs.Instance.buttonPrefab, Vector3.zero, Quaternion.identity);
             testModeButton.transform.SetParent(configWindow.transform.GetChild(4));
@@ -323,6 +370,16 @@ public class UIManager : MonoBehaviour
         } else if (comp.nodeType == (int)NodeType.ImageDisplay) {
             comp.GetComponent<Node_ImageDisplay>().PopulateConfigMenu(configWindow);
         }
+    }
+
+    public void ReturnAssetName(string gotAssetName) {
+        toRunWithLoadedAsset.Invoke(gotAssetName);
+    }
+
+    public void GrabAssetName(UnityAction<string> toRunWhenFinished) {
+        toRunWithLoadedAsset = toRunWhenFinished;
+
+        assetManagerWindow.SetActive(true);
     }
 
     public void UpdateActiveLayout() {
@@ -342,7 +399,7 @@ public class UIManager : MonoBehaviour
         // setting up the layout tabs
         layoutTabs.InitializeTabs(AppData.Instance.layouts.Count, AppData.layoutTabSpacing);
 
-        layoutTabs.onChangeTabs = SwitchToLayout; 
+        layoutTabs.onChangeTabs.AddListener(SwitchToLayout); 
 
         LoadAllLayouts();
 
@@ -388,11 +445,29 @@ public class UIManager : MonoBehaviour
 
             for (int i = 0; i < AppData.Instance.layouts[layoutIndex].doubleNodes.Length; i++) {
                 NodeData_Double dataClass = AppData.Instance.layouts[layoutIndex].doubleNodes[i];
-                SpawnAndPlaceNewNode((int)NodeType.Double, dataClass.generic.GetPosition(), dataClass.generic.GetSize(), dataClass.sourceString, dataClass.titleString, dataClass.generic.isTracked, layoutObject);
+
+                GameObject node = SpawnAndPlaceNewNode((int)NodeType.Double, dataClass.generic.GetPosition(), dataClass.generic.GetSize(), dataClass.generic.isTracked, layoutObject);
+                node.GetComponent<Node_Double>().sourceString = dataClass.sourceString;
+                node.GetComponent<Node_Double>().titleString = dataClass.titleString;
             }
             for (int i = 0; i < AppData.Instance.layouts[layoutIndex].compassNodes.Length; i++) {
                 NodeData_Compass dataClass = AppData.Instance.layouts[layoutIndex].compassNodes[i];
-                SpawnAndPlaceNewNode((int)NodeType.Compass, dataClass.generic.GetPosition(), dataClass.generic.GetSize(), dataClass.sourceString, "", dataClass.generic.isTracked, layoutObject);
+
+                GameObject node = SpawnAndPlaceNewNode((int)NodeType.Compass, dataClass.generic.GetPosition(), dataClass.generic.GetSize(), dataClass.generic.isTracked, layoutObject);
+                node.GetComponent<Node_Compass>().sourceString = dataClass.sourceString;
+            }
+            for (int i = 0; i < AppData.Instance.layouts[layoutIndex].imageDisplayNodes.Length; i++) {
+                NodeData_ImageDisplay dataClass = AppData.Instance.layouts[layoutIndex].imageDisplayNodes[i];
+
+                GameObject node = SpawnAndPlaceNewNode((int)NodeType.ImageDisplay, dataClass.generic.GetPosition(), dataClass.generic.GetSize(), dataClass.generic.isTracked, layoutObject);
+                node.GetComponent<Node_ImageDisplay>().sourceString = dataClass.sourceString;
+                node.GetComponent<Node_ImageDisplay>().layers = dataClass.layers.ToList();
+            }
+            for (int i = 0; i < AppData.Instance.layouts[layoutIndex].field2DNodes.Length; i++) {
+                NodeData_Field2D dataClass = AppData.Instance.layouts[layoutIndex].field2DNodes[i];
+
+                GameObject node = SpawnAndPlaceNewNode((int)NodeType.Field2D, dataClass.generic.GetPosition(), dataClass.generic.GetSize(), dataClass.generic.isTracked, layoutObject);
+                node.GetComponent<Node_Field2D>().robots = dataClass.robots;
             }
         }
     }
@@ -421,18 +496,6 @@ public class UIManager : MonoBehaviour
                 activeNodes.Add(activeNodeContainer.transform.GetChild(i).gameObject);
             }
         }
-    }
-
-    public void ToggleSettingsWindow() {
-        settingsWindow.SetActive(!settingsWindow.activeSelf);
-    }
-
-    public void ToggleNewNodeWindow() {
-        nodeWindow.SetActive(!nodeWindow.activeSelf);
-    }
-
-    public void ToggleConfigWindow() {
-        configWindow.SetActive(!configWindow.activeSelf);
     }
 
     // -- Node Stuff -- // 

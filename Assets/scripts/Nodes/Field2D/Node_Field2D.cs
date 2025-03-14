@@ -10,8 +10,6 @@ public class Node_Field2D : MonoBehaviour
     public NodeData_Field2D data;
 
     // settings 
-    public float robotWidth;
-    public float bumperWidth;
     public Color robotColor = Color.yellow;
     public Sprite fieldTexture;
 
@@ -26,6 +24,9 @@ public class Node_Field2D : MonoBehaviour
     // all robot readouts (text displays of data) are children of this
     public Transform robotReadoutContainer;
 
+    public float defaultBumperWidth;
+    public float defaultBumperThickness;
+
     public void Awake() {
         // getting the interactionHandler component
         interact = GetComponent<NodeInteractionHandler>();
@@ -34,6 +35,8 @@ public class Node_Field2D : MonoBehaviour
         interact.nodeType = (int)NodeType.Field2D;
 
         fieldImage.GetComponent<RectTransform>().sizeDelta = new Vector2(fieldTexture.texture.width, fieldTexture.texture.height);
+
+        robots = new List<TrackedRobot>();
     }
 
     void Update() {
@@ -147,7 +150,7 @@ public class Node_Field2D : MonoBehaviour
 
     // adds a container for tracked robot data
     public void AddTrackedRobot() {
-
+        robots.Add(new TrackedRobot(defaultBumperWidth, defaultBumperThickness));
     }
 
     public void SetX(string input, int robotIndex) {
@@ -211,5 +214,18 @@ public class Node_Field2D : MonoBehaviour
                 component.localRotation = Quaternion.Euler(0, 0, 90);
             }
         }
+    }
+
+    public void PopulateDataClass() {
+        // robot data
+        data.robots = robots;
+
+        data.generic = new GenericNodeData(
+            transform.position.x,
+            transform.position.y,
+            transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.x,
+            transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.y,
+            interact.isNodeTracked
+        );
     }
 }
