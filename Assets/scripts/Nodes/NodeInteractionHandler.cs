@@ -194,6 +194,8 @@ public class NodeInteractionHandler : MonoBehaviour
 
         // see the variable definition for the glossary
 
+        // all these if statements define what the hold type is
+        // there are no else statements because that made more sense to me and I'm lazy
         if (Input.GetMouseButtonDown(0) && CanvasUtils.IsCursorInteract(leftEdgeTransform.gameObject, true)) {
             holdType = 2;
             CanvasUtils.SetTransparencyOfChildren(gameObject, 0.5f, false);
@@ -250,37 +252,52 @@ public class NodeInteractionHandler : MonoBehaviour
             HandleScale();
         }
 
+        // calling the PositionUI() function for all nodes that have it
+        // (i may have missed one or two)
+
+        // it's called here, not in the Update() function for the respective nodes,
+        // and i have no idea why i decided to do this
+
+        // the order is arbitrary, else statements because you can't be 2 nodes at once
         if (GetComponent<Node_Double>() != null) {
             GetComponent<Node_Double>().PositionUI();
         }
-        if (GetComponent<Node_String>() != null) {
+        else if (GetComponent<Node_String>() != null) {
             GetComponent<Node_String>().PositionUI();
         }
-        if (GetComponent<Node_Compass>() != null) {
+        else if (GetComponent<Node_Compass>() != null) {
             GetComponent<Node_Compass>().PositionUI();
         }
-        if (GetComponent<Node_ImageDisplay>() != null) {
+        else if (GetComponent<Node_ImageDisplay>() != null) {
             GetComponent<Node_ImageDisplay>().PositionUI();
         }
 
+        // the timer logic for confirming a connection loss (no NT data for a certain amount of time)
         if (connectionLoss && timeWhenConnectionLost < Time.time - timeToConfirmedLoss) {
             // TODO: show to the user when connection has been lost
             confirmedConnectionLoss = true;
         }
 
+        // making sure the parent object is the same as the background object
+        // this is done because the background object is the one actually being dealth with in code (for some reason),
+        // and I want to keep the parent synced
         GetComponent<RectTransform>().sizeDelta = backgroundTransform.GetComponent<RectTransform>().sizeDelta;
     }
 
-    // called when a hold type of 1 is triggered
+    // called when a hold type of 1 is triggered (the user starts dragging around the node)
     public void Grab() {
         holdType = 1;
         CanvasUtils.SetTransparencyOfChildren(gameObject, 0.5f, false);
     }
 
+    // this variable is explained at its definition, 
+    // but basically this is called when first placing a node,
+    // so that you have to click to place it instead of just letting go
     public void Lock() {
         isHoldLocked = true;
     }
 
+    // setting the edge object positions to what they should be
     void RefreshEdges() {
         // the recttransform component of the node
         RectTransform rect = transform.GetChild(0).GetComponent<RectTransform>();
@@ -317,6 +334,8 @@ public class NodeInteractionHandler : MonoBehaviour
         backgroundTransform.GetComponent<Image>().color = isNodeTracked ? new Color(0, 0.34f, 0.84f, 1) : new Color(1,1,1,0.1f);
     }
 
+    // handling the scale of all edges and the background object
+    // basically depening on the type of hold the Input.mousePosition variable is used to move around different edges and such
     void HandleScale() {
         if (holdType == 2) { // holding left
             UIManager.Instance.MoveAlignedEdges((int)EdgeType.Left, leftEdge, Input.mousePosition, transform.position);
@@ -340,40 +359,9 @@ public class NodeInteractionHandler : MonoBehaviour
             UIManager.Instance.MoveAlignedEdges((int)EdgeType.Right, rightEdge, Input.mousePosition, transform.position);
         }
 
+        // once everything is scaled make sure the positions are right as well
+        // (very important)
         RefreshEdges();
-    }
-
-    public void MoveEdge(int edgeType, Vector3 newPos) {
-        // the recttransform component of the node
-        RectTransform rect = transform.GetChild(0).GetComponent<RectTransform>();
-
-        if (edgeType == (int)EdgeType.Left) {
-            transform.position = new Vector3((rightEdge + (newPos - rightEdge) / 2).x, transform.position.y, 0);
-            rect.sizeDelta = new Vector2(Mathf.Abs((newPos - rightEdge).x), rect.sizeDelta.y);
-        } else if (edgeType == (int)EdgeType.Right) {
-            transform.position = new Vector3((leftEdge + (newPos - leftEdge) / 2).x, transform.position.y, 0);
-            rect.sizeDelta = new Vector2((newPos - leftEdge).x, rect.sizeDelta.y);
-        } else if (edgeType == (int)EdgeType.Bottom) {
-            transform.position = new Vector3(transform.position.x, (topEdge + (newPos - topEdge) / 2).y, 0);
-            rect.sizeDelta = new Vector2(rect.sizeDelta.x, Mathf.Abs((newPos - topEdge).y));
-        } else if (edgeType == (int)EdgeType.Top) {
-            transform.position = new Vector3(transform.position.x, (bottomEdge + (newPos - bottomEdge) / 2).y, 0);
-            rect.sizeDelta = new Vector2(rect.sizeDelta.x, (newPos - bottomEdge).y);
-        }
-    }
-
-    public Vector3 ClampAttemptedMove(Vector3 attemptedPoint, int edgeType) {
-        if (edgeType == 0) {
-            return rightEdge + new Vector3(-minWidth, 0, 0);
-        } else if (edgeType == 1) {
-            return leftEdge + new Vector3(minWidth, 0, 0);
-        } else if (edgeType == 2) {
-            return topEdge + new Vector3(0, -minHeight, 0);
-        } else if (edgeType == 3) {
-            return bottomEdge + new Vector3(0, minHeight, 0);
-        }
-        //Debug.Log("ERROR: When clamping an attempted edge move, supplied edge index does not exist! Needs to be [0..4]");
-        return attemptedPoint;
     }
 
     // based on position of other nodes, figure out where this node shoul be 
@@ -459,6 +447,45 @@ public class NodeInteractionHandler : MonoBehaviour
         UIManager.Instance.DrawPreviewNode(Input.mousePosition + offsetFromCursor, backgroundTransform.GetComponent<RectTransform>().sizeDelta);
     }
 
+    // I have no clue what these next three functions do, 
+    // just that they are VERY IMPORTANT AND SHOULD NOT BE MESSED WITH
+    // ----------------------
+    public void MoveEdge(int edgeType, Vector3 newPos) {
+        // the recttransform component of the node
+        RectTransform rect = transform.GetChild(0).GetComponent<RectTransform>();
+
+        if (edgeType == (int)EdgeType.Left) {
+            transform.position = new Vector3((rightEdge + (newPos - rightEdge) / 2).x, transform.position.y, 0);
+            rect.sizeDelta = new Vector2(Mathf.Abs((newPos - rightEdge).x), rect.sizeDelta.y);
+        } else if (edgeType == (int)EdgeType.Right) {
+            transform.position = new Vector3((leftEdge + (newPos - leftEdge) / 2).x, transform.position.y, 0);
+            rect.sizeDelta = new Vector2((newPos - leftEdge).x, rect.sizeDelta.y);
+        } else if (edgeType == (int)EdgeType.Bottom) {
+            transform.position = new Vector3(transform.position.x, (topEdge + (newPos - topEdge) / 2).y, 0);
+            rect.sizeDelta = new Vector2(rect.sizeDelta.x, Mathf.Abs((newPos - topEdge).y));
+        } else if (edgeType == (int)EdgeType.Top) {
+            transform.position = new Vector3(transform.position.x, (bottomEdge + (newPos - bottomEdge) / 2).y, 0);
+            rect.sizeDelta = new Vector2(rect.sizeDelta.x, (newPos - bottomEdge).y);
+        }
+    }
+
+    public Vector3 ClampAttemptedMove(Vector3 attemptedPoint, int edgeType) {
+        if (edgeType == 0) {
+            return rightEdge + new Vector3(-minWidth, 0, 0);
+        } else if (edgeType == 1) {
+            return leftEdge + new Vector3(minWidth, 0, 0);
+        } else if (edgeType == 2) {
+            return topEdge + new Vector3(0, -minHeight, 0);
+        } else if (edgeType == 3) {
+            return bottomEdge + new Vector3(0, minHeight, 0);
+        }
+
+        // got rid of this debug cuz it wasn't rlly doing anything and i didnt like it
+        //Debug.Log("ERROR: When clamping an attempted edge move, supplied edge index does not exist! Needs to be [0..4]");
+
+        return attemptedPoint;
+    }
+
     Vector3 Snap(Vector3 input, Vector3 target, SnappingMode mode) {
         if ((int)mode == 0) {
             return new Vector3(target.x, input.y, input.z);
@@ -472,4 +499,6 @@ public class NodeInteractionHandler : MonoBehaviour
 
         return input;
     }
+
+    // ----------------------
 }

@@ -1,0 +1,13 @@
+a few things to note:
+
+- the warning about confirmedConnectionLoss is normal, I'm just not using the variable right now
+
+a few things to do:
+
+- the PopulateRightClickMenu() functions in all the Node_ scripts should be changed to one central function for all nodes
+- there are a lot of variables in the Node_ scripts that are also in the NodeData_ scripts, 
+    just delete the copies in the Node_ scripts and use the NodeData_ ones only to reduce verbosity (low priority)
+
+- im getting sick of green windows, please implement a proper color theme system (the color picking UI is already there)
+
+- nodes can snap to the edges of other nodes even if they're on the other side of the screen, please fix that (add a distance threshold idk)
