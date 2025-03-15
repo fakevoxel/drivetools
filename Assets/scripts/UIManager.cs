@@ -330,35 +330,7 @@ public class UIManager : MonoBehaviour
             sourceInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
             comp.GetComponent<Node_Compass>().SetSourceString); // this syntax is interesting, I supply the function without () and unity knows to give it the final string as a parameter
         } else if (comp.nodeType == (int)NodeType.Field2D) {
-
-            // button to add a new robot
-            GameObject addRobotButton = Instantiate(UIPrefabs.Instance.buttonPrefab, Vector3.zero, Quaternion.identity);
-            addRobotButton.transform.SetParent(configWindow.transform.GetChild(4));
-            addRobotButton.transform.localPosition = new Vector3(0, 0, 0);
-            addRobotButton.GetComponent<UI_Button>().onPress.AddListener(
-                    () => comp.GetComponent<Node_Field2D>().AddTrackedRobot()
-                );
-
-            // for (int i = 0; i < comp.GetComponent<Node_Field2D>().robots.Count; i++) {
-            //     GameObject xInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
-            //     xInput.transform.SetParent(configWindow.transform.GetChild(4));
-            //     xInput.transform.localPosition = new Vector3(0, 0, 0);
-            //     xInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
-            //         (value) => comp.GetComponent<Node_Field2D>().SetX(value, 0)
-            //     );
-            //     GameObject yInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
-            //     yInput.transform.SetParent(configWindow.transform.GetChild(4));
-            //     yInput.transform.localPosition = new Vector3(0, -100, 0);
-            //     yInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
-            //         (value) => comp.GetComponent<Node_Field2D>().SetY(value, 0)
-            //     );
-            //     GameObject zInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
-            //     zInput.transform.SetParent(configWindow.transform.GetChild(4));
-            //     zInput.transform.localPosition = new Vector3(0, -200, 0);
-            //     zInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
-            //         (value) => comp.GetComponent<Node_Field2D>().SetRot(value, 0)
-            //     );
-            // }
+            comp.GetComponent<Node_Field2D>().PopulateConfigMenu(configWindow);
         } else if (comp.nodeType == (int)NodeType.Graph) {
             GameObject testModeButton = Instantiate(UIPrefabs.Instance.buttonPrefab, Vector3.zero, Quaternion.identity);
             testModeButton.transform.SetParent(configWindow.transform.GetChild(4));
@@ -468,6 +440,7 @@ public class UIManager : MonoBehaviour
 
                 GameObject node = SpawnAndPlaceNewNode((int)NodeType.Field2D, dataClass.generic.GetPosition(), dataClass.generic.GetSize(), dataClass.generic.isTracked, layoutObject);
                 node.GetComponent<Node_Field2D>().robots = dataClass.robots;
+                node.GetComponent<Node_Field2D>().markers = dataClass.markers;
             }
         }
     }

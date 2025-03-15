@@ -1430,6 +1430,7 @@ MonoBehaviour:
   objectSetPrefab: {fileID: 1414232719413097048, guid: d73e9c272da1ebd45bb4ad102887d4a1, type: 3}
   elementListPrefab: {fileID: 1497774390090611328, guid: d0a3929ae40e46a49a3e4aef29cfb6cb, type: 3}
   imagePrefab: {fileID: 2050176180922664969, guid: e52e82f893a4b6e4e83638e78425d2ee, type: 3}
+  robotPrefab: {fileID: 577220202807272425, guid: ce282f3c0bd551f46b87bec36aab4381, type: 3}
 --- !u!1 &227633035
 GameObject:
   m_ObjectHideFlags: 0
@@ -2157,7 +2158,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -324, y: 176}
+  m_AnchoredPosition: {x: -324, y: 133}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &391956917
@@ -2184,8 +2185,9 @@ MonoBehaviour:
   onAddNewElement:
     m_PersistentCalls:
       m_Calls: []
-  spacing: 200
+  spacing: 250
   isHorizontal: 1
+  limit: 4
   pressedElementIndex: 0
 --- !u!1 &401863133
 GameObject:
@@ -5095,6 +5097,9 @@ MonoBehaviour:
   - {fileID: 608621042}
   selectedTab: 0
   buttonToLookFor: 0
+  onChangeTabs:
+    m_PersistentCalls:
+      m_Calls: []
   runOnUpdate: 1
   colorSwitch: 1
   defaultColor: {r: 0.43529412, g: 0.3372549, b: 0.8392157, a: 1}
@@ -13111,6 +13116,9 @@ MonoBehaviour:
   tabObjects: []
   selectedTab: 0
   buttonToLookFor: 0
+  onChangeTabs:
+    m_PersistentCalls:
+      m_Calls: []
   runOnUpdate: 0
   colorSwitch: 0
   defaultColor: {r: 1, g: 1, b: 1, a: 1}

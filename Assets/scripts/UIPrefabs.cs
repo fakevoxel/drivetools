@@ -36,4 +36,7 @@ public class UIPrefabs : MonoBehaviour
     public GameObject objectSetPrefab;
     public GameObject elementListPrefab;
     public GameObject imagePrefab;
+
+    // robot prefab for the field2d node
+    public GameObject robotPrefab;
 }

@@ -30,8 +30,8 @@ public class NetworkManager : MonoBehaviour
     NetworkTable table;
 
     // these values get send to the nodes if there is no connection
-    string defaultString = "connectionloss";
-    double defaultDouble = -9999;
+    string defaultString = "null";
+    double defaultDouble = 0;
 
     void Update() {
         if (!isNetworkRunning) {

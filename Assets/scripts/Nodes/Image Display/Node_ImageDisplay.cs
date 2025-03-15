@@ -163,8 +163,8 @@ public class Node_ImageDisplay : MonoBehaviour
         newLayerButton.GetComponent<UI_Button>().onPress.AddListener(
             () => {
                 layers.Add(new ImageDisplayLayer());
-                CanvasUtils.DestroyChildren(UIManager.Instance.configWindow.transform.GetChild(4).gameObject);
-                this.PopulateConfigMenu(UIManager.Instance.configWindow);
+                CanvasUtils.DestroyChildren(window.transform.GetChild(4).gameObject);
+                this.PopulateConfigMenu(window);
             }
         );
 
