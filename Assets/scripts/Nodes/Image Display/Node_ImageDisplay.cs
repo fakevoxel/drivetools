@@ -1,72 +1,80 @@
 using System.Collections.Generic;
-using System.Reflection;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Jobs;
 using UnityEngine.UI;
+
+// TOOD: make it so you can spawn an image node and tell it to always draw one image, no conditions
 
 public class Node_ImageDisplay : MonoBehaviour
 {
-    // Data classes, unused rn but soon to be used when writing to disk
-    public GenericNodeData genericData;
     public NodeData_ImageDisplay data;
-    
-    public float xPadding;
-    public float yPadding;
 
-    // the string value been taken from NT
+    // string value been taken from NT
+    // represents the 'current state', which is compared to states defined by the user
     public string dataValue;
-    // the display layers
-    // things are split into layers so you can stack image files on top of each other
+
+    // display layers
+    // the system is split into layers so you can stack image files on top of each other
+    // why did I do it like this? not sure, it probably won't get used
     public List<ImageDisplayLayer> layers;
 
+    // interaction component of this node, handles the boring stuff like positioning
     public NodeInteractionHandler interact;
 
-    // the networktables name to use when fetching data
+    // networktables name to use when fetching data
     public string sourceString;
 
+    // the transform object that has all the image objects as its children
+    // hence the name 'container'
     public Transform dataContainer;
 
     void Awake() {
         // getting the interactionHandler component
         interact = GetComponent<NodeInteractionHandler>();
 
+        // setting the name and type
+        // type is very important
         interact.nodeName = name;
         interact.nodeType = (int)NodeType.ImageDisplay;
 
-        xPadding = 30;
-        yPadding = 30;
-
+        // initializing the layers list (or else you get null reference exceptions)
         layers = new List<ImageDisplayLayer>();
+
+        // adding one layer to start with (because what would u do with none?)
+        // no the real reason is that the UI_Tabs component used to handle the layers can't deal with 0 tabs
+        // TODO: fix that UI_Tabs problem ^^
         layers.Add(new ImageDisplayLayer());
     }
 
     // populating the right-click widget with options for this node
+    // I implemented this on a per-node basis, which was a mistake (?)
+    // i mean the code is literally the same for all nodes, except for the nodeinteractionhandler reference
+    // TODO: make this one function for all nodes?
     public void PopulateRightClickMenu() {
+        // first clear any objects that are already children of the widget
+        // this is necessary because when the widget is closed its just hidden, not cleared
         CanvasUtils.DestroyChildren(UIManager.Instance.nodeOptionsWidget.transform.GetChild(0).gameObject);
 
+        // get the rectTransform pf the widget, so we can scale it
         RectTransform bgTransform = UIManager.Instance.nodeOptionsWidget.transform.GetChild(0).GetComponent<RectTransform>();
 
-        // this could be more modular, but I don't care rn
-        // TODO: ?
-
-        // we're using a size of 200 x 60 for each option, so with two options (right now) we have 200 x 120
+        // we're using a size of 200 x 60 for each option, so with three options (right now) we have 200 x 180
         bgTransform.sizeDelta = new Vector2(200, 180);
 
         // button to open the config menu for this node
         // ----------------------------------
 
         GameObject editButton = Instantiate(UIPrefabs.Instance.textButtonPrefab, Vector3.zero, Quaternion.identity);
-
         editButton.transform.SetParent(bgTransform);
-
+        // telling the user what the button actually does
         editButton.GetComponent<TextMeshProUGUI>().text = "edit";
 
         // moving the button to the right spot on the widget
         editButton.transform.localPosition = 
         new Vector3(bgTransform.sizeDelta.x / 2, 0, 0) // the top-centre of the element
         + new Vector3(0, -bgTransform.sizeDelta.y / 3 * 0, 0); // the offset vector
-
+        
+        // telling the button what to call when its pressed
         editButton.transform.GetChild(0).GetComponent<UI_Button>().onPress.AddListener(
             () => UIManager.Instance.OpenNodeConfig(GetComponent<NodeInteractionHandler>())
         );
@@ -75,9 +83,7 @@ public class Node_ImageDisplay : MonoBehaviour
         // ----------------------------------
 
         GameObject deleteButton = Instantiate(UIPrefabs.Instance.textButtonPrefab, Vector3.zero, Quaternion.identity);
-
         deleteButton.transform.SetParent(bgTransform);
-
         deleteButton.GetComponent<TextMeshProUGUI>().text = "delete";
 
         // moving the button to the right spot on the widget
@@ -89,13 +95,11 @@ public class Node_ImageDisplay : MonoBehaviour
             () => UIManager.Instance.DeleteNode(gameObject)
         );
 
-        // button to toggle tracking of this node
+        // button to toggle tracking on/off for this node
         // ----------------------------------
 
         GameObject trackButton = Instantiate(UIPrefabs.Instance.textButtonPrefab, Vector3.zero, Quaternion.identity);
-
         trackButton.transform.SetParent(bgTransform);
-
         trackButton.GetComponent<TextMeshProUGUI>().text = "track";
 
         // moving the button to the right spot on the widget
@@ -108,17 +112,27 @@ public class Node_ImageDisplay : MonoBehaviour
         );
     }
 
+    // tell the node what NT string to use
     public void SetSourceString(string input) {
         sourceString = input;
     }
+    // this says 0 references but BEWARE!
+    // there might be objects in the scene that call this
     public void SetSourceString(TMP_InputField input) {
         SetSourceString(input.text);
     }
 
+    // why is this a function, this isn't object-oriented programming?
+    // i mean if i ever want to run code when the data value is changed...
+    // but it's changed in ONE LOCATION
+    // maybe there's an object in the scene that uses this?
     public void SetData(string value) {
         dataValue = value;
     }
 
+    // throw all the relevant variables into the NodeData_ImageDisplay class so that it can be written to disk
+    // this is called in the UIManager, which controls the writing of nodes to disk
+    // it is not called periodically!!
     public void PopulateDataClass() {
         data.sourceString = sourceString;
         data.layers = layers.ToArray();
@@ -132,22 +146,21 @@ public class Node_ImageDisplay : MonoBehaviour
         );
     }
 
+    // I found the UIManager getting pretty cluttered with the code that positioned objects on the nodeConfigWindow
+    // so, I moved most of the logic for different node types to their respective scripts
+    // anyways this is called in UIManager when the user hits 'edit' on this node
     public void PopulateConfigMenu(GameObject window) {
-        // double nodes are simple, they only have a source string and a title
-
         // create an input field for the source string
         GameObject sourceInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
-
-        // parent it to the window
         sourceInput.transform.SetParent(window.transform.GetChild(4));
-        // zero it
         sourceInput.transform.localPosition = new Vector3(0, 200, 0);
         
         // we set the text of the input field to show the user the current source string
         sourceInput.GetComponent<TMP_InputField>().text = sourceString;
+
         // when the user finishes editing, change the source string of the double node
+        // this syntax is interesting, I supply the function without () and unity knows to give it the final string as a parameter
         sourceInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
-                // this syntax is interesting, I supply the function without () and unity knows to give it the final string as a parameter
         SetSourceString);
 
         GameObject layerTabs = Instantiate(UIPrefabs.Instance.tabsPrefab, Vector3.zero, Quaternion.identity);
@@ -168,6 +181,14 @@ public class Node_ImageDisplay : MonoBehaviour
             }
         );
 
+        // UI_ObjectSetManager is a class to help with turning gameobjects on/off
+        // here it's used to toggle the condition and image lists based on what layer tab is selected
+        // its nice because you can link it directly to a UI_Tabs class
+
+        // technically there could just be one object set that does both since they're toggled at the same time, but whatever
+
+        // managing the condition (requirement) lists
+        // -----------------
         GameObject inputSet = Instantiate(UIPrefabs.Instance.objectSetPrefab, Vector3.zero, Quaternion.identity);
         inputSet.transform.SetParent(window.transform.GetChild(4));
         inputSet.transform.localPosition = Vector3.zero;
@@ -176,6 +197,8 @@ public class Node_ImageDisplay : MonoBehaviour
         inputSet.GetComponent<UI_ObjectSetManager>().controllingTabs = layerTabs.GetComponent<UI_Tabs>();
         inputSet.GetComponent<UI_ObjectSetManager>().Initialize();
 
+        // managing the image (result) lists
+        // -----------------
         GameObject imageSet = Instantiate(UIPrefabs.Instance.objectSetPrefab, Vector3.zero, Quaternion.identity);
         imageSet.transform.SetParent(window.transform.GetChild(4));
         imageSet.transform.localPosition = Vector3.zero;
@@ -184,56 +207,97 @@ public class Node_ImageDisplay : MonoBehaviour
         imageSet.GetComponent<UI_ObjectSetManager>().controllingTabs = layerTabs.GetComponent<UI_Tabs>();
         imageSet.GetComponent<UI_ObjectSetManager>().Initialize();
 
+        // each layer has a list of states, and a list of images
+        // so, we go through each layer and define those
         for (int i = 0; i < layers.Count; i++) {
+            // unity has this tricky thing where if we supply an indexer variable (the counter in a loop) to a unityaction,
+            // it will use the latest value, not the one it was when it was applied,
+            // so we have to create a local variable that gets re-defined every time
+            // if we didn't do this, everything that uses i would be equal to layers.Count instead of [0, 1, 2, ....]
             int j = i;
 
+            // UI_InputList (also reffered to as element list) is basically a row (or column) of buttons that you can add to
+            // they're used here for the required states, and the resulting images
+
+            // this element list is for the required states
             GameObject newInputList = Instantiate(UIPrefabs.Instance.elementListPrefab, Vector3.zero, Quaternion.identity);
             newInputList.transform.SetParent(window.transform.GetChild(4));
             newInputList.transform.localPosition = new Vector3(-150, -75, 0);
-            
-            for (int k = 0; k < layers[i].requiredStates.Count; k++) {
-                newInputList.GetComponent<UI_InputList>().AddNewElement();
+        
+            // making sure there is a number of buttons equal to the number of states in this list
+            // otherwise when the user added states, then closed and re-opened this menu they wouldn't show up
 
+            // TLDR: this part syncs the UI with what's actually going on
+            for (int k = 0; k < layers[i].requiredStates.Count; k++) {
+                // first we add the element object, we can let the UI_InputList do the lifting
+                newInputList.GetComponent<UI_InputList>().AddNewElement();
+                // then set the text value to whatever that state is
                 newInputList.transform.GetChild(0).GetChild(k).GetComponent<TMP_InputField>().text = layers[i].requiredStates[k];
             }
 
+            // telling the element list that when we click off of one of the input fields, it should send over the string value
             newInputList.GetComponent<UI_InputList>().onEditElement.AddListener(
                 (value) => {
                     SetState(j, newInputList.GetComponent<UI_InputList>().pressedElementIndex, value);
                 }
             );
+            // when we add a new element to the UI, a new state should be added to the backend too
             newInputList.GetComponent<UI_InputList>().onAddNewElement.AddListener(
                 () => AddNewRequiredState(j)
             );
 
             inputSet.GetComponent<UI_ObjectSetManager>().sets[i] = new UI_ObjectSet(new GameObject[]{newInputList});
 
+            // TODO: make the image buttons actually reflect the image that has been selected, 
+            // right now they're always just white and its the worst UX thing ever
+
+            // this element list is for the resulting images
             GameObject newImageList = Instantiate(UIPrefabs.Instance.elementListPrefab, Vector3.zero, Quaternion.identity);
             newImageList.transform.SetParent(window.transform.GetChild(4));
             newImageList.transform.localPosition = new Vector3(150, -75, 0);
 
+            // normally an element list uses input fields (per the prefab), but we're telling this one to use buttons
             newImageList.GetComponent<UI_InputList>().inputPrefab = UIPrefabs.Instance.buttonPrefab;
 
+            // since (for some reason) we don't actually display the selected image,
+            // all we need to do to sync up the UI is create however many buttons we need
+
+            // TLDR: also syncing UI but less work for images
             for (int k = 0; k < layers[i].images.Count; k++) {
                 newImageList.GetComponent<UI_InputList>().AddNewElement();
             }
 
+            // like for the required states, when the user edits an element we want get the new value
+            // we're using onPressElement instead here bc its buttons
+
+            // method of getting images is unique here, what we're doing is telling the UIManager to open the asset menu with GrabAssetName(),
+            // so that the user can pick an image from there,
+            // and supplying what we want to do (as a UnityAction) with the name that the user picked
+            // in this case what we want to do is SetImage()
+
+            // TLDR: keep backend synced with UI
             newImageList.GetComponent<UI_InputList>().onPressElement.AddListener(
                 () => {
                     UIManager.Instance.GrabAssetName((name) =>
                     SetImage(j, newImageList.GetComponent<UI_InputList>().pressedElementIndex, name));
                 }
             );
+            // same as the required states list, when we add a new element we want the backend to keep up
             newImageList.GetComponent<UI_InputList>().onAddNewElement.AddListener(
                 () => AddNewImage(j)
             );
 
+            // make sure the object set has a reference to this element list
             imageSet.GetComponent<UI_ObjectSetManager>().sets[j] = new UI_ObjectSet(new GameObject[]{newImageList});
         }
 
+        // we call onChangeTabs to make sure that the object sets only have one set of objects enabled
+        // since the object sets have layerTabs as the controlling tab object, this will call EnableSetOfIndex()
         layerTabs.GetComponent<UI_Tabs>().onChangeTabs.Invoke(layerTabs.GetComponent<UI_Tabs>().selectedTab);
     }
-
+    
+    // called periodically, used to deal with the image components
+    // a PositionUI() function is present on most nodes
     public void PositionUI() {
         float minDimensions = (interact.leftEdge - interact.rightEdge).magnitude < 
         (interact.topEdge - interact.bottomEdge).magnitude ? 
@@ -265,6 +329,7 @@ public class Node_ImageDisplay : MonoBehaviour
         }
     }
 
+    // why are these functions? ig in case I want to add code whenever new stuff is added
     public void AddNewRequiredState(int layerIndex) {
         layers[layerIndex].requiredStates.Add(null);
     }
@@ -272,10 +337,12 @@ public class Node_ImageDisplay : MonoBehaviour
         layers[layerIndex].images.Add(null);
     }
 
+    // functions for setting data
     public void SetImage(int layerIndex, int stateIndex, string assetName) {
         if (layers[layerIndex].images.Count <= stateIndex) {return;}
 
         layers[layerIndex].images[stateIndex] = assetName;
+        // make sure to close the asset menu so the user knows they've selected something
         UIManager.Instance.assetManagerWindow.SetActive(false);
     }
     public void SetState(int layerIndex, int stateIndex, string value) {
@@ -284,6 +351,8 @@ public class Node_ImageDisplay : MonoBehaviour
         layers[layerIndex].requiredStates[stateIndex] = value;
     }
 
+    // called periodically (inside of NetworkManager) to update the data value from networktables
+    // FetchNTDouble() is a very handy function
     public void UpdateData() {
         SetData(NetworkManager.Instance.FetchNTDouble(sourceString).ToString());
     }

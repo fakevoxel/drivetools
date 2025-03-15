@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -17,64 +16,144 @@ public enum EdgeType {
     Top,
 }
 
-// deals with ui interactions with nodes
+// deals with ui interactions with nodes, like snapping and re-sizing
+// this script is present on every node prefab
 public class NodeInteractionHandler : MonoBehaviour
 {
+    // each node type has it's own index, made easier by the NodeType enum
     public int nodeType;
+
+    // the minimum width and height that this node can ocuppy
+    // can I just say this was so annoying to get working
     public float minWidth;
     public float minHeight;
 
+    // the transform object of the background image,
+    // which is the blank image scaled to the size of the node
     public Transform backgroundTransform;
+
+    // how close do you have to be to another node to snap on to it?
+    // and yes, the nodes have a snapping system similar to KSP,
+    // just instead of snapping points you have snapping edges
     public double snappingTolerance;
+
+    // how far do you have to move the cursor for the node to un-snap itself
     public double stickyTolerance;
 
-    public int holdType; // not held, center, left edge, right, bottom, top
+    // very rarely do I write comments the first time, usually its bc something is a pain to remember
+    // as explained somewhere below this defines how the user is interacting with a node
+
+    // here's the key:
+        // 0 = not touching the node (obviously)
+        // 1 = node is held (dragging it around)
+
+        // 2 = left edge
+        // 3 = right edge
+        // 4 = bottom edge
+        // 5 = top edge
+
+        // 6 = top left corner
+        // 7 = bottom left corner
+        // 8 = top right corner
+        // 9 = bottom right corner
+    // ------------
+    public int holdType;
+
+    // whether the user's cursor is over the node at the moment
     public bool isHoveringOverNode;
+
+    // whether the user can drop the node just by letting go of left mouse,
+    // (like when dragging nodes around, value is false),
+    // or whether they have to click to place it,
+    // (like when first placing a node, value is true)
     public bool isHoldLocked;
+
+    // when the node is being held (dragged around),
+    // this defines where the center was compared to the cursor whent the user picked up the node
     private Vector3 offsetFromCursor;
+    // I actually don't know how this is different 
+    // TODO: know
     private Vector3 offsetFromCursorRaw;
 
-    // bottom left and top right points of the node
+
+    // bottom left and top right points of the node,
+    // these (I think) represent the pixel (screen) positions of the four corners
     public Vector3 leftEdge, rightEdge, bottomEdge, topEdge;
+
+    // there are physical objects for all edges and corners,
+    // both so they can be seen by the user (think google slides),
+    // and because they're positions are actually referenced in the backend here
+    // basically THEY ARE NECESSARY
+
+    // transform objects for all four edges
     public Transform leftEdgeTransform, rightEdgeTransform, bottomEdgeTransform, topEdgeTransform;
+    // transform objects for all four corners
     public Transform topLeftTransform, bottomLeftTransform, topRightTransform, bottomRightTransform;
 
+    // the name of the node, obviously
     public string nodeName;
+
+    // a boolean that turns to true if there is no NT data available, 
+    // and false if there is
+    // it updates IMMEDIATELY
     private bool connectionLoss;
+    // same thing as above, but it only becomes true after a solid time of no connection has passed
+    // THIS IS THE ONE TO USE if you want to show the user when a node isn't receiving data
     private bool confirmedConnectionLoss;
+    // the program time (Time.time) when connection was first lost (first boolean set to true)
+    // this resets every time the boolean goes from true to false and back again
     private double timeWhenConnectionLost;
+    // how long exactly before connection loss is confirmed and the second boolean is set to true
     private double timeToConfirmedLoss = 1.5;
 
     // whether or not the node is flagged for recording
+    // being 'tracked' means when the users hits record,
+    // this node will start logging data
     public bool isNodeTracked;
 
     void Awake() {
+        // instead of defining stuff in the inspector, it's quicker just to leverage the SearchChildrenForName() function
+        // after all, there are many instances of this script, one on every node prefab
         backgroundTransform = CanvasUtils.SearchChildrenForName(gameObject, "bg");
 
+        // edges
         leftEdgeTransform = CanvasUtils.SearchChildrenForName(gameObject, "leftEdge");
         rightEdgeTransform = CanvasUtils.SearchChildrenForName(gameObject, "rightEdge");
         bottomEdgeTransform = CanvasUtils.SearchChildrenForName(gameObject, "bottomEdge");
         topEdgeTransform = CanvasUtils.SearchChildrenForName(gameObject, "topEdge");
 
+        // corners
         topLeftTransform = CanvasUtils.SearchChildrenForName(gameObject, "topLeftCorner");
         bottomLeftTransform = CanvasUtils.SearchChildrenForName(gameObject, "bottomLeftCorner");
         topRightTransform = CanvasUtils.SearchChildrenForName(gameObject, "topRightCorner");
         bottomRightTransform = CanvasUtils.SearchChildrenForName(gameObject, "bottomRightCorner");
     }
 
+    // this is a public function both so I can insert logic here,
+    // and so that I can assign buttons to it in the inspector
+
+    // when a node is 'tracked' it's essentally flagged for data recording
+    // if the user hits record, all tracked nodes will start logging data
     public void ToggleTrack() {
         isNodeTracked = !isNodeTracked;
     }
 
-    public void SetName(string newName) {
-        nodeName = newName;
-    }
+    // this function has no references, 
+    // but its still probably being called in the inspector!
+    // (BEWARE AND DONT DELETE!!)
     public void SetName(TMP_InputField input) {
         nodeName = input.text;
     }
 
+    // sort of a misc. function for all periodic logic
+
+    // when I started this project I gave the UIManager the only call to Update(), 
+    // and everything else was called from the UIManager's Update() function
+    // this kept the order of logic consistent and easy to debug
+
+    // since then I have given most nodes calls to the Update() function
     public void Refresh() {
-        // the recttransform component of the node
+        // the recttransform component of the node, so I don't have to call GetComponent() 500 times
         RectTransform rect = transform.GetChild(0).GetComponent<RectTransform>();
         
         if (holdType == 1 || holdType == 0) {
@@ -109,6 +188,11 @@ public class NodeInteractionHandler : MonoBehaviour
 
             isHoveringOverNode = false;
         }
+
+        // the holdType variable is just an easy way of knowing how the player is interacting with this node
+        // like, are they messing with the top-left corner? the left edge?
+
+        // see the variable definition for the glossary
 
         if (Input.GetMouseButtonDown(0) && CanvasUtils.IsCursorInteract(leftEdgeTransform.gameObject, true)) {
             holdType = 2;
