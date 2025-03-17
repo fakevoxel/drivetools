@@ -1,5 +1,7 @@
 using UnityEngine;
 
+// I kept adding prefab objects to the UIManager, and that script gets cluttered fast
+// so, I moved them all here
 public class UIPrefabs : MonoBehaviour
 {
     private static UIPrefabs _instance;

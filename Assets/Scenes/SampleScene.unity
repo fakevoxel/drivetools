@@ -3235,6 +3235,7 @@ MonoBehaviour:
   isConnectedIcon: {fileID: 1851278863}
   ipDisplay: {fileID: 57900119}
   isNetworkRunning: 0
+  clientLogInterval: 1
 --- !u!114 &583078172
 MonoBehaviour:
   m_ObjectHideFlags: 0

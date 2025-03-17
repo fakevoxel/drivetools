@@ -2,7 +2,6 @@ using UnityEngine;
 using FRC.NetworkTables;
 using TMPro;
 using UnityEngine.UI;
-using System.Linq;
 
 public class NetworkManager : MonoBehaviour
 {
@@ -28,11 +27,18 @@ public class NetworkManager : MonoBehaviour
     public Image isConnectedIcon;
     public TextMeshProUGUI ipDisplay;
     public bool isNetworkRunning;
-    NetworkTable table;
+    // the dashboard works off of the SmartDashboard networktable, so right now I just have a variable to store that
+    private NetworkTable table;
 
     // these values get send to the nodes if there is no connection
     string defaultString = "null";
     double defaultDouble = 0;
+    // timer variable for debugging the number of connected clients
+    float lastClientLogTime;
+    // log interval
+    public float clientLogInterval;
+
+    private bool gotTable;
 
     void Update() {
         if (!isNetworkRunning) {
@@ -40,24 +46,21 @@ public class NetworkManager : MonoBehaviour
             isNetworkRunning = true;
         }
 
-        // was gonna test a bug that killed photonvision
-        //Debug.Log(NetworkTable.Connections().Count);
+        if (Time.time > lastClientLogTime + clientLogInterval) {
+            lastClientLogTime = Time.time;
+            Debug.Log("Number of networktables connections: " + NetworkTableInstance.Default.GetConnections().Length);
+        }
 
         // Right now using the smartdashboard table only
         // TODO: add functionality to switch between tables
-        if (NetworkTableInstance.Default.GetConnections().ToArray().Length > 0) {
-            table = NetworkTableInstance.Default.GetTable("SmartDashboard");
+        if (NetworkTableInstance.Default.GetConnections().Length > 0) {
+            if (!gotTable) {
+                gotTable = true;
+                table = NetworkTableInstance.Default.GetTable("SmartDashboard");
+            }
 
             UpdateAllNodeData(table);
             isConnectedIcon.color = Color.green;
-            
-            string[] keys = new string[table.GetSubTable("Driver Select").GetKeys().Count];
-            table.GetSubTable("Driver Select").GetKeys().CopyTo(keys);
-
-            // if (keys.Length > 0) {
-            //     Debug.Log(keys[4]);
-            //     Debug.Log(table.GetSubTable("Driver Select").GetString(".type"));
-            // }
         }
         else {
             isConnectedIcon.color = Color.red;
@@ -83,35 +86,37 @@ public class NetworkManager : MonoBehaviour
         }
     }   
 
-    public void RetrieveAllNodes() {
-        string[] doubleKeys = new string[table.GetKeys(NtType.Double).Count];
-        table.GetKeys(NtType.Double).CopyTo(doubleKeys);
+    // public void RetrieveAllNodes() {
+    //     string[] doubleKeys = new string[table.GetKeys(NtType.Double).Count];
+    //     table.GetKeys(NtType.Double).CopyTo(doubleKeys);
         
-        for (int i = 0; i < doubleKeys.Length; i++) {
-            if (!UIManager.Instance.HasActiveNodeWithSource((int)NodeType.Double, doubleKeys[i])) {
-                UIManager.Instance.SpawnAndPlaceNewNode((int)NodeType.Double, doubleKeys[i]);
-            }
-        }
-    }
+    //     for (int i = 0; i < doubleKeys.Length; i++) {
+    //         if (!UIManager.Instance.HasActiveNodeWithSource((int)NodeType.Double, doubleKeys[i])) {
+    //             UIManager.Instance.SpawnAndPlaceNewNode((int)NodeType.Double, doubleKeys[i]);
+    //         }
+    //     }
+    // }
 
     // get a double off networktables using a name
     public double FetchNTDouble(string key) {
-        if (table == null || NetworkTableInstance.Default.GetConnections().ToArray().Length <= 0) {return defaultDouble;}
+        if (!gotTable) {return defaultDouble;}
         double val = table.GetEntry(key).GetDouble(defaultDouble);
         return val;
     }
     // get a string off networktables using a name
     public string FetchNTString(string key) {
-        if (table == null || NetworkTableInstance.Default.GetConnections().ToArray().Length <= 0) {return defaultString;}
+        if (!gotTable) {return defaultString;}
         string val = table.GetEntry(key).GetString(defaultString);
         return val;
     }
 
     public void InitializeNetworkTablesClient() {
-        InitializeNetworkTablesClient();
+        Debug.Log("Starting networktables...");
+        NetworkTableInstance.Default.StartClientTeam(2386);
     }
 
     public void CloseNetworkTables() {
-        CloseNetworkTables();
+        Debug.Log("Stopping networktables...");
+        NetworkTableInstance.Default.StopClient();
     }
 }
