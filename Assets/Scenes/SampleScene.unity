@@ -1430,7 +1430,7 @@ MonoBehaviour:
   objectSetPrefab: {fileID: 1414232719413097048, guid: d73e9c272da1ebd45bb4ad102887d4a1, type: 3}
   elementListPrefab: {fileID: 1497774390090611328, guid: d0a3929ae40e46a49a3e4aef29cfb6cb, type: 3}
   imagePrefab: {fileID: 2050176180922664969, guid: e52e82f893a4b6e4e83638e78425d2ee, type: 3}
-  robotPrefab: {fileID: 577220202807272425, guid: ce282f3c0bd551f46b87bec36aab4381, type: 3}
+  robotPrefab: {fileID: 6600850344121734635, guid: ce282f3c0bd551f46b87bec36aab4381, type: 3}
 --- !u!1 &227633035
 GameObject:
   m_ObjectHideFlags: 0

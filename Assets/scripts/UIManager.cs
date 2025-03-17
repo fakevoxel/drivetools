@@ -111,6 +111,8 @@ public class UIManager : MonoBehaviour
         PopulateNodeData();
         // save all of the layouts to disk, to be loaded when the user opens the program again
         SaveUtils.SaveLayouts(AppData.Instance.layouts.ToArray());
+
+        NetworkManager.Instance.CloseNetworkTables();
     }
 
     // going through EVERY SINGLE active noded and populating its respective NodeData class

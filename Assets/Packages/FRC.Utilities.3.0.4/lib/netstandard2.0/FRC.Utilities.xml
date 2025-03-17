@@ -1,0 +1,508 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FRC.Utilities</name>
+    </assembly>
+    <members>
+        <member name="T:FRC.CachedNativeString">
+            <summary>
+            Holds a Cached UTF8 string to pass to native code. There is no way to initialize or dispose of this
+            string from user code.
+            </summary>
+        </member>
+        <member name="F:FRC.CachedNativeString.Buffer">
+            <summary>
+            Pointer to this string, null terminated. Do not modify this pointer.
+            </summary>
+        </member>
+        <member name="F:FRC.CachedNativeString.Length">
+            <summary>
+            The Length of this string without the null terminator;
+            </summary>
+        </member>
+        <member name="M:FRC.CachedNativeString.ToString">
+            <summary>
+            Gets the string
+            </summary>
+            <returns>The contained string</returns>
+        </member>
+        <member name="T:FRC.DisposableNativeString">
+            <summary>
+            Holds a UTF8 string to pass to native code. Make sure to properly dispose of this to avoid a memory leak
+            </summary>
+        </member>
+        <member name="F:FRC.DisposableNativeString.Buffer">
+            <summary>
+            Pointer to this string, null terminated. Do not modify this pointer.
+            </summary>
+        </member>
+        <member name="F:FRC.DisposableNativeString.Length">
+            <summary>
+            The Length of this string without the null terminator;
+            </summary>
+        </member>
+        <member name="M:FRC.DisposableNativeString.#ctor(System.String)">
+            <summary>
+            Creates a new UTF8 string from a managed string
+            </summary>
+            <param name="vStr">The managed string</param>
+        </member>
+        <member name="M:FRC.DisposableNativeString.Dispose">
+            <summary>
+            Disposes of the native string
+            </summary>
+        </member>
+        <member name="M:FRC.DisposableNativeString.ToString">
+            <summary>
+            Gets the string
+            </summary>
+            <returns>The contained string</returns>
+        </member>
+        <member name="T:FRC.ILGeneration.CalliILGenerator">
+            <summary>
+            Generator for generating CallI IL calls
+            </summary>
+        </member>
+        <member name="M:FRC.ILGeneration.CalliILGenerator.#ctor">
+            <summary>
+            Construct a new Calli il generator
+            </summary>
+        </member>
+        <member name="M:FRC.ILGeneration.CalliILGenerator.GenerateMethod(System.Reflection.Emit.ILGenerator,System.Type,System.Type[],System.IntPtr,System.Boolean)">
+            <summary>
+            Generate a native calling method
+            </summary>
+            <param name="generator"></param>
+            <param name="returnType"></param>
+            <param name="parameters"></param>
+            <param name="nativeFp"></param>
+            <param name="isInstance"></param>
+        </member>
+        <member name="T:FRC.ILGeneration.IFunctionPointerLoader">
+            <summary>
+            Interface for loading a function pointer
+            </summary>
+        </member>
+        <member name="M:FRC.ILGeneration.IFunctionPointerLoader.GetProcAddress(System.String)">
+            <summary>
+            Get a function pointer for a function name
+            </summary>
+            <param name="name"></param>
+            <returns></returns>
+        </member>
+        <member name="T:FRC.ILGeneration.ILHelpers">
+            <summary>
+            Helpers for IL testing
+            </summary>
+        </member>
+        <member name="M:FRC.ILGeneration.ILHelpers.VerifyBlittableParameters(System.Type,System.Type[])">
+            <summary>
+            Test if parameters are blittable
+            </summary>
+            <param name="returnType"></param>
+            <param name="parameters"></param>
+        </member>
+        <member name="T:FRC.ManagedString">
+            <summary>
+            Contains a UTF8 string whos memory is owned in managed memory
+            </summary>
+        </member>
+        <member name="P:FRC.ManagedString.Buffer">
+            <summary>
+            The buffer to the string. Do not modify this array. Null terminated
+            </summary>
+        </member>
+        <member name="P:FRC.ManagedString.Length">
+            <summary>
+            The length of this string, not including the null terminator
+            </summary>
+        </member>
+        <member name="M:FRC.ManagedString.#ctor(System.String)">
+            <summary>
+            Constructs a managed UTF8 string from a C# string
+            </summary>
+            <param name="str"></param>
+        </member>
+        <member name="M:FRC.ManagedString.GetHashCode">
+            <summary>
+            Gets a Hash Code for this string
+            </summary>
+            <returns>The hash code</returns>
+        </member>
+        <member name="M:FRC.ManagedString.Equals(System.Object)">
+            <summary>
+            Checks if an object is equal to this string
+            </summary>
+            <param name="obj">The object to check</param>
+            <returns>True if the objects are equal</returns>
+        </member>
+        <member name="M:FRC.ManagedString.ToString">
+            <summary>
+            Returns the contents of this string
+            </summary>
+            <returns>The contents of this string</returns>
+        </member>
+        <member name="T:FRC.NativeLibraryUtilities.EmbeddedLibraryLoader">
+            <summary>
+             Library loader for embedded devices
+             </summary>
+        </member>
+        <member name="P:FRC.NativeLibraryUtilities.EmbeddedLibraryLoader.NativeLibraryHandle">
+            <inheritdoc/>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.EmbeddedLibraryLoader.FRC#NativeLibraryUtilities#ILibraryLoader#LoadLibrary(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.EmbeddedLibraryLoader.TryLoadLibrary(System.String)">
+            <summary>
+            Try to load a native library from a path
+            </summary>
+            <param name="filename"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.EmbeddedLibraryLoader.FRC#ILGeneration#IFunctionPointerLoader#GetProcAddress(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.EmbeddedLibraryLoader.FRC#NativeLibraryUtilities#ILibraryLoader#UnloadLibrary">
+            <inheritdoc/>
+        </member>
+        <member name="T:FRC.NativeLibraryUtilities.ILibraryInformation">
+            <summary>
+            Interface for getting information about a loaded native library.
+            </summary>
+        </member>
+        <member name="P:FRC.NativeLibraryUtilities.ILibraryInformation.LibraryLoader">
+            <summary>
+            The LibraryLoader used to load this library
+            </summary>
+        </member>
+        <member name="P:FRC.NativeLibraryUtilities.ILibraryInformation.LibraryLocation">
+            <summary>
+            The location on disk of the native library
+            </summary>
+        </member>
+        <member name="P:FRC.NativeLibraryUtilities.ILibraryInformation.OsType">
+            <summary>
+            The OS Type of the loaded system.
+            </summary>
+        </member>
+        <member name="P:FRC.NativeLibraryUtilities.ILibraryInformation.UsingTempFile">
+            <summary>
+            Gets if the native library was extracted to the temp directory
+            </summary>
+        </member>
+        <member name="T:FRC.NativeLibraryUtilities.ILibraryLoader">
+            <summary>
+            Interface for platform specific native interface to the library
+            </summary>
+        </member>
+        <member name="P:FRC.NativeLibraryUtilities.ILibraryLoader.NativeLibraryHandle">
+            <summary>
+            Gets the native library handle for the library
+            </summary>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.ILibraryLoader.LoadLibrary(System.String)">
+            <summary>
+            Loads the library from the specified file name
+            </summary>
+            <param name="filename"></param>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.ILibraryLoader.TryLoadLibrary(System.String)">
+            <summary>
+            Tires to load library from specified file name
+            </summary>
+            <param name="filename"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.ILibraryLoader.UnloadLibrary">
+            <summary>
+            Unloads the native library
+            </summary>
+        </member>
+        <member name="T:FRC.NativeLibraryUtilities.LinuxLibraryLoader">
+            <summary>
+            This class handles native libraries on Linux
+            </summary>
+        </member>
+        <member name="P:FRC.NativeLibraryUtilities.LinuxLibraryLoader.NativeLibraryHandle">
+            <inheritdoc/>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.LinuxLibraryLoader.FRC#NativeLibraryUtilities#ILibraryLoader#LoadLibrary(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.LinuxLibraryLoader.TryLoadLibrary(System.String)">
+            <summary>
+            Try to load a native library from a path
+            </summary>
+            <param name="filename"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.LinuxLibraryLoader.FRC#ILGeneration#IFunctionPointerLoader#GetProcAddress(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.LinuxLibraryLoader.FRC#NativeLibraryUtilities#ILibraryLoader#UnloadLibrary">
+            <inheritdoc/>
+        </member>
+        <member name="T:FRC.NativeLibraryUtilities.MacOsLibraryLoader">
+            <summary>
+            This class handles native libraries on Mac OS
+            </summary>
+        </member>
+        <member name="P:FRC.NativeLibraryUtilities.MacOsLibraryLoader.NativeLibraryHandle">
+            <inheritdoc/>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.MacOsLibraryLoader.FRC#NativeLibraryUtilities#ILibraryLoader#TryLoadLibrary(System.String)">
+            <summary>
+            Try to load a native library from a path
+            </summary>
+            <param name="filename"></param>
+            <returns></returns>
+        </member>
+        <member name="T:FRC.NativeLibraryUtilities.NativeCallAttribute">
+            <summary>
+            Specifies that the attributed field should be considered a target for native initialization
+            </summary>
+        </member>
+        <member name="P:FRC.NativeLibraryUtilities.NativeCallAttribute.NativeName">
+            <summary>
+            Gets the native name for this field if set.
+            </summary>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.NativeCallAttribute.#ctor">
+            <summary>
+            Initializes a new instance of <see cref="T:FRC.NativeLibraryUtilities.NativeCallAttribute"/>,
+            using the name of the field as the native name.
+            </summary>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.NativeCallAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of <see cref="T:FRC.NativeLibraryUtilities.NativeCallAttribute"/>,
+            with the name of the native method passed in.
+            </summary>
+            <param name="nativeName"></param>
+        </member>
+        <member name="T:FRC.NativeLibraryUtilities.NativeLibraryLoader">
+            <summary>
+            This class handles loading of a native library
+            </summary>
+        </member>
+        <member name="P:FRC.NativeLibraryUtilities.NativeLibraryLoader.LibraryLoader">
+            <inheritdoc/>
+        </member>
+        <member name="P:FRC.NativeLibraryUtilities.NativeLibraryLoader.OsType">
+            <inheritdoc/>
+        </member>
+        <member name="P:FRC.NativeLibraryUtilities.NativeLibraryLoader.UsingTempFile">
+            <inheritdoc/>
+        </member>
+        <member name="P:FRC.NativeLibraryUtilities.NativeLibraryLoader.LibraryLocation">
+            <inheritdoc/>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.NativeLibraryLoader.CheckIsRoboRio">
+            <summary>
+            Checks if the current system is a roboRIO
+            </summary>
+            <returns>True if running on a roboRIO</returns>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.NativeLibraryLoader.CheckIsRaspbian">
+            <summary>
+            Checks if the current system is Raspbian
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.NativeLibraryLoader.AddLibraryLocation(FRC.NativeLibraryUtilities.OsType,System.String)">
+            <summary>
+            Add a file location to be used when automatically searching for a library to load
+            </summary>
+            <param name="osType">The OsType to associate with the file</param>
+            <param name="libraryName">The file to load on that OS</param>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.NativeLibraryLoader.LoadNativeLibrary``1(FRC.NativeLibraryUtilities.ILibraryLoader,System.String,System.Boolean,System.String)">
+            <summary>
+            Loads a native library using the specified loader and file
+            </summary>
+            <typeparam name="T">The type containing the native resource, if it is embedded.</typeparam>
+            <param name="loader">The LibraryLoader to use</param>
+            <param name="location">The file location. Can be either an embedded resource, or a direct file location</param>
+            <param name="directLoad">True to load the file directly from disk, otherwise false to extract from embedded</param>
+            <param name="extractLocation">The location to extract to if the file is embedded. On null, it extracts to a temp file</param>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.NativeLibraryLoader.LoadNativeLibrary``1(System.String,System.Boolean,System.String)">
+            <summary>
+            Loads a native library using the specified file. The OS is determined automatically
+            </summary>
+            <typeparam name="T">The type containing the native resource, if it is embedded.</typeparam>
+            <param name="location">The file location. Can be either an embedded resource, or a direct file location</param>
+            <param name="directLoad">True to load the file directly from disk, otherwise false to extract from embedded</param>
+            <param name="extractLocation">The location to extract to if the file is embedded. On null, it extracts to a temp file</param>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.NativeLibraryLoader.LoadNativeLibrary``1(System.Boolean,System.String)">
+            <summary>
+            Loads a native library, using locations added using <see cref="M:FRC.NativeLibraryUtilities.NativeLibraryLoader.AddLibraryLocation(FRC.NativeLibraryUtilities.OsType,System.String)"/>
+            </summary>
+            <typeparam name="T">The type containing the native resource, if it is embedded.</typeparam>
+            <param name="directLoad">True to load the file directly from disk, otherwise false to extract from embedded</param>
+            <param name="extractLocation">The location to extract to if the file is embedded. On null, it extracts to a temp file</param>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.NativeLibraryLoader.TryLoadNativeLibraryPath(System.String)">
+            <summary>
+            Try to load a native library directly from a path
+            </summary>
+            <param name="libraryName"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.NativeLibraryLoader.LoadNativeLibraryFromAssembly(System.Reflection.Assembly,System.Boolean)">
+            <summary>
+            Loads a native library with a reflected assembly holding the native libraries
+            </summary>
+            <param name="assembly">The assembly to load from</param>
+            <param name="localLoadOnRio">True to force a local load on the RoboRIO</param>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.NativeLibraryLoader.LoadNativeLibraryFromReflectedAssembly(System.String,System.Boolean)">
+            <summary>
+            Loads a native library with a reflected assembly holding the native libraries
+            </summary>
+            <param name="assemblyName">The name of the assembly to reflect into and load from</param>
+            <param name="localLoadOnRio">True to force a local load on the RoboRIO</param>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.NativeLibraryLoader.LoadNativeInterface``1">
+            <summary>
+            Load a native interface
+            </summary>
+            <typeparam name="T"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.NativeLibraryLoader.GetOsType">
+            <summary>
+            Gets the OS Type of the current running system.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:FRC.NativeLibraryUtilities.OsType">
+            <summary>
+            Enumeration of the OS type for this system.
+            </summary>
+        </member>
+        <member name="F:FRC.NativeLibraryUtilities.OsType.None">
+            <summary>
+            OS Type not found
+            </summary>
+        </member>
+        <member name="F:FRC.NativeLibraryUtilities.OsType.Windows32">
+            <summary>
+            Windows 32 bit
+            </summary>
+        </member>
+        <member name="F:FRC.NativeLibraryUtilities.OsType.Windows64">
+            <summary>
+            Windows 64 bit
+            </summary>
+        </member>
+        <member name="F:FRC.NativeLibraryUtilities.OsType.Linux32">
+            <summary>
+            Linux 32 bit
+            </summary>
+        </member>
+        <member name="F:FRC.NativeLibraryUtilities.OsType.Linux64">
+            <summary>
+            Linux 64 bit
+            </summary>
+        </member>
+        <member name="F:FRC.NativeLibraryUtilities.OsType.MacOs32">
+            <summary>
+            Mac OS 32 bit
+            </summary>
+        </member>
+        <member name="F:FRC.NativeLibraryUtilities.OsType.MacOs64">
+            <summary>
+            Mac OS 64 bit
+            </summary>
+        </member>
+        <member name="F:FRC.NativeLibraryUtilities.OsType.roboRIO">
+            <summary>
+            FRC roboRIO
+            </summary>
+        </member>
+        <member name="F:FRC.NativeLibraryUtilities.OsType.LinuxAarch64">
+            <summary>
+            Linux Arm Hard Float (Not Raspbian)
+            </summary>
+        </member>
+        <member name="F:FRC.NativeLibraryUtilities.OsType.LinuxRaspbian">
+            <summary>
+            Linux Raspbian
+            </summary>
+        </member>
+        <member name="T:FRC.NativeLibraryUtilities.WindowsLibraryLoader">
+            <summary>
+            This class handles native libraries on Windows
+            </summary>
+        </member>
+        <member name="P:FRC.NativeLibraryUtilities.WindowsLibraryLoader.NativeLibraryHandle">
+            <inheritdoc/>
+        </member>
+        <member name="M:FRC.NativeLibraryUtilities.WindowsLibraryLoader.TryLoadLibrary(System.String)">
+            <summary>
+            Try to load a native library from a path
+            </summary>
+            <param name="filename"></param>
+            <returns></returns>
+        </member>
+        <member name="T:FRC.UTF8String">
+            <summary>
+            Utility class for working with UTF8 string getting passed to native code.
+            </summary>
+        </member>
+        <member name="M:FRC.UTF8String.CreateCachedUTF8String(System.String)">
+            <summary>
+            Creates a UTF8 string that will be cached, using the already cached string is already created
+            </summary>
+            <param name="str">The string to cache</param>
+            <returns>The cached UTF8 string</returns>
+        </member>
+        <member name="M:FRC.UTF8String.CreateUTF8String(System.String)">
+            <summary>
+            Creates a UTF8 null termincated string and stores it in a ManagedString
+            </summary>
+            <param name="str">The string to create as UTF8</param>
+            <returns>The UTF8 string</returns>
+        </member>
+        <member name="M:FRC.UTF8String.CreateUTF8DisposableString(System.String)">
+            <summary>
+            Creates a UTF8 null termincated native string that can be disposed.
+            </summary>
+            <param name="str">The string to create as UTF8</param>
+            <returns>The native UTF8 string</returns>
+        </member>
+        <member name="M:FRC.UTF8String.ReadUTF8String(System.IntPtr,System.UIntPtr)">
+            <summary>
+            Reads a UTF8 string from a native pointer.
+            </summary>
+            <param name="str">The pointer to read from</param>
+            <param name="size">The length of the string</param>
+            <returns>The managed string</returns>
+        </member>
+        <member name="M:FRC.UTF8String.ReadUTF8String(System.Byte*,System.UIntPtr)">
+            <summary>
+            Reads a UTF8 string from a native pointer.
+            </summary>
+            <param name="str">The pointer to read from</param>
+            <param name="size">The length of the string</param>
+            <returns>The managed string</returns>
+        </member>
+        <member name="M:FRC.UTF8String.ReadUTF8String(System.IntPtr)">
+            <summary>
+            Reads a UTF8 string from a null termincated native pointer
+            </summary>
+            <param name="str">The pointer to read from (must be null terminated)</param>
+            <returns>The managed string</returns>
+        </member>
+        <member name="M:FRC.UTF8String.ReadUTF8String(System.Byte*)">
+            <summary>
+            Reads a UTF8 string from a null termincated native pointer
+            </summary>
+            <param name="str">The pointer to read from (must be null terminated)</param>
+            <returns>The managed string</returns>
+        </member>
+    </members>
+</doc>

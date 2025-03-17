@@ -1,7 +1,8 @@
 using UnityEngine;
-using NetworkTables;
+using FRC.NetworkTables;
 using TMPro;
 using UnityEngine.UI;
+using System.Linq;
 
 public class NetworkManager : MonoBehaviour
 {
@@ -39,14 +40,24 @@ public class NetworkManager : MonoBehaviour
             isNetworkRunning = true;
         }
 
+        // was gonna test a bug that killed photonvision
+        //Debug.Log(NetworkTable.Connections().Count);
+
         // Right now using the smartdashboard table only
         // TODO: add functionality to switch between tables
-        table = NetworkTable.GetTable("SmartDashboard");
+        if (NetworkTableInstance.Default.GetConnections().ToArray().Length > 0) {
+            table = NetworkTableInstance.Default.GetTable("SmartDashboard");
 
-        if (table.IsConnected) {
             UpdateAllNodeData(table);
-
             isConnectedIcon.color = Color.green;
+            
+            string[] keys = new string[table.GetSubTable("Driver Select").GetKeys().Count];
+            table.GetSubTable("Driver Select").GetKeys().CopyTo(keys);
+
+            // if (keys.Length > 0) {
+            //     Debug.Log(keys[4]);
+            //     Debug.Log(table.GetSubTable("Driver Select").GetString(".type"));
+            // }
         }
         else {
             isConnectedIcon.color = Color.red;
@@ -85,20 +96,22 @@ public class NetworkManager : MonoBehaviour
 
     // get a double off networktables using a name
     public double FetchNTDouble(string key) {
-        double val = table.GetNumber(key, defaultDouble);
+        if (table == null || NetworkTableInstance.Default.GetConnections().ToArray().Length <= 0) {return defaultDouble;}
+        double val = table.GetEntry(key).GetDouble(defaultDouble);
         return val;
     }
     // get a string off networktables using a name
     public string FetchNTString(string key) {
-        string val = table.GetString(key, defaultString);
+        if (table == null || NetworkTableInstance.Default.GetConnections().ToArray().Length <= 0) {return defaultString;}
+        string val = table.GetEntry(key).GetString(defaultString);
         return val;
     }
 
     public void InitializeNetworkTablesClient() {
-        NetworkTable.SetClientMode();
-        NetworkTable.SetTeam(AppData.Instance.teamNumber); 
-        NetworkTable.SetIPAddress(AppData.Instance.robotRadioIP);
-        NetworkTable.SetDSClientEnabled(false);
-        NetworkTable.Initialize();
+        InitializeNetworkTablesClient();
+    }
+
+    public void CloseNetworkTables() {
+        CloseNetworkTables();
     }
 }

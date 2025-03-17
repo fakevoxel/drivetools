@@ -44,12 +44,12 @@ public class Node_Field2D : MonoBehaviour
     }
 
     void Update() {
-        if ((interact.leftEdge - interact.rightEdge).magnitude < (interact.topEdge - interact.bottomEdge).magnitude * 2.181043663471778f) {
-            fieldImage.GetComponent<RectTransform>().sizeDelta = new Vector2((interact.leftEdge - interact.rightEdge).magnitude, (interact.leftEdge - interact.rightEdge).magnitude * 0.45849609375f);
-            fieldBG.GetComponent<RectTransform>().sizeDelta = new Vector2((interact.leftEdge - interact.rightEdge).magnitude, (interact.leftEdge - interact.rightEdge).magnitude * 0.45849609375f);
+        if ((interact.leftEdge - interact.rightEdge).magnitude < (interact.topEdge - interact.bottomEdge).magnitude * 2.17433234421365f) {
+            fieldImage.GetComponent<RectTransform>().sizeDelta = new Vector2((interact.leftEdge - interact.rightEdge).magnitude, (interact.leftEdge - interact.rightEdge).magnitude * 0.4599112930740362f);
+            fieldBG.GetComponent<RectTransform>().sizeDelta = new Vector2((interact.leftEdge - interact.rightEdge).magnitude, (interact.leftEdge - interact.rightEdge).magnitude * 0.4599112930740362f);
         } else {
-            fieldImage.GetComponent<RectTransform>().sizeDelta = new Vector2((interact.topEdge - interact.bottomEdge).magnitude * 2.181043663471778f, (interact.topEdge - interact.bottomEdge).magnitude);
-            fieldBG.GetComponent<RectTransform>().sizeDelta = new Vector2((interact.topEdge - interact.bottomEdge).magnitude * 2.181043663471778f, (interact.topEdge - interact.bottomEdge).magnitude);
+            fieldImage.GetComponent<RectTransform>().sizeDelta = new Vector2((interact.topEdge - interact.bottomEdge).magnitude * 2.17433234421365f, (interact.topEdge - interact.bottomEdge).magnitude);
+            fieldBG.GetComponent<RectTransform>().sizeDelta = new Vector2((interact.topEdge - interact.bottomEdge).magnitude * 2.17433234421365f, (interact.topEdge - interact.bottomEdge).magnitude);
         }
 
         if (robotVisualContainer.childCount != robots.Count) {
@@ -378,10 +378,14 @@ public class Node_Field2D : MonoBehaviour
         + new Vector3(MetersToPixels(robotData.xPos), MetersToPixels(robotData.yPos), 0);
         robotVisual.rotation = Quaternion.Euler(new Vector3(0, 0, robotData.rot));
         
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             RectTransform component = robotVisual.GetChild(i).GetComponent<RectTransform>();
 
-            component.sizeDelta = new Vector2(MetersToPixels(robotData.bumperWidth), MetersToPixels(robotData.bumperThickness));
+            if (i == 4) {
+                component.sizeDelta = new Vector2(20, 20);
+            } else {
+                component.sizeDelta = new Vector2(MetersToPixels(robotData.bumperWidth), MetersToPixels(robotData.bumperThickness));
+            }
             component.GetComponent<Image>().color = robotColor;
 
             if (i==0) {
@@ -396,6 +400,9 @@ public class Node_Field2D : MonoBehaviour
             } else if (i==3) {
                 component.localPosition = new Vector3(MetersToPixels(-robotData.bumperWidth/2 + robotData.bumperThickness/2), 0, 0);
                 component.localRotation = Quaternion.Euler(0, 0, 90);
+            } else if (i==4) {
+                component.localPosition = new Vector3(MetersToPixels(robotData.bumperWidth/2 - robotData.bumperThickness/2), 0, 0);
+                component.localRotation = Quaternion.Euler(0, 0, 0);
             }
         }
     }

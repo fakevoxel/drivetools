@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
+  <metadata>
+    <id>FRC.Utilities</id>
+    <version>3.0.4</version>
+    <title>FRC Utilities</title>
+    <authors>RobotDotNet</authors>
+    <owners>RobotDotNet</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/robotdotnet/FRC-Utilities/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/robotdotnet/FRC-Utilities</projectUrl>
+    <description>FRC Utility Library</description>
+    <copyright>Copyright 2016-2019 RobotDotNet</copyright>
+    <tags>Native Library Delegates FRC</tags>
+    <repository type="git" url="git://github.com/robotdotnet/FRC-Utilities" />
+    <dependencies>
+      <group targetFramework=".NETStandard2.0">
+        <dependency id="System.Reflection.Emit" version="4.7.0" exclude="Build,Analyzers" />
+        <dependency id="System.Reflection.Emit.ILGeneration" version="4.7.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+</package>
