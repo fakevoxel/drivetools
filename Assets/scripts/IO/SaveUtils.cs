@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
@@ -107,5 +109,17 @@ public class SaveUtils : MonoBehaviour
         BinaryFormatter formatter = new BinaryFormatter();
 
         File.WriteAllBytes(savePath + image.name, image.EncodeToPNG());
+    }
+
+    public static string[] GetAllDefaultAssetDirectories() {
+        List<string> toReturn = new List<string>();
+
+        string[] filePaths = Directory.GetFiles(saveDirectory + "/" + "v" + buildVersion + "/default assets/");
+
+        for (int i = 0; i < filePaths.Length; i++) {
+            toReturn.Add(filePaths[i]);
+        }
+
+        return toReturn.ToArray();
     }
 }

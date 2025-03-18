@@ -23,15 +23,6 @@ public class AssetManager : MonoBehaviour
 
     private void Awake() {
         Instance = this;
-
-        for (int i = 0; i < defaultAssets.Length; i++) {
-            SaveUtils.SavePNG(defaultAssets[i]);
-        }
-    }
-
-    void Start() {
-        GameObject.Find("woah").GetComponent<RawImage>().texture = SaveUtils.LoadPNG(
-            SaveUtils.saveDirectory + "/" + "v" + SaveUtils.buildVersion + "/default assets/icon_false");
     }
 
     public Texture2D[] defaultAssets;
@@ -46,11 +37,18 @@ public class AssetManager : MonoBehaviour
         }
         AppData.Instance.imageAssetDirectories.Clear();
 
-        for (int i = 0; i < tempDirectories.Count; i++) {
-            // then the UI part
+        string[] defaultAssetPaths = SaveUtils.GetAllDefaultAssetDirectories();
+
+        for (int i = 0; i < defaultAssetPaths.Length; i++) {
             assetList.AddNewElement();
-            UIManager.Instance.PassLoadedFile(tempDirectories[i]);
+            UIManager.Instance.PassLoadedFile(defaultAssetPaths[i]);
         }
+
+        // for (int i = 0; i < tempDirectories.Count; i++) {
+        //     // then the UI part
+        //     assetList.AddNewElement();
+        //     UIManager.Instance.PassLoadedFile(tempDirectories[i]);
+        // }
     }
 
     public void AddImageAsset(TMP_InputField input) {

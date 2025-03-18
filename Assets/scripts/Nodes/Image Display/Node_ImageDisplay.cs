@@ -37,13 +37,15 @@ public class Node_ImageDisplay : MonoBehaviour
         interact.nodeName = name;
         interact.nodeType = (int)NodeType.ImageDisplay;
 
-        // initializing the layers list (or else you get null reference exceptions)
-        layers = new List<ImageDisplayLayer>();
+        if (layers.Count == 0) {
+            // initializing the layers list (or else you get null reference exceptions)
+            layers = new List<ImageDisplayLayer>();
 
-        // adding one layer to start with (because what would u do with none?)
-        // no the real reason is that the UI_Tabs component used to handle the layers can't deal with 0 tabs
-        // TODO: fix that UI_Tabs problem ^^
-        layers.Add(new ImageDisplayLayer());
+            // adding one layer to start with (because what would u do with none?)
+            // no the real reason is that the UI_Tabs component used to handle the layers can't deal with 0 tabs
+            // TODO: fix that UI_Tabs problem ^^
+            layers.Add(new ImageDisplayLayer());
+        }
     }
 
     // populating the right-click widget with options for this node

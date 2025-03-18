@@ -9,8 +9,9 @@ public enum NodeType {
     String,
     Compass,
     Field2D,
-    Graph,
-    ImageDisplay, // to be implemented
+    Graph, // unfinished
+    ImageDisplay,
+    Boolean, // modified image display node, still uses NodeType.imageDisplay
 }
 
 public class UIManager : MonoBehaviour

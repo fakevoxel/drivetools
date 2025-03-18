@@ -334,8 +334,8 @@ MonoBehaviour:
     - true
     - false
     images:
-    - 
-    - 
+    - icon_true
+    - icon_false
   interact: {fileID: 0}
   sourceString: 
   dataContainer: {fileID: 1850425194472197300}

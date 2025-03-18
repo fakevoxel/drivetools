@@ -2,6 +2,7 @@ using UnityEngine;
 using System.IO;
 using System;
 using System.Diagnostics;
+using System.Linq;
 
 public class FileUtils : MonoBehaviour
 {
@@ -39,11 +40,16 @@ public class FileUtils : MonoBehaviour
             }
         }
 
-        int endIndex = 0;
-        for (int i = path.Length - 1; i >= 0; i--) {
-            if (path[i] == '.') {
-                endIndex = i;
-                break;
+        int endIndex = path.Length - 1;
+        if (path.LastIndexOf(".") > startIndex) {
+            UnityEngine.Debug.Log(path);
+            
+            endIndex = 0;
+            for (int i = path.Length - 1; i >= 0; i--) {
+                if (path[i] == '.') {
+                    endIndex = i;
+                    break;
+                }
             }
         }
 
