@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// some math functions that are probably native to unity, but I made my own
+// this is a utility class, only static variables and functions here
 public class MathUtils
 {
     public static float ToRadians(float a) {

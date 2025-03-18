@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using UnityEngine.UI;
 using TMPro;
 using UnityEngine;
 
@@ -25,10 +24,16 @@ public class AssetManager : MonoBehaviour
         Instance = this;
     }
 
+    // the assets that will get written to the default asset directory, and always loaded in
+    // these include icons for boolean nodes, etc.
     public Texture2D[] defaultAssets;
+    // list of currently loaded image assets, textures that are loaded by the user go here
     public List<Texture2D> imageAssets;
+    // the UI component that lists all of the loaded assets
     public UI_InputList assetList;
 
+
+    // TODO: just save the default asset directories as normal assets, don't load them separately
     public void PopulateAssets() {
         List<string> tempDirectories = new List<string>();
 
@@ -51,6 +56,8 @@ public class AssetManager : MonoBehaviour
         // }
     }
 
+    // given an input field, presumably with the file path, load and add a new image asset
+    // TODO: dealing with invalid paths?
     public void AddImageAsset(TMP_InputField input) {
         Texture2D newAsset = SaveUtils.LoadPNG(input.text);
         newAsset.name = FileUtils.GetFileName(input.text);
@@ -58,6 +65,7 @@ public class AssetManager : MonoBehaviour
         imageAssets.Add(newAsset);
         AppData.Instance.imageAssetDirectories.Add(input.text);
     }
+    // given the string of the file path, load and add an image asset
     public void AddImageAsset(string input) {
         Texture2D newAsset = SaveUtils.LoadPNG(input);
         newAsset.name = FileUtils.GetFileName(input);
@@ -66,6 +74,8 @@ public class AssetManager : MonoBehaviour
         AppData.Instance.imageAssetDirectories.Add(input);
     }
 
+    // get the Texture2D of an asset, when provided the asset's name
+    // used for imagedisplay nodes, which store the asset name AND NOT THE TEXTURE
     public Texture2D GetImageOfName(string name) {
         for (int i = 0; i < imageAssets.Count; i++) {
             if (imageAssets[i].name == name) {

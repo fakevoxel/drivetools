@@ -1,12 +1,16 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
-public class SaveUtils : MonoBehaviour
-{
+// different from FileUtils!
+// this is a utility class that contains functions for reading/writing save data
+public class SaveUtils
+{   
+    // this ends up being the appdata/locallow/fakevoxel/etc. directory for windows
     public static string saveDirectory = Application.persistentDataPath;
+    // the current version of the software, this is organized by year.update.hotfix
+    // so, the first build for 2025 is 2025.0.1
     public static string buildVersion = "2025.0.1";
 
     public static void SavePreferences(PersistentSettings _prefs)
