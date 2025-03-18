@@ -2,10 +2,11 @@ using System.Reflection;
 using TMPro;
 using UnityEngine;
 
-public class Node_Double : MonoBehaviour
+// WIP
+public class Node_Dropdown : MonoBehaviour
 {
     public GenericNodeData genericData;
-    public NodeData_Double data;
+    public NodeData_Dropdown data;
     
     public float xPadding;
     public float yPadding;
@@ -26,7 +27,7 @@ public class Node_Double : MonoBehaviour
         interact = GetComponent<NodeInteractionHandler>();
 
         interact.nodeName = name;
-        interact.nodeType = (int)NodeType.Double;
+        interact.nodeType = (int)NodeType.Dropdown;
         
         dataDisplay = CanvasUtils.SearchChildrenForName(gameObject, "data").GetComponent<TextMeshProUGUI>();
         dataDisplay.transform.SetParent(transform);
@@ -121,11 +122,6 @@ public class Node_Double : MonoBehaviour
         SetTitleString(input.text);
     }
 
-    public void SetData(double value) {
-        dataValue = value;
-        dataDisplay.text = value.ToString();
-    }
-
     public void PositionUI() {
         // move the name of the node
         titleDisplay.transform.position = interact.transform.position + new Vector3(0, yPadding, 0);
@@ -145,41 +141,5 @@ public class Node_Double : MonoBehaviour
             transform.GetChild(0).GetComponent<RectTransform>().sizeDelta.y,
             interact.isNodeTracked
         );
-    }
-
-    public void PopulateConfigMenu(GameObject window) {
-        // double nodes are simple, they only have a source string and a title
-
-        // create an input field for the source string
-        GameObject sourceInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
-
-        // parent it to the window
-        sourceInput.transform.SetParent(window.transform.GetChild(4));
-        // zero it
-        sourceInput.transform.localPosition = new Vector3(0, 0, 0);
-        
-        // we set the text of the input field to show the user the current source string
-        sourceInput.GetComponent<TMP_InputField>().text = sourceString;
-        // when the user finishes editing, change the source string of the double node
-        sourceInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
-                // this syntax is interesting, I supply the function without () and unity knows to give it the final string as a parameter
-        SetSourceString);
-
-        // create an input field for the title string
-        GameObject titleInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
-        // parent it to the window
-        titleInput.transform.SetParent(window.transform.GetChild(4));
-        // zero it
-        titleInput.transform.localPosition = new Vector3(0, -100, 0);
-        // we set the text of the input field to show the user the current source string
-        titleInput.GetComponent<TMP_InputField>().text = titleString;
-            // when the user finishes editing, change the source string of the double node
-        titleInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
-                // this syntax is interesting, I supply the function without () and unity knows to give it the final string as a parameter
-        SetTitleString);
-    }
-
-    public void UpdateData() {
-        SetData(NetworkManager.Instance.FetchNTDouble(sourceString));
     }
 }

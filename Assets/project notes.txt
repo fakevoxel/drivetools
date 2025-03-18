@@ -5,10 +5,10 @@ a few things to note:
 road to release: 
 -------------------
 
+- image display nodes being able to take in any data type
 - dropdown nodes
 - "download" button allowing you to see and select nodes up on NT
 - picking from possible options when asssigning NT keys to existing nodes (no input fields)
-- tooltips for buttons
 - file browser for loading in assets (no input fields)
 - popup boxes for certain things (like trying to load a non-image asset)
 - UI/theme improvements (no red and green windows)

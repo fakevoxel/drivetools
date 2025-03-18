@@ -11,7 +11,8 @@ public enum NodeType {
     Field2D,
     Graph, // unfinished
     ImageDisplay,
-    Boolean, // modified image display node, still uses NodeType.imageDisplay
+    Boolean, // modified image display node, still uses NodeType.imageDisplay, the unique type is only for spawning it in
+    Dropdown,
 }
 
 public class UIManager : MonoBehaviour

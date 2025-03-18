@@ -37,6 +37,7 @@ public class Node_ImageDisplay : MonoBehaviour
         interact.nodeName = name;
         interact.nodeType = (int)NodeType.ImageDisplay;
 
+        // we ONLY REINITIALIZE THE ARRAY IF IT HAS A COUNT OF 0, because some prefabs will have pre-defined arrays
         if (layers.Count == 0) {
             // initializing the layers list (or else you get null reference exceptions)
             layers = new List<ImageDisplayLayer>();
