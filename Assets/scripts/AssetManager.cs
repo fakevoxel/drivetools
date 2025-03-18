@@ -1,7 +1,6 @@
 using System.Collections.Generic;
-using System.IO;
+using UnityEngine.UI;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 
 // script for managing assets, for now just images used in image display nodes
@@ -24,8 +23,18 @@ public class AssetManager : MonoBehaviour
 
     private void Awake() {
         Instance = this;
+
+        for (int i = 0; i < defaultAssets.Length; i++) {
+            SaveUtils.SavePNG(defaultAssets[i]);
+        }
     }
 
+    void Start() {
+        GameObject.Find("woah").GetComponent<RawImage>().texture = SaveUtils.LoadPNG(
+            SaveUtils.saveDirectory + "/" + "v" + SaveUtils.buildVersion + "/default assets/icon_false");
+    }
+
+    public Texture2D[] defaultAssets;
     public List<Texture2D> imageAssets;
     public UI_InputList assetList;
 

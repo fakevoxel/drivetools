@@ -2,6 +2,7 @@ using UnityEngine;
 using FRC.NetworkTables;
 using TMPro;
 using UnityEngine.UI;
+using System.Linq;
 
 public class NetworkManager : MonoBehaviour
 {
@@ -24,6 +25,8 @@ public class NetworkManager : MonoBehaviour
         Instance = this;
     }
 
+    public bool devMode; // if true, run w/o NT
+
     public Image isConnectedIcon;
     public TextMeshProUGUI ipDisplay;
     public bool isNetworkRunning;
@@ -41,7 +44,7 @@ public class NetworkManager : MonoBehaviour
     private bool gotTable;
 
     void Update() {
-        if (!isNetworkRunning) {
+        if (!isNetworkRunning && !devMode) {
             InitializeNetworkTablesClient();
             isNetworkRunning = true;
         }
@@ -84,18 +87,7 @@ public class NetworkManager : MonoBehaviour
                 comp.GetComponent<Node_ImageDisplay>().UpdateData();
             }
         }
-    }   
-
-    // public void RetrieveAllNodes() {
-    //     string[] doubleKeys = new string[table.GetKeys(NtType.Double).Count];
-    //     table.GetKeys(NtType.Double).CopyTo(doubleKeys);
-        
-    //     for (int i = 0; i < doubleKeys.Length; i++) {
-    //         if (!UIManager.Instance.HasActiveNodeWithSource((int)NodeType.Double, doubleKeys[i])) {
-    //             UIManager.Instance.SpawnAndPlaceNewNode((int)NodeType.Double, doubleKeys[i]);
-    //         }
-    //     }
-    // }
+    }  
 
     // get a double off networktables using a name
     public double FetchNTDouble(string key) {
@@ -118,5 +110,14 @@ public class NetworkManager : MonoBehaviour
     public void CloseNetworkTables() {
         Debug.Log("Stopping networktables...");
         NetworkTableInstance.Default.StopClient();
+    }
+
+    // spawn all the necessary UI objects in the menu that allows you to select nodes from NetworkTables
+    public void PopulateNodeSelectionMenu() {
+        if (!gotTable) {return;}
+
+        string[] availableDoubleEntries = table.GetKeys(NtType.Double).ToArray();
+        string[] availableStringEntries = table.GetKeys(NtType.String).ToArray();
+        string[] availableBooleanEntries = table.GetKeys(NtType.Boolean).ToArray(); // will be represented using image display nodes
     }
 }

@@ -94,4 +94,18 @@ public class SaveUtils : MonoBehaviour
         }
         return tex;
     }
+
+    public static void SavePNG(Texture2D image) {
+
+        string savePath = saveDirectory + "/" + "v" + buildVersion + "/default assets/";
+
+        if (!Directory.Exists(savePath))
+        {
+            Directory.CreateDirectory(savePath);
+        }
+
+        BinaryFormatter formatter = new BinaryFormatter();
+
+        File.WriteAllBytes(savePath + image.name, image.EncodeToPNG());
+    }
 }

@@ -57,6 +57,7 @@ public class UIManager : MonoBehaviour
 
     private UnityAction<string> toRunWithLoadedFile;
     private UnityAction<string> toRunWithLoadedAsset;
+    private bool isLocked; // if true, user can't interact with nodes
 
     void Start() {
         CloseRightClickMenu();
@@ -66,11 +67,14 @@ public class UIManager : MonoBehaviour
     // because I want to be able to control when logic is run
     // I do this so that I can manually tell nodes to refresh or not
     void Update() {
-        // update all DATA (coming from robot) for nodes in the active layout
-        UpdateActiveLayout();
+        // handle switching layouts (the UI_Tabs class)
+        layoutTabs.HandleInteract();
 
         // handle node interations for the active layout
-        layoutTabs.HandleInteract();
+        if (!isLocked) {
+            // handle node interactions for the active layout
+            UpdateActiveLayout();
+        }
 
         canvasTransform.GetChild(0).GetComponent<RectTransform>().sizeDelta = 
         canvasTransform.GetComponent<RectTransform>().sizeDelta * 1.25f;
@@ -80,6 +84,10 @@ public class UIManager : MonoBehaviour
         );
         layoutTabsObject.transform.GetChild(0).GetComponent<RectTransform>().sizeDelta = 
         new Vector2(canvasTransform.GetComponent<RectTransform>().sizeDelta.x * 1.25f, 100);
+    }
+
+    public void ToggleLock() {
+        isLocked = !isLocked;
     }
 
     public void LoadFile(UnityAction<string> toRunAfterLoad) {

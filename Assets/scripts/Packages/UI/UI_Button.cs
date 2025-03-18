@@ -19,6 +19,9 @@ public class UI_Button : MonoBehaviour
     [Space(8)]
     [Header("Interaction Settings")]
     public string toolTip; // what to display on the tooltip when the button is hovered over
+    private bool usingTooltip;
+    private float hoverStartTime; // the time when the mouse cursor first entered the button's area
+    private UnityAction disableTooltipAction; // the thing to invoke when we don't want the tooltip anymore
     public int buttonToLookFor; // left (0), right (1), or middle click (2)
 
     [Space(8)]
@@ -41,12 +44,17 @@ public class UI_Button : MonoBehaviour
 
     void Start() {
         if (!string.IsNullOrEmpty(toolTip)) {
-            
-        }
+            usingTooltip = true;
+        } else {usingTooltip = false; }
     }
 
     void Update() {
         HandleInteraction();
+    }
+
+    // tell the button object what to do when it doesn't want the tooltip anymore
+    public void SetDisableTooltipAction(UnityAction action) {
+        disableTooltipAction = action;
     }
 
     // this all runs in its own function, so I can easily change whether the button is active or not
@@ -56,6 +64,8 @@ public class UI_Button : MonoBehaviour
             if (!isHover) {
                 // if we weren't hovering before, invoke onHoverEnter
                 onHoverEnter.Invoke();
+
+                hoverStartTime = Time.time;
             }
             isHover = true; // hover is set to true if the cursor is over the button
             if (Input.GetMouseButtonDown(buttonToLookFor)) {
@@ -65,8 +75,15 @@ public class UI_Button : MonoBehaviour
         else {
             if (isHover) {
                 // if we were just hovering, invoke onHoverExit
-                isHover = false;
+                onHoverExit.Invoke();
+                if (disableTooltipAction != null) {
+                    disableTooltipAction.Invoke();
+                    disableTooltipAction = null;
+                }
             }
+
+            isHover = false;
+            hoverStartTime = 0;
         }
 
         if (isPressed) { // is the button pressed
@@ -93,7 +110,13 @@ public class UI_Button : MonoBehaviour
         }
         else {
             if (colorSwitch) { GetComponent<Image>().color = defaultColor; } // default color (not interacting at all)
-        }   
+        }  
+
+        // tooltip logic
+        if (isHover && Time.time > hoverStartTime + UI_TooltipSystem.Instance.displayDelay && disableTooltipAction == null && usingTooltip) {
+            UI_TooltipSystem.Instance.DisplayTooltip(toolTip);
+            SetDisableTooltipAction(UI_TooltipSystem.Instance.GetDisableAction());
+        } 
     }
 
     // since the boolean is private, here's a function for checking the button state
