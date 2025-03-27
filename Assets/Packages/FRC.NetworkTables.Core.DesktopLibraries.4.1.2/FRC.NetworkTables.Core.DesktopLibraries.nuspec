@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>FRC.NetworkTables.Core.DesktopLibraries</id>
+    <version>4.1.2</version>
+    <title>FRC NetworkTables.Core.DesktopLibraries</title>
+    <authors>RobotDotNet</authors>
+    <owners>RobotDotNet</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <licenseUrl>https://github.com/robotdotnet/NetworkTables/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/robotdotnet/NetworkTables</projectUrl>
+    <description>Native desktop libraries for NetworkTables</description>
+    <copyright>Copyright 2018 RobotDotNet</copyright>
+    <tags>WPILib FRC FIRST RoboRio</tags>
+    <repository type="git" url="git://github.com/robotdotnet/NetworkTables" />
+    <dependencies>
+      <group targetFramework=".NETStandard2.0" />
+    </dependencies>
+  </metadata>
+</package>

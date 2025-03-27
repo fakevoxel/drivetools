@@ -1,0 +1,20 @@
+a few things to note:
+
+- the warning about confirmedConnectionLoss is normal, I'm just not using the variable right now
+
+road to release: 
+-------------------
+
+- image display nodes being able to take in any data type
+- dropdown nodes
+- "download" button allowing you to see and select nodes up on NT
+- picking from possible options when asssigning NT keys to existing nodes (no input fields)
+- file browser for loading in assets (no input fields)
+- popup boxes for certain things (like trying to load a non-image asset)
+- UI/theme improvements (no red and green windows)
+- bugfixes
+    - nodes can snap to the edges of other nodes even if they're on the other side of the screen, please fix that (add a distance threshold idk)
+- code cleanup
+    - comment/clean up the UI_ scripts so I can run a reverse update (with Asset Manager) and get to working on other stuff again
+    - there are a lot of variables in the Node_ scripts that are also in the NodeData_ scripts, 
+    just delete the copies in the Node_ scripts and use the NodeData_ ones only to reduce verbosity (low priority)

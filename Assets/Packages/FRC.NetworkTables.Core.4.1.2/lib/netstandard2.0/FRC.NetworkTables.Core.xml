@@ -1,0 +1,1441 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FRC.NetworkTables.Core</name>
+    </assembly>
+    <members>
+        <member name="T:FRC.NetworkTables.ConnectionInfo">
+            <summary>
+            This class contains all info needed for a given connection.
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.ConnectionInfo.RemoteId">
+            <summary>Gets the Remote Id of the Connection.</summary>
+        </member>
+        <member name="F:FRC.NetworkTables.ConnectionInfo.RemoteIp">
+            <summary>Gets the Remote IP Address of the Connection.</summary>
+        </member>
+        <member name="F:FRC.NetworkTables.ConnectionInfo.RemotePort">
+            <summary>Gets the Remote Port of the Connection.</summary>
+        </member>
+        <member name="F:FRC.NetworkTables.ConnectionInfo.LastUpdate">
+            <summary>Gets the last update time of the Connection.</summary>
+        </member>
+        <member name="F:FRC.NetworkTables.ConnectionInfo.ProtocolVersion">
+            <summary>Gets the Protocol Version of the Connection.</summary>
+        </member>
+        <member name="T:FRC.NetworkTables.EntryInfo">
+            <summary>
+            This class contains all info for a given entry.
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.EntryInfo.Name">
+            <summary>Gets the Name of the entry.</summary>
+        </member>
+        <member name="F:FRC.NetworkTables.EntryInfo.Type">
+            <summary>Gets the Type of the entry.</summary>
+        </member>
+        <member name="F:FRC.NetworkTables.EntryInfo.Flags">
+            <summary>Gets the Flags attached to the entry.</summary>
+        </member>
+        <member name="F:FRC.NetworkTables.EntryInfo.LastChange">
+            <summary>Gets the last change time of the entry.</summary>
+        </member>
+        <member name="P:FRC.NetworkTables.EntryInfo.Entry">
+            <summary>Gets the entry object for this entry.</summary>
+        </member>
+        <member name="T:FRC.NetworkTables.NtType">
+            <summary>
+            An enumeration of all types allowed in the NetworkTables.
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.NtType.Unassigned">
+            <summary>
+            No type assigned
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.NtType.Boolean">
+            <summary>
+            Boolean type
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.NtType.Double">
+            <summary>
+            Double type
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.NtType.String">
+            <summary>
+            String type
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.NtType.Raw">
+            <summary>
+            Raw type
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.NtType.BooleanArray">
+            <summary>
+            Boolean Array type
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.NtType.DoubleArray">
+            <summary>
+            Double Array type
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.NtType.StringArray">
+            <summary>
+            String Array type
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.NtType.Rpc">
+            <summary>
+            Rpc type
+            </summary>
+        </member>
+        <member name="T:FRC.NetworkTables.NotifyFlags">
+            <summary>
+            The flags avalible for TableListeners
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.NotifyFlags.None">
+            <summary>
+             Notify nobody
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.NotifyFlags.Immediate">
+            <summary>
+            Initial listener addition
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.NotifyFlags.Local">
+            <summary>
+            Changed locally
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.NotifyFlags.New">
+            <summary>
+            Newly created entry
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.NotifyFlags.Delete">
+            <summary>
+            Deleted entry
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.NotifyFlags.Update">
+            <summary>
+            Value changed for entry
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.NotifyFlags.FlagsChanged">
+            <summary>
+            Flags changed for entry
+            </summary>
+        </member>
+        <member name="T:FRC.NetworkTables.EntryFlags">
+            <summary>
+            The flags avalible for Entries
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.EntryFlags.None">
+            <summary>
+            No flags
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.EntryFlags.Persistent">
+            <summary>
+            Set entry to be persistent
+            </summary>
+        </member>
+        <member name="T:FRC.NetworkTables.LogLevel">
+            <summary>
+            The log level to use for the NT logger
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.LogLevel.Critical">
+            
+        </member>
+        <member name="F:FRC.NetworkTables.LogLevel.Error">
+            
+        </member>
+        <member name="F:FRC.NetworkTables.LogLevel.Warning">
+            
+        </member>
+        <member name="F:FRC.NetworkTables.LogLevel.Info">
+            
+        </member>
+        <member name="F:FRC.NetworkTables.LogLevel.Debug">
+            
+        </member>
+        <member name="F:FRC.NetworkTables.LogLevel.Debug1">
+            
+        </member>
+        <member name="F:FRC.NetworkTables.LogLevel.Debug2">
+            
+        </member>
+        <member name="F:FRC.NetworkTables.LogLevel.Debug3">
+            
+        </member>
+        <member name="F:FRC.NetworkTables.LogLevel.Debug4">
+            
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtHandle">
+            <summary>
+            Low level NT Core Handle
+            </summary>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtHandle.#ctor(System.Int32)">
+            <summary>
+            Create a handle from an int.
+            </summary>
+            <param name="value">handle value</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtHandle.Get">
+            <summary>
+            Gets the raw handle value
+            </summary>
+            <returns>The raw handle value</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtHandle.Equals(System.Object)">
+            <summary>
+            Checks equality between another object
+            </summary>
+            <param name="obj">Object to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtHandle.Equals(FRC.NetworkTables.Interop.NtHandle)">
+            <summary>
+            Checks equality between another Handle
+            </summary>
+            <param name="other">Handle to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtHandle.GetHashCode">
+            <summary>
+            Gets Hash Code of Handle
+            </summary>
+            <returns>Handle Value as Hash Code</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtHandle.op_Equality(FRC.NetworkTables.Interop.NtHandle,FRC.NetworkTables.Interop.NtHandle)">
+            <summary>
+            Gets if 2 handles are equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtHandle.op_Inequality(FRC.NetworkTables.Interop.NtHandle,FRC.NetworkTables.Interop.NtHandle)">
+            <summary>
+            Gets if 2 handles are not equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if not equal</returns>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtInst">
+            <summary>
+            Low Level NT Core Instance Handle
+            </summary>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtInst.#ctor(System.Int32)">
+            <summary>
+            Creates a new handle
+            </summary>
+            <param name="value">handle value</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtInst.Get">
+            <summary>
+            Gets the raw handle value
+            </summary>
+            <returns>The raw handle value</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtInst.op_Implicit(FRC.NetworkTables.Interop.NtInst)~FRC.NetworkTables.Interop.NtHandle">
+            <summary>
+            Converts a handle to a base handle
+            </summary>
+            <param name="value">The current handle</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtInst.Equals(System.Object)">
+            <summary>
+            Checks equality between another object
+            </summary>
+            <param name="obj">Object to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtInst.Equals(FRC.NetworkTables.Interop.NtInst)">
+            <summary>
+            Checks equality between another Handle
+            </summary>
+            <param name="other">Handle to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtInst.GetHashCode">
+            <summary>
+            Gets Hash Code of Handle
+            </summary>
+            <returns>Handle Value as Hash Code</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtInst.op_Equality(FRC.NetworkTables.Interop.NtInst,FRC.NetworkTables.Interop.NtInst)">
+            <summary>
+            Gets if 2 handles are equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtInst.op_Inequality(FRC.NetworkTables.Interop.NtInst,FRC.NetworkTables.Interop.NtInst)">
+            <summary>
+            Gets if 2 handles are not equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if not equal</returns>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtEntry">
+            <summary>
+            Low Level NT Core Entry Handle
+            </summary>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntry.#ctor(System.Int32)">
+            <summary>
+            Creates a new handle
+            </summary>
+            <param name="value">handle value</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntry.Get">
+            <summary>
+            Gets the raw handle value
+            </summary>
+            <returns>The raw handle value</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntry.op_Implicit(FRC.NetworkTables.Interop.NtEntry)~FRC.NetworkTables.Interop.NtHandle">
+            <summary>
+            Converts a handle to a base handle
+            </summary>
+            <param name="value">The current handle</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntry.Equals(System.Object)">
+            <summary>
+            Checks equality between another object
+            </summary>
+            <param name="obj">Object to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntry.Equals(FRC.NetworkTables.Interop.NtEntry)">
+            <summary>
+            Checks equality between another Handle
+            </summary>
+            <param name="other">Handle to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntry.GetHashCode">
+            <summary>
+            Gets Hash Code of Handle
+            </summary>
+            <returns>Handle Value as Hash Code</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntry.op_Equality(FRC.NetworkTables.Interop.NtEntry,FRC.NetworkTables.Interop.NtEntry)">
+            <summary>
+            Gets if 2 handles are equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntry.op_Inequality(FRC.NetworkTables.Interop.NtEntry,FRC.NetworkTables.Interop.NtEntry)">
+            <summary>
+            Gets if 2 handles are not equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if not equal</returns>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtEntryListener">
+            <summary>
+            Low Level NT Core Entry Listener Handle
+            </summary>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntryListener.#ctor(System.Int32)">
+            <summary>
+            Creates a new handle
+            </summary>
+            <param name="value">handle value</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntryListener.Get">
+            <summary>
+            Gets the raw handle value
+            </summary>
+            <returns>The raw handle value</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntryListener.op_Implicit(FRC.NetworkTables.Interop.NtEntryListener)~FRC.NetworkTables.Interop.NtHandle">
+            <summary>
+            Converts a handle to a base handle
+            </summary>
+            <param name="value">The current handle</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntryListener.Equals(System.Object)">
+            <summary>
+            Checks equality between another object
+            </summary>
+            <param name="obj">Object to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntryListener.Equals(FRC.NetworkTables.Interop.NtEntryListener)">
+            <summary>
+            Checks equality between another Handle
+            </summary>
+            <param name="other">Handle to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntryListener.GetHashCode">
+            <summary>
+            Gets Hash Code of Handle
+            </summary>
+            <returns>Handle Value as Hash Code</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntryListener.op_Equality(FRC.NetworkTables.Interop.NtEntryListener,FRC.NetworkTables.Interop.NtEntryListener)">
+            <summary>
+            Gets if 2 handles are equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntryListener.op_Inequality(FRC.NetworkTables.Interop.NtEntryListener,FRC.NetworkTables.Interop.NtEntryListener)">
+            <summary>
+            Gets if 2 handles are not equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if not equal</returns>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtEntryListenerPoller">
+            <summary>
+            Low Level NT Core Entry Poller Handle
+            </summary>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntryListenerPoller.#ctor(System.Int32)">
+            <summary>
+            Creates a new handle
+            </summary>
+            <param name="value">handle value</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntryListenerPoller.Get">
+            <summary>
+            Gets the raw handle value
+            </summary>
+            <returns>The raw handle value</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntryListenerPoller.op_Implicit(FRC.NetworkTables.Interop.NtEntryListenerPoller)~FRC.NetworkTables.Interop.NtHandle">
+            <summary>
+            Converts a handle to a base handle
+            </summary>
+            <param name="value">The current handle</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntryListenerPoller.Equals(System.Object)">
+            <summary>
+            Checks equality between another object
+            </summary>
+            <param name="obj">Object to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntryListenerPoller.Equals(FRC.NetworkTables.Interop.NtEntryListenerPoller)">
+            <summary>
+            Checks equality between another Handle
+            </summary>
+            <param name="other">Handle to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntryListenerPoller.GetHashCode">
+            <summary>
+            Gets Hash Code of Handle
+            </summary>
+            <returns>Handle Value as Hash Code</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntryListenerPoller.op_Equality(FRC.NetworkTables.Interop.NtEntryListenerPoller,FRC.NetworkTables.Interop.NtEntryListenerPoller)">
+            <summary>
+            Gets if 2 handles are equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtEntryListenerPoller.op_Inequality(FRC.NetworkTables.Interop.NtEntryListenerPoller,FRC.NetworkTables.Interop.NtEntryListenerPoller)">
+            <summary>
+            Gets if 2 handles are not equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if not equal</returns>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtConnectionListener">
+            <summary>
+            Low Level NT Core Connection Listener Handle
+            </summary>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtConnectionListener.#ctor(System.Int32)">
+            <summary>
+            Creates a new handle
+            </summary>
+            <param name="value">handle value</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtConnectionListener.Get">
+            <summary>
+            Gets the raw handle value
+            </summary>
+            <returns>The raw handle value</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtConnectionListener.op_Implicit(FRC.NetworkTables.Interop.NtConnectionListener)~FRC.NetworkTables.Interop.NtHandle">
+            <summary>
+            Converts a handle to a base handle
+            </summary>
+            <param name="value">The current handle</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtConnectionListener.Equals(System.Object)">
+            <summary>
+            Checks equality between another object
+            </summary>
+            <param name="obj">Object to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtConnectionListener.Equals(FRC.NetworkTables.Interop.NtConnectionListener)">
+            <summary>
+            Checks equality between another Handle
+            </summary>
+            <param name="other">Handle to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtConnectionListener.GetHashCode">
+            <summary>
+            Gets Hash Code of Handle
+            </summary>
+            <returns>Handle Value as Hash Code</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtConnectionListener.op_Equality(FRC.NetworkTables.Interop.NtConnectionListener,FRC.NetworkTables.Interop.NtConnectionListener)">
+            <summary>
+            Gets if 2 handles are equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtConnectionListener.op_Inequality(FRC.NetworkTables.Interop.NtConnectionListener,FRC.NetworkTables.Interop.NtConnectionListener)">
+            <summary>
+            Gets if 2 handles are not equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if not equal</returns>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtConnectionListenerPoller">
+            <summary>
+            Low Level NT Core Connection Listener Poller Handle
+            </summary>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtConnectionListenerPoller.#ctor(System.Int32)">
+            <summary>
+            Creates a new handle
+            </summary>
+            <param name="value">handle value</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtConnectionListenerPoller.Get">
+            <summary>
+            Gets the raw handle value
+            </summary>
+            <returns>The raw handle value</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtConnectionListenerPoller.op_Implicit(FRC.NetworkTables.Interop.NtConnectionListenerPoller)~FRC.NetworkTables.Interop.NtHandle">
+            <summary>
+            Converts a handle to a base handle
+            </summary>
+            <param name="value">The current handle</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtConnectionListenerPoller.Equals(System.Object)">
+            <summary>
+            Checks equality between another object
+            </summary>
+            <param name="obj">Object to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtConnectionListenerPoller.Equals(FRC.NetworkTables.Interop.NtConnectionListenerPoller)">
+            <summary>
+            Checks equality between another Handle
+            </summary>
+            <param name="other">Handle to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtConnectionListenerPoller.GetHashCode">
+            <summary>
+            Gets Hash Code of Handle
+            </summary>
+            <returns>Handle Value as Hash Code</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtConnectionListenerPoller.op_Equality(FRC.NetworkTables.Interop.NtConnectionListenerPoller,FRC.NetworkTables.Interop.NtConnectionListenerPoller)">
+            <summary>
+            Gets if 2 handles are equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtConnectionListenerPoller.op_Inequality(FRC.NetworkTables.Interop.NtConnectionListenerPoller,FRC.NetworkTables.Interop.NtConnectionListenerPoller)">
+            <summary>
+            Gets if 2 handles are not equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if not equal</returns>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtLogger">
+            <summary>
+            Low Level NT Core Logger Handle
+            </summary>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtLogger.#ctor(System.Int32)">
+            <summary>
+            Creates a new handle
+            </summary>
+            <param name="value">handle value</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtLogger.Get">
+            <summary>
+            Gets the raw handle value
+            </summary>
+            <returns>The raw handle value</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtLogger.op_Implicit(FRC.NetworkTables.Interop.NtLogger)~FRC.NetworkTables.Interop.NtHandle">
+            <summary>
+            Converts a handle to a base handle
+            </summary>
+            <param name="value">The current handle</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtLogger.Equals(System.Object)">
+            <summary>
+            Checks equality between another object
+            </summary>
+            <param name="obj">Object to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtLogger.Equals(FRC.NetworkTables.Interop.NtLogger)">
+            <summary>
+            Checks equality between another Handle
+            </summary>
+            <param name="other">Handle to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtLogger.GetHashCode">
+            <summary>
+            Gets Hash Code of Handle
+            </summary>
+            <returns>Handle Value as Hash Code</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtLogger.op_Equality(FRC.NetworkTables.Interop.NtLogger,FRC.NetworkTables.Interop.NtLogger)">
+            <summary>
+            Gets if 2 handles are equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtLogger.op_Inequality(FRC.NetworkTables.Interop.NtLogger,FRC.NetworkTables.Interop.NtLogger)">
+            <summary>
+            Gets if 2 handles are not equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if not equal</returns>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtLoggerPoller">
+            <summary>
+            Low Level NT Core Logger Poller Handle
+            </summary>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtLoggerPoller.#ctor(System.Int32)">
+            <summary>
+            Creates a new handle
+            </summary>
+            <param name="value">handle value</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtLoggerPoller.Get">
+            <summary>
+            Gets the raw handle value
+            </summary>
+            <returns>The raw handle value</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtLoggerPoller.op_Implicit(FRC.NetworkTables.Interop.NtLoggerPoller)~FRC.NetworkTables.Interop.NtHandle">
+            <summary>
+            Converts a handle to a base handle
+            </summary>
+            <param name="value">The current handle</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtLoggerPoller.Equals(System.Object)">
+            <summary>
+            Checks equality between another object
+            </summary>
+            <param name="obj">Object to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtLoggerPoller.Equals(FRC.NetworkTables.Interop.NtLoggerPoller)">
+            <summary>
+            Checks equality between another Handle
+            </summary>
+            <param name="other">Handle to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtLoggerPoller.GetHashCode">
+            <summary>
+            Gets Hash Code of Handle
+            </summary>
+            <returns>Handle Value as Hash Code</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtLoggerPoller.op_Equality(FRC.NetworkTables.Interop.NtLoggerPoller,FRC.NetworkTables.Interop.NtLoggerPoller)">
+            <summary>
+            Gets if 2 handles are equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtLoggerPoller.op_Inequality(FRC.NetworkTables.Interop.NtLoggerPoller,FRC.NetworkTables.Interop.NtLoggerPoller)">
+            <summary>
+            Gets if 2 handles are not equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if not equal</returns>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtRpcCall">
+            <summary>
+            Low Level NT Core Rpc Call Handle
+            </summary>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtRpcCall.#ctor(System.Int32)">
+            <summary>
+            Creates a new handle
+            </summary>
+            <param name="value">handle value</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtRpcCall.Get">
+            <summary>
+            Gets the raw handle value
+            </summary>
+            <returns>The raw handle value</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtRpcCall.op_Implicit(FRC.NetworkTables.Interop.NtRpcCall)~FRC.NetworkTables.Interop.NtHandle">
+            <summary>
+            Converts a handle to a base handle
+            </summary>
+            <param name="value">The current handle</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtRpcCall.Equals(System.Object)">
+            <summary>
+            Checks equality between another object
+            </summary>
+            <param name="obj">Object to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtRpcCall.Equals(FRC.NetworkTables.Interop.NtRpcCall)">
+            <summary>
+            Checks equality between another Handle
+            </summary>
+            <param name="other">Handle to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtRpcCall.GetHashCode">
+            <summary>
+            Gets Hash Code of Handle
+            </summary>
+            <returns>Handle Value as Hash Code</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtRpcCall.op_Equality(FRC.NetworkTables.Interop.NtRpcCall,FRC.NetworkTables.Interop.NtRpcCall)">
+            <summary>
+            Gets if 2 handles are equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtRpcCall.op_Inequality(FRC.NetworkTables.Interop.NtRpcCall,FRC.NetworkTables.Interop.NtRpcCall)">
+            <summary>
+            Gets if 2 handles are not equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if not equal</returns>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtRpcCallPoller">
+            <summary>
+            Low Level NT Core Rpc Call Poller Handle
+            </summary>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtRpcCallPoller.#ctor(System.Int32)">
+            <summary>
+            Creates a new handle
+            </summary>
+            <param name="value">handle value</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtRpcCallPoller.Get">
+            <summary>
+            Gets the raw handle value
+            </summary>
+            <returns>The raw handle value</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtRpcCallPoller.op_Implicit(FRC.NetworkTables.Interop.NtRpcCallPoller)~FRC.NetworkTables.Interop.NtHandle">
+            <summary>
+            Converts a handle to a base handle
+            </summary>
+            <param name="value">The current handle</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtRpcCallPoller.Equals(System.Object)">
+            <summary>
+            Checks equality between another object
+            </summary>
+            <param name="obj">Object to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtRpcCallPoller.Equals(FRC.NetworkTables.Interop.NtRpcCallPoller)">
+            <summary>
+            Checks equality between another Handle
+            </summary>
+            <param name="other">Handle to check</param>
+            <returns>True if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtRpcCallPoller.GetHashCode">
+            <summary>
+            Gets Hash Code of Handle
+            </summary>
+            <returns>Handle Value as Hash Code</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtRpcCallPoller.op_Equality(FRC.NetworkTables.Interop.NtRpcCallPoller,FRC.NetworkTables.Interop.NtRpcCallPoller)">
+            <summary>
+            Gets if 2 handles are equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if equal</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtRpcCallPoller.op_Inequality(FRC.NetworkTables.Interop.NtRpcCallPoller,FRC.NetworkTables.Interop.NtRpcCallPoller)">
+            <summary>
+            Gets if 2 handles are not equal
+            </summary>
+            <param name="lhs">Left Hand Side</param>
+            <param name="rhs">Right Hand Side</param>
+            <returns>true if not equal</returns>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtCore">
+            <summary>
+            Raw NT Core access function
+            </summary>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtBool">
+            <summary>
+            NT Bool for interop
+            </summary>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtBool.#ctor(System.Int32)">
+            <summary>
+            Creates an NT Bool from an int
+            </summary>
+            <param name="value">value</param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtBool.#ctor(System.Boolean)">
+            <summary>
+            Creates an NT Bool from a bool
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtBool.Get">
+            <summary>
+            Gets the value
+            </summary>
+            <returns>value</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.Interop.NtBool.op_Implicit(System.Boolean)~FRC.NetworkTables.Interop.NtBool">
+            <summary>
+            Converts a bool to an NT Bool
+            </summary>
+            <param name="value">bool balue</param>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtString">
+            <summary>
+            NT String
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtString.str">
+            <summary>
+            String Pointer
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtString.len">
+            <summary>
+            String Length
+            </summary>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.BoolArr">
+            <summary>
+            NT Boolean Array
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.BoolArr.arr">
+            <summary>
+            Array Pointer
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.BoolArr.len">
+            <summary>
+            Array Length
+            </summary>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.DoubleArr">
+            <summary>
+            NT Double Array
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.DoubleArr.arr">
+            <summary>
+            Array Pointer
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.DoubleArr.len">
+            <summary>
+            Array Length
+            </summary>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.StringArr">
+            <summary>
+            NT String Array
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.StringArr.arr">
+            <summary>
+            Array Pointer
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.StringArr.len">
+            <summary>
+            Array Length
+            </summary>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.DataUnion">
+            <summary>
+            NT Entry Data Union
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.DataUnion.v_boolean">
+            <summary>
+            Boolean Value
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.DataUnion.v_double">
+            <summary>
+            Double Value
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.DataUnion.v_string">
+            <summary>
+            String Value
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.DataUnion.v_raw">
+            <summary>
+            Raw Value
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.DataUnion.arr_boolean">
+            <summary>
+            Boolean Array Value
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.DataUnion.arr_double">
+            <summary>
+            Double Array Value
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.DataUnion.arr_string">
+            <summary>
+            String Array Value
+            </summary>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtValue">
+            <summary>
+            NT Value
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtValue.type">
+            <summary>
+            Value Type
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtValue.last_change">
+            <summary>
+            Value Last Change
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtValue.data">
+            <summary>
+            Value Data
+            </summary>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtEntryInfo">
+            <summary>
+            NT Entry Info
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtEntryInfo.entry">
+            <summary>
+            Entry Handle
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtEntryInfo.name">
+            <summary>
+            Name
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtEntryInfo.type">
+            <summary>
+            Entry Type
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtEntryInfo.flags">
+            <summary>
+            Entry Flags
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtEntryInfo.last_change">
+            <summary>
+            Last Entry Change
+            </summary>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtConnectionInfo">
+            <summary>
+            NT Connection Info
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtConnectionInfo.remote_id">
+            <summary>
+            Remote ID
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtConnectionInfo.remote_ip">
+            <summary>
+            Remote IP
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtConnectionInfo.remote_port">
+            <summary>
+            Remote Port
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtConnectionInfo.last_update">
+            <summary>
+            Last Update
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtConnectionInfo.protocol_version">
+            <summary>
+            NT Protocol Version
+            </summary>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtRpcParamDef">
+            <summary>
+            NT Rpc Parameter Definition
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtRpcParamDef.name">
+            <summary>
+            Parameter Name
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtRpcParamDef.type">
+            <summary>
+            Parameter Type
+            </summary>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtRpcResultDef">
+            <summary>
+            NT Rpc Result Definition
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtRpcResultDef.name">
+            <summary>
+            Result Name
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtRpcResultDef.type">
+            <summary>
+            Result Type
+            </summary>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtRpcDefinition">
+            <summary>
+            NT Rpc Definition
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtRpcDefinition.version">
+            <summary>
+            Definition Version
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtRpcDefinition.name">
+            <summary>
+            Rpc Name
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtRpcDefinition.num_params">
+            <summary>
+            Number of Parameters
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtRpcDefinition.params">
+            <summary>
+            Array of Parameter Definitions
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtRpcDefinition.num_results">
+            <summary>
+            Number of Results
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtRpcDefinition.results">
+            <summary>
+            Array of Result Definitions
+            </summary>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtRpcAnswer">
+            <summary>
+            NT Rpc Answer Version 1
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtRpcAnswer.entry">
+            <summary>
+            Rpc Entry Handle
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtRpcAnswer.call">
+            <summary>
+            Rpc Call Handle
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtRpcAnswer.name">
+            <summary>
+            Rpc Name
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtRpcAnswer.params">
+            <summary>
+            Rpc Parameters
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtRpcAnswer.conn">
+            <summary>
+            Rpc Connection
+            </summary>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtEntryNotification">
+            <summary>
+            NT Entry Notification
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtEntryNotification.listener">
+            <summary>
+            Entry Listener Handle
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtEntryNotification.entry">
+            <summary>
+            Entry Handle
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtEntryNotification.name">
+            <summary>
+            Entry Name
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtEntryNotification.value">
+            <summary>
+            Entry Value
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtEntryNotification.flags">
+            <summary>
+            Notification Flags
+            </summary>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtConnectionNotification">
+            <summary>
+            NT Connection Notification
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtConnectionNotification.listener">
+            <summary>
+            Listener Handle
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtConnectionNotification.connected">
+            <summary>
+            Connected or Disconnected
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtConnectionNotification.conn">
+            <summary>
+            Connection Info
+            </summary>
+        </member>
+        <member name="T:FRC.NetworkTables.Interop.NtLogMessage">
+            <summary>
+            NT Log Message
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtLogMessage.logger">
+            <summary>
+            Logger Handle
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtLogMessage.level">
+            <summary>
+            Log Level
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtLogMessage.filename">
+            <summary>
+            Filename
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtLogMessage.line">
+            <summary>
+             Line
+            </summary>
+        </member>
+        <member name="F:FRC.NetworkTables.Interop.NtLogMessage.message">
+            <summary>
+            Message
+            </summary>
+        </member>
+        <member name="M:FRC.NetworkTables.RefNetworkTableValue.IsBoolean">
+            <summary>
+            Gets if the type is boolean
+            </summary>
+            <returns>True if the type is boolean</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.RefNetworkTableValue.IsDouble">
+            <summary>
+            Gets if the type is double
+            </summary>
+            <returns>True if the type is double</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.RefNetworkTableValue.IsString">
+            <summary>
+            Gets if the type is string
+            </summary>
+            <returns>True if the type is string</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.RefNetworkTableValue.IsRaw">
+            <summary>
+            Gets if the type is raw
+            </summary>
+            <returns>True if the type is raw</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.RefNetworkTableValue.IsRpc">
+            <summary>
+            Gets if the type is Rpc
+            </summary>
+            <returns>True if the type is Rpc</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.RefNetworkTableValue.IsBooleanArray">
+            <summary>
+            Gets if the type is boolean array
+            </summary>
+            <returns>True if the type is a boolean array</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.RefNetworkTableValue.IsDoubleArray">
+            <summary>
+            Gets if the type is double array
+            </summary>
+            <returns>True if the type is a double array</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.RefNetworkTableValue.IsStringArray">
+            <summary>
+            Gets if the type is string array
+            </summary>
+            <returns>True if the type is a string array</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.RefNetworkTableValue.GetBoolean">
+            <summary>
+            Gets the boolean value from the type
+            </summary>
+            <returns>boolean contained in type</returns>
+            <exception cref="T:System.InvalidCastException">Thrown if
+            type is not boolean.</exception>
+        </member>
+        <member name="M:FRC.NetworkTables.RefNetworkTableValue.GetDouble">
+            <summary>
+            Gets the double value from the type
+            </summary>
+            <returns>double contained in type</returns>
+            <exception cref="T:System.InvalidCastException">Thrown if
+            type is not double.</exception>
+        </member>
+        <member name="M:FRC.NetworkTables.RefNetworkTableValue.GetString">
+            <summary>
+            Gets the string value from the type
+            </summary>
+            <returns>string contained in type</returns>
+            <exception cref="T:System.InvalidCastException">Thrown if
+            type is not string.</exception>
+        </member>
+        <member name="M:FRC.NetworkTables.RefNetworkTableValue.GetRaw">
+            <summary>
+            Gets the raw value from the type
+            </summary>
+            <returns>raw byte array contained in type</returns>
+            <exception cref="T:System.InvalidCastException">Thrown if
+            type is not raw.</exception>
+        </member>
+        <member name="M:FRC.NetworkTables.RefNetworkTableValue.GetRpc">
+            <summary>
+            Gets the rpc value from the type
+            </summary>
+            <returns>rpc byte array contained in type</returns>
+            <exception cref="T:System.InvalidCastException">Thrown if
+            type is not rpc.</exception>
+        </member>
+        <member name="M:FRC.NetworkTables.RefNetworkTableValue.GetBooleanArray">
+            <summary>
+            Gets the boolean array value from the type
+            </summary>
+            <returns>boolean array contained in type</returns>
+            <exception cref="T:System.InvalidCastException">Thrown if
+            type is not boolean array.</exception>
+        </member>
+        <member name="M:FRC.NetworkTables.RefNetworkTableValue.GetDoubleArray">
+            <summary>
+            Gets the double array value from the type
+            </summary>
+            <returns>double array contained in type</returns>
+            <exception cref="T:System.InvalidCastException">Thrown if
+            type is not double array.</exception>
+        </member>
+        <member name="M:FRC.NetworkTables.RefNetworkTableValue.GetStringArray">
+            <summary>
+            Gets the string array value from the type
+            </summary>
+            <returns>string array contained in type</returns>
+            <exception cref="T:System.InvalidCastException">Thrown if
+            type is not string arrya.</exception>
+        </member>
+        <member name="M:FRC.NetworkTables.NetworkTableValue.IsBoolean">
+            <summary>
+            Gets if the type is boolean
+            </summary>
+            <returns>True if the type is boolean</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.NetworkTableValue.IsDouble">
+            <summary>
+            Gets if the type is double
+            </summary>
+            <returns>True if the type is double</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.NetworkTableValue.IsString">
+            <summary>
+            Gets if the type is string
+            </summary>
+            <returns>True if the type is string</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.NetworkTableValue.IsRaw">
+            <summary>
+            Gets if the type is raw
+            </summary>
+            <returns>True if the type is raw</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.NetworkTableValue.IsRpc">
+            <summary>
+            Gets if the type is Rpc
+            </summary>
+            <returns>True if the type is Rpc</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.NetworkTableValue.IsBooleanArray">
+            <summary>
+            Gets if the type is boolean array
+            </summary>
+            <returns>True if the type is a boolean array</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.NetworkTableValue.IsDoubleArray">
+            <summary>
+            Gets if the type is double array
+            </summary>
+            <returns>True if the type is a double array</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.NetworkTableValue.IsStringArray">
+            <summary>
+            Gets if the type is string array
+            </summary>
+            <returns>True if the type is a string array</returns>
+        </member>
+        <member name="M:FRC.NetworkTables.NetworkTableValue.GetBoolean">
+            <summary>
+            Gets the boolean value from the type
+            </summary>
+            <returns>boolean contained in type</returns>
+            <exception cref="T:System.InvalidCastException">Thrown if
+            type is not boolean.</exception>
+        </member>
+        <member name="M:FRC.NetworkTables.NetworkTableValue.GetDouble">
+            <summary>
+            Gets the double value from the type
+            </summary>
+            <returns>double contained in type</returns>
+            <exception cref="T:System.InvalidCastException">Thrown if
+            type is not double.</exception>
+        </member>
+        <member name="M:FRC.NetworkTables.NetworkTableValue.GetString">
+            <summary>
+            Gets the string value from the type
+            </summary>
+            <returns>string contained in type</returns>
+            <exception cref="T:System.InvalidCastException">Thrown if
+            type is not string.</exception>
+        </member>
+        <member name="M:FRC.NetworkTables.NetworkTableValue.GetRaw">
+            <summary>
+            Gets the raw value from the type
+            </summary>
+            <returns>raw byte array contained in type</returns>
+            <exception cref="T:System.InvalidCastException">Thrown if
+            type is not raw.</exception>
+        </member>
+        <member name="M:FRC.NetworkTables.NetworkTableValue.GetRpc">
+            <summary>
+            Gets the rpc value from the type
+            </summary>
+            <returns>rpc byte array contained in type</returns>
+            <exception cref="T:System.InvalidCastException">Thrown if
+            type is not rpc.</exception>
+        </member>
+        <member name="M:FRC.NetworkTables.NetworkTableValue.GetBooleanArray">
+            <summary>
+            Gets the boolean array value from the type
+            </summary>
+            <returns>boolean array contained in type</returns>
+            <exception cref="T:System.InvalidCastException">Thrown if
+            type is not boolean array.</exception>
+        </member>
+        <member name="M:FRC.NetworkTables.NetworkTableValue.GetDoubleArray">
+            <summary>
+            Gets the double array value from the type
+            </summary>
+            <returns>double array contained in type</returns>
+            <exception cref="T:System.InvalidCastException">Thrown if
+            type is not double array.</exception>
+        </member>
+        <member name="M:FRC.NetworkTables.NetworkTableValue.GetStringArray">
+            <summary>
+            Gets the string array value from the type
+            </summary>
+            <returns>string array contained in type</returns>
+            <exception cref="T:System.InvalidCastException">Thrown if
+            type is not string arrya.</exception>
+        </member>
+    </members>
+</doc>
