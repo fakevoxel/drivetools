@@ -57,9 +57,8 @@ public class AppData : MonoBehaviour
         Color.blue,
     };
 
-    // keeping track of time, so that we can update the colors periodically
-    private float lastColorRefresh;
-    private float colorRefreshTimer;
+    private float refreshTime;
+    private float refreshTimer;
 
     // the color pickers used to change the theme
     public UI_ColorPicker[] colorPickers;
@@ -70,7 +69,9 @@ public class AppData : MonoBehaviour
     private int[] colorIndices;
 
     void Start() {
-        colorRefreshTimer = 2;
+        refreshTimer = 0.25f;
+        refreshTime = -1;
+
         SetupColorPickers();
         
         LoadSettingsFromDisk();
@@ -87,6 +88,15 @@ public class AppData : MonoBehaviour
             int j = i;
             colorPickers[i].onEndInteraction.AddListener((color) => SetColorOfIndex(j, color));
             colorSliders[i].onEndInteraction.AddListener(() => SetColorOfIndex(j, colorPickers[j].GetColor()));
+        }
+    }
+
+    void Update()
+    {
+        if (refreshTime + refreshTimer < Time.time && refreshTime != -1) {
+            refreshTime = -1;
+           
+            ApplyColorsToNewObjects();
         }
     }
 
@@ -120,13 +130,6 @@ public class AppData : MonoBehaviour
 
         UpdateTargetFrameRate(60);
         SetTeamNumber(2386);
-    }
-
-    void Update() {
-        if (Time.time > lastColorRefresh + colorRefreshTimer) {
-            // fix the color palette
-            lastColorRefresh = Time.time;
-        }
     }
 
     public void SetTeamNumber(TMP_InputField input) {
@@ -205,6 +208,15 @@ public class AppData : MonoBehaviour
         AssetManager.Instance.PopulateAssets();
     }
 
+    public void ApplyColorsToNewObjects() {
+        UpdateTrackedImageComponents();
+        ApplyColorPalette();
+    }
+
+    public void RefreshObjectColors() {
+        refreshTime = Time.time;
+    }
+
     public void LoadLayoutFromDisk() {
         DashboardLayout[] layoutArray = SaveUtils.LoadLayouts();
         List<DashboardLayout> layoutList = new List<DashboardLayout>();
@@ -226,6 +238,13 @@ public class AppData : MonoBehaviour
     
     // keeping track of all image components in the scene
     public void UpdateTrackedImageComponents() {
+        if (imageComponentsInScene != null) {
+            for (int i = 0; i < colorIndices.Length; i++) {
+                if (colorIndices[i] == -1) {continue;}
+                imageComponentsInScene[i].color = editorColors[colorIndices[i]];
+            }
+        }
+
         Image[] allImageComponents = UIManager.Instance.canvasTransform.GetComponentsInChildren<Image>(true);
 
         imageComponentsInScene = new Image[allImageComponents.Length];
@@ -236,7 +255,7 @@ public class AppData : MonoBehaviour
             colorIndices[i] = -1;
 
             for (int j = 0; j < 4; j++) {
-                if (imageComponentsInScene[i].color == oldColorPalette[j]) {
+                if (imageComponentsInScene[i].color == editorColors[j]) {
                     colorIndices[i] = j;
                 }
             }

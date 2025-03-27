@@ -242,6 +242,9 @@ public class NodeInteractionHandler : MonoBehaviour
 
         if (holdType != 0 && isHoldLocked && Input.GetMouseButtonDown(0)) {
             isHoldLocked = false;
+
+            // make sure the node adopts the proper colors
+            AppData.Instance.RefreshObjectColors();
         }
 
         // when held, drag the node along with the cursor

@@ -3508,10 +3508,10 @@ MonoBehaviour:
   teamNumberInput: {fileID: 153046497}
   frameRateInput: {fileID: 1120167991}
   colorPalette:
-  - {r: 0.15248835, g: 0.22264141, b: 0.1608739, a: 1}
-  - {r: 0.1107938, g: 0.14716971, b: 0.11483557, a: 1}
-  - {r: 0.9169811, g: 0.6287072, b: 0.3996653, a: 1}
-  - {r: 0.68422836, g: 1, b: 0.65471697, a: 1}
+  - {r: 0.25446472, g: 0.25446472, b: 0.25446472, a: 1}
+  - {r: 0.16972901, g: 0.16972901, b: 0.16972901, a: 1}
+  - {r: 0.8938451, g: 0, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
   oldColorPalette: []
   editorColors:
   - {r: 0, g: 1, b: 1, a: 1}
@@ -13397,7 +13397,7 @@ MonoBehaviour:
   lerpColor: 0
   zeroColor: {r: 0, g: 0, b: 0, a: 0}
   oneColor: {r: 0, g: 0, b: 0, a: 0}
-  onUpdateSlider:
+  whileInteracting:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4623034400217009671}
@@ -13432,7 +13432,7 @@ MonoBehaviour:
   lerpColor: 0
   zeroColor: {r: 0, g: 0, b: 0, a: 0}
   oneColor: {r: 0, g: 0, b: 0, a: 0}
-  onUpdateSlider:
+  whileInteracting:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4623034400663385211}
@@ -13467,7 +13467,7 @@ MonoBehaviour:
   lerpColor: 0
   zeroColor: {r: 0, g: 0, b: 0, a: 0}
   oneColor: {r: 0, g: 0, b: 0, a: 0}
-  onUpdateSlider:
+  whileInteracting:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4623034402069126151}
@@ -13502,7 +13502,7 @@ MonoBehaviour:
   lerpColor: 0
   zeroColor: {r: 0, g: 0, b: 0, a: 0}
   oneColor: {r: 0, g: 0, b: 0, a: 0}
-  onUpdateSlider:
+  whileInteracting:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 4623034400342031127}

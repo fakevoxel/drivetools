@@ -2,6 +2,9 @@ a few things to note:
 
 - the warning about confirmedConnectionLoss is normal, I'm just not using the variable right now
 
+- (03/26/2025) there was a git issue where I had to force update the branch from the local copy, 
+there could be changes made github-side that have been overwritten so watch out for anything weird
+
 road to release: 
 -------------------
 
@@ -11,7 +14,6 @@ road to release:
 - picking from possible options when asssigning NT keys to existing nodes (no input fields)
 - file browser for loading in assets (no input fields)
 - popup boxes for certain things (like trying to load a non-image asset)
-- UI/theme improvements (no red and green windows)
 - bugfixes
     - nodes can snap to the edges of other nodes even if they're on the other side of the screen, please fix that (add a distance threshold idk)
 - code cleanup
