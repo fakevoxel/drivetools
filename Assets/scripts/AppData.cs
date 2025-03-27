@@ -177,6 +177,53 @@ public class AppData : MonoBehaviour
         SaveUtils.SavePreferences(prefs);
     }
 
+    // loading the file from disk and setting the variables
+    public void LoadSettingsFromDisk() {
+        PersistentSettings prefs = SaveUtils.LoadPreferences();
+        if (prefs == null) {return;}
+
+        SetTeamNumber(prefs.teamNumber);
+        UpdateTargetFrameRate(prefs.targetFrameRate);
+        imageAssetDirectories = prefs.imageAssetDirectories.ToList();
+        LoadColorPalette(SerializableColor.CreateColorArray(prefs.colorPalette));
+       
+        AssetManager.Instance.PopulateAssets();
+    }
+
+    public void LoadLayoutFromDisk() {
+        DashboardLayout[] layoutArray = SaveUtils.LoadLayouts();
+        List<DashboardLayout> layoutList = new List<DashboardLayout>();
+        if (layoutArray == null) {LoadFactoryDefaults(); return;}
+        for (int i = 0; i < layoutArray.Length; i++) {
+            layoutList.Add(layoutArray[i]);
+        }
+
+        layouts = layoutList;
+        UIManager.Instance.ResetAndLoadAllLayouts();
+        UIManager.Instance.SwitchToLayout(0);
+    }
+
+    // these two functions are weird
+    // basically, when a node is placed this first function is called, which starts a timer
+    // the timer allows other code to finish running, then the node's color palette is set to the current palette
+    // thats what the second function is for, setting the palette
+    public void RefreshObjectColors() {
+        refreshTime = Time.time;
+    }
+    public void ApplyColorsToNewObjects() {
+        UpdateTrackedImageComponents();
+        ApplyColorPalette();
+    }
+    // --------------
+
+    // modify one of the colors in the palette
+    // this function is called by the color picker components in the settings menu
+    public void SetColorOfIndex(int colorIndex, Color newColor) {
+        colorPalette[colorIndex] = newColor;
+
+        ApplyColorPalette();
+    }
+
     // setting the color palette array, and properly initializing the sliders and color pickers
     public void LoadColorPalette(Color[] palette) {
         colorPalette = palette;
@@ -194,57 +241,25 @@ public class AppData : MonoBehaviour
             colorSliders[i].SetValue(h);
         }
     }
-
-    // loading the file from disk and setting the variables
-    public void LoadSettingsFromDisk() {
-        PersistentSettings prefs = SaveUtils.LoadPreferences();
-        if (prefs == null) {return;}
-
-        SetTeamNumber(prefs.teamNumber);
-        UpdateTargetFrameRate(prefs.targetFrameRate);
-        imageAssetDirectories = prefs.imageAssetDirectories.ToList();
-        LoadColorPalette(SerializableColor.CreateColorArray(prefs.colorPalette));
-       
-        AssetManager.Instance.PopulateAssets();
-    }
-
-    public void ApplyColorsToNewObjects() {
-        UpdateTrackedImageComponents();
-        ApplyColorPalette();
-    }
-
-    public void RefreshObjectColors() {
-        refreshTime = Time.time;
-    }
-
-    public void LoadLayoutFromDisk() {
-        DashboardLayout[] layoutArray = SaveUtils.LoadLayouts();
-        List<DashboardLayout> layoutList = new List<DashboardLayout>();
-        if (layoutArray == null) {LoadFactoryDefaults(); return;}
-        for (int i = 0; i < layoutArray.Length; i++) {
-            layoutList.Add(layoutArray[i]);
-        }
-
-        layouts = layoutList;
-        UIManager.Instance.ResetAndLoadAllLayouts();
-        UIManager.Instance.SwitchToLayout(0);
-    }
-
-    public void SetColorOfIndex(int colorIndex, Color newColor) {
-        colorPalette[colorIndex] = newColor;
-
-        ApplyColorPalette();
-    }
     
     // keeping track of all image components in the scene
     public void UpdateTrackedImageComponents() {
+        // first we set all object's colors back to the editor colors
+        // since any newly spawned objects will have their editor colors already, this simplifies things
+        // it means we just have to look at editor colors to figure out what objects to change
         if (imageComponentsInScene != null) {
             for (int i = 0; i < colorIndices.Length; i++) {
+                // sometimes the color index of an object is -1, meaning it should remain unaffected
+                // removing this obv causes an index error
                 if (colorIndices[i] == -1) {continue;}
+                
+                // this reverts back to a given editor color
                 imageComponentsInScene[i].color = editorColors[colorIndices[i]];
             }
         }
 
+        // grabbing every single unity Image class in the scene
+        // it's not amazing, but it does work and it requires no work from me :)
         Image[] allImageComponents = UIManager.Instance.canvasTransform.GetComponentsInChildren<Image>(true);
 
         imageComponentsInScene = new Image[allImageComponents.Length];
@@ -255,6 +270,8 @@ public class AppData : MonoBehaviour
             colorIndices[i] = -1;
 
             for (int j = 0; j < 4; j++) {
+                // since we reset everything back to editor colors (see above),
+                // we just have to look at the editorColors array
                 if (imageComponentsInScene[i].color == editorColors[j]) {
                     colorIndices[i] = j;
                 }
