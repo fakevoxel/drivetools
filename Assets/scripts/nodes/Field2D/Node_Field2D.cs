@@ -74,15 +74,23 @@ public class Node_Field2D : MonoBehaviour
         for (int i = 0; i < robots.Count; i++) {
             if (!string.IsNullOrEmpty(robots[i].xSource) && !string.IsNullOrEmpty(robots[i].ySource) && !string.IsNullOrEmpty(robots[i].rotSource)) {
                 robots[i].UpdateData();
+                robotVisualContainer.GetChild(i).gameObject.SetActive(true);
             
                 DrawRobot(i);
+            }
+            else {
+                robotVisualContainer.GetChild(i).gameObject.SetActive(false);
             }
         }
         for (int i = 0; i < markers.Count; i++) {
             if (!string.IsNullOrEmpty(markers[i].xSource) && !string.IsNullOrEmpty(markers[i].ySource) && !string.IsNullOrEmpty(markers[i].rotSource)) {
                 markers[i].UpdateData();
-            
+                markerVisualContainer.GetChild(i).gameObject.SetActive(true);
+                
                 DrawMarker(i);
+            }
+            else {
+                markerVisualContainer.GetChild(i).gameObject.SetActive(false);
             }
         }
     }
@@ -91,7 +99,8 @@ public class Node_Field2D : MonoBehaviour
         // button to add a new robot
         GameObject addRobotButton = Instantiate(UIPrefabs.Instance.buttonPrefab, Vector3.zero, Quaternion.identity);
         addRobotButton.transform.SetParent(window.transform.GetChild(4));
-        addRobotButton.transform.localPosition = new Vector3(0, 200, 0);
+        addRobotButton.transform.localPosition = new Vector3(-100, 200, 0);
+        addRobotButton.GetComponent<RectTransform>().sizeDelta = Vector3.one * 50;
 
         // we set up the button so that it adds a new robot, then re-initializes the menu
         addRobotButton.GetComponent<UI_Button>().onPress.AddListener(
@@ -102,10 +111,19 @@ public class Node_Field2D : MonoBehaviour
                 }
             );
 
+        addRobotButton.GetComponent<Image>().sprite = UIPrefabs.Instance.icons[0];
+
+        GameObject robotsLabel = Instantiate(UIPrefabs.Instance.textPrefab, Vector3.zero, Quaternion.identity);
+        // parent, position
+        robotsLabel.transform.SetParent(window.transform.GetChild(4));
+        robotsLabel.transform.localPosition = new Vector3(-250, 200, 0);
+
+        robotsLabel.GetComponent<TextMeshProUGUI>().text = "Robots";
+
         // tabs to manage what robot you're editing
         GameObject robotTabs = Instantiate(UIPrefabs.Instance.tabsPrefab, Vector3.zero, Quaternion.identity);
         robotTabs.transform.SetParent(window.transform.GetChild(4));
-        robotTabs.transform.localPosition = Vector3.zero;
+        robotTabs.transform.localPosition = new Vector3(-250, 140, 0);
         
         // set up the tabs so there's a tab for each robot
         robotTabs.GetComponent<UI_Tabs>().InitializeTabs(robots.Count, 125);
@@ -124,6 +142,13 @@ public class Node_Field2D : MonoBehaviour
         for (int i = 0; i < robots.Count; i++) {
             int j = i;
 
+            GameObject titleLabel = Instantiate(UIPrefabs.Instance.textPrefab, Vector3.zero, Quaternion.identity);
+            // parent, position
+            titleLabel.transform.SetParent(window.transform.GetChild(4));
+            titleLabel.transform.localPosition = new Vector3(-180, 50, 0);
+
+            titleLabel.GetComponent<TextMeshProUGUI>().text = "x, y, z NT Adresses:";
+
             // the xSource input
             GameObject xInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
             xInput.transform.SetParent(window.transform.GetChild(4));
@@ -131,6 +156,8 @@ public class Node_Field2D : MonoBehaviour
             xInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
                 (value) => SetRobotX(value, j)
             );
+
+            xInput.GetComponent<TMP_InputField>().text = robots[i].xSource;
 
             // the ySource input
             GameObject yInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
@@ -140,6 +167,8 @@ public class Node_Field2D : MonoBehaviour
                 (value) => SetRobotY(value, j)
             );
 
+            yInput.GetComponent<TMP_InputField>().text = robots[i].ySource;
+
             // the rotSource input
             GameObject zInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
             zInput.transform.SetParent(window.transform.GetChild(4));
@@ -148,21 +177,34 @@ public class Node_Field2D : MonoBehaviour
                 (value) => SetRobotRot(value, j)
             );
 
+            zInput.GetComponent<TMP_InputField>().text = robots[i].rotSource;
+
+            GameObject titleLabel2 = Instantiate(UIPrefabs.Instance.textPrefab, Vector3.zero, Quaternion.identity);
+            // parent, position
+            titleLabel2.transform.SetParent(window.transform.GetChild(4));
+            titleLabel2.transform.localPosition = new Vector3(-180, -275, 0);
+
+            titleLabel2.GetComponent<TextMeshProUGUI>().text = "Bumper width, thickness";
+
             // the bumper width input
             GameObject widthInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
             widthInput.transform.SetParent(window.transform.GetChild(4));
-            widthInput.transform.localPosition = new Vector3(-180, -275, 0);
+            widthInput.transform.localPosition = new Vector3(-180, -360, 0);
             widthInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
                 (value) => SetRobotWidth(float.Parse(value), j)
             );
 
+            widthInput.GetComponent<TMP_InputField>().text = robots[i].bumperWidth.ToString();
+
             // the bumper thickness input
             GameObject thicknessInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
             thicknessInput.transform.SetParent(window.transform.GetChild(4));
-            thicknessInput.transform.localPosition = new Vector3(-180, -350, 0);
+            thicknessInput.transform.localPosition = new Vector3(-180, -435, 0);
             thicknessInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
                 (value) => SetRobotThickness(float.Parse(value), j)
             );
+
+            thicknessInput.GetComponent<TMP_InputField>().text = robots[i].bumperThickness.ToString();
 
             robotSetManager.GetComponent<UI_ObjectSetManager>().sets[j] = new UI_ObjectSet(new GameObject[]{
                 xInput, yInput, zInput, widthInput, thicknessInput
@@ -172,7 +214,15 @@ public class Node_Field2D : MonoBehaviour
         // button to add a new robot
         GameObject addMarkerButton = Instantiate(UIPrefabs.Instance.buttonPrefab, Vector3.zero, Quaternion.identity);
         addMarkerButton.transform.SetParent(window.transform.GetChild(4));
-        addMarkerButton.transform.localPosition = new Vector3(200, 200, 0);
+        addMarkerButton.transform.localPosition = new Vector3(260, 200, 0);
+        addMarkerButton.GetComponent<RectTransform>().sizeDelta = Vector3.one * 50;
+
+        GameObject markersLabel = Instantiate(UIPrefabs.Instance.textPrefab, Vector3.zero, Quaternion.identity);
+        // parent, position
+        markersLabel.transform.SetParent(window.transform.GetChild(4));
+        markersLabel.transform.localPosition = new Vector3(100, 200, 0);
+
+        markersLabel.GetComponent<TextMeshProUGUI>().text = "Markers";
 
         // we set up the button so that it adds a new robot, then re-initializes the menu
         addMarkerButton.GetComponent<UI_Button>().onPress.AddListener(
@@ -183,10 +233,12 @@ public class Node_Field2D : MonoBehaviour
                 }
             );
 
+        addMarkerButton.GetComponent<Image>().sprite = UIPrefabs.Instance.icons[0];
+
         // another set of tabs for field markers (highlighted positions on the field)
         GameObject markerTabs = Instantiate(UIPrefabs.Instance.tabsPrefab, Vector3.zero, Quaternion.identity);
         markerTabs.transform.SetParent(window.transform.GetChild(4));
-        markerTabs.transform.localPosition = new Vector3(0, -400, 0);;
+        markerTabs.transform.localPosition = new Vector3(100, 140, 0);
         
         // set up the tabs so there's a tab for each robot
         markerTabs.GetComponent<UI_Tabs>().InitializeTabs(markers.Count, 125);
@@ -205,6 +257,13 @@ public class Node_Field2D : MonoBehaviour
         for (int i = 0; i < markers.Count; i++) {
             int j = i;
 
+            GameObject titleLabel = Instantiate(UIPrefabs.Instance.textPrefab, Vector3.zero, Quaternion.identity);
+            // parent, position
+            titleLabel.transform.SetParent(window.transform.GetChild(4));
+            titleLabel.transform.localPosition = new Vector3(180, 50, 0);
+
+            titleLabel.GetComponent<TextMeshProUGUI>().text = "x, y, z NT Adresses:";
+
             // the xSource input
             GameObject xInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
             xInput.transform.SetParent(window.transform.GetChild(4));
@@ -212,6 +271,8 @@ public class Node_Field2D : MonoBehaviour
             xInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
                 (value) => SetMarkerX(value, j)
             );
+
+            xInput.GetComponent<TMP_InputField>().text = markers[i].xSource;
 
             // the ySource input
             GameObject yInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
@@ -221,6 +282,8 @@ public class Node_Field2D : MonoBehaviour
                 (value) => SetMarkerY(value, j)
             );
 
+            yInput.GetComponent<TMP_InputField>().text = markers[i].ySource;
+
             // the rotation input
             GameObject zInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
             zInput.transform.SetParent(window.transform.GetChild(4));
@@ -229,18 +292,29 @@ public class Node_Field2D : MonoBehaviour
                 (value) => SetMarkerRot(value, j)
             );
 
+            zInput.GetComponent<TMP_InputField>().text = markers[i].rotSource;
+
+            GameObject titleLabel2 = Instantiate(UIPrefabs.Instance.textPrefab, Vector3.zero, Quaternion.identity);
+            // parent, position
+            titleLabel2.transform.SetParent(window.transform.GetChild(4));
+            titleLabel2.transform.localPosition = new Vector3(180, -275, 0);
+
+            titleLabel2.GetComponent<TextMeshProUGUI>().text = "Marker size, image";
+
             // the size input
             GameObject sizeInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
             sizeInput.transform.SetParent(window.transform.GetChild(4));
-            sizeInput.transform.localPosition = new Vector3(180, -275, 0);
+            sizeInput.transform.localPosition = new Vector3(180, -360, 0);
             sizeInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
                 (value) => SetMarkerSize(float.Parse(value), j)
             );
 
+            sizeInput.GetComponent<TMP_InputField>().text = markers[i].size.ToString();
+
             // a button to select what image to use for the marker
             GameObject imageButton = Instantiate(UIPrefabs.Instance.buttonPrefab, Vector3.zero, Quaternion.identity);
             imageButton.transform.SetParent(window.transform.GetChild(4));
-            imageButton.transform.localPosition = new Vector3(200, -350, 0);
+            imageButton.transform.localPosition = new Vector3(200, -435, 0);
             imageButton.GetComponent<UI_Button>().onPress.AddListener(
                 () => UIManager.Instance.GrabAssetName(
                     (imageName) => SetMarkerImage(imageName, j)

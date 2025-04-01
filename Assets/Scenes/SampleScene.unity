@@ -1461,6 +1461,8 @@ MonoBehaviour:
   imagePrefab: {fileID: 2050176180922664969, guid: e52e82f893a4b6e4e83638e78425d2ee, type: 3}
   dropDownPrefab: {fileID: 7713443159051048669, guid: d537f4f71a5efb34682139e264b9a64d, type: 3}
   robotPrefab: {fileID: 6600850344121734635, guid: ce282f3c0bd551f46b87bec36aab4381, type: 3}
+  icons:
+  - {fileID: 21300000, guid: a32c8bd08b8481441a217398f4e79e04, type: 3}
 --- !u!114 &217184662
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9358,8 +9360,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 800, y: 700}
+  m_AnchoredPosition: {x: 0, y: -75.31467}
+  m_SizeDelta: {x: 800, y: 850.6293}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1462068343
 MonoBehaviour:
@@ -11995,7 +11997,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1978734193
 MonoBehaviour:
   m_ObjectHideFlags: 0

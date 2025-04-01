@@ -42,4 +42,7 @@ public class UIPrefabs : MonoBehaviour
 
     // robot prefab for the field2d node
     public GameObject robotPrefab;
+
+    // UI icons that buttons and stuff use
+    public Sprite[] icons;
 }

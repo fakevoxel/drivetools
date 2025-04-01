@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7537696764345798654
 CanvasRenderer:
@@ -88,14 +88,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 104fe81d67db781438e337dac02397fd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  toolTip: 
   buttonToLookFor: 0
+  onHoverEnter:
+    m_PersistentCalls:
+      m_Calls: []
+  whileHover:
+    m_PersistentCalls:
+      m_Calls: []
+  onHoverExit:
+    m_PersistentCalls:
+      m_Calls: []
   onPress:
     m_PersistentCalls:
       m_Calls: []
-  onDrag:
+  whilePress:
     m_PersistentCalls:
       m_Calls: []
-  whilePress:
+  onDrag:
     m_PersistentCalls:
       m_Calls: []
   colorSwitch: 0

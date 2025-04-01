@@ -8,7 +8,6 @@ there could be changes made github-side that have been overwritten so watch out 
 road to release: 
 -------------------
 
-- image display nodes being able to take in any data type
 - dropdown nodes
 - "download" button allowing you to see and select nodes up on NT
 - picking from possible options when asssigning NT keys to existing nodes (no input fields)
