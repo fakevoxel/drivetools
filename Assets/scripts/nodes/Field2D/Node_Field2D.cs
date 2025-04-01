@@ -127,7 +127,7 @@ public class Node_Field2D : MonoBehaviour
             // the xSource input
             GameObject xInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
             xInput.transform.SetParent(window.transform.GetChild(4));
-            xInput.transform.localPosition = new Vector3(0, -75, 0);
+            xInput.transform.localPosition = new Vector3(-180, -50, 0);
             xInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
                 (value) => SetRobotX(value, j)
             );
@@ -135,7 +135,7 @@ public class Node_Field2D : MonoBehaviour
             // the ySource input
             GameObject yInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
             yInput.transform.SetParent(window.transform.GetChild(4));
-            yInput.transform.localPosition = new Vector3(0, -150, 0);
+            yInput.transform.localPosition = new Vector3(-180, -125, 0);
             yInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
                 (value) => SetRobotY(value, j)
             );
@@ -143,23 +143,23 @@ public class Node_Field2D : MonoBehaviour
             // the rotSource input
             GameObject zInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
             zInput.transform.SetParent(window.transform.GetChild(4));
-            zInput.transform.localPosition = new Vector3(0, -225, 0);
+            zInput.transform.localPosition = new Vector3(-180, -200, 0);
             zInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
                 (value) => SetRobotRot(value, j)
             );
 
-            // the rotSource input
+            // the bumper width input
             GameObject widthInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
             widthInput.transform.SetParent(window.transform.GetChild(4));
-            widthInput.transform.localPosition = new Vector3(0, -300, 0);
+            widthInput.transform.localPosition = new Vector3(-180, -275, 0);
             widthInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
                 (value) => SetRobotWidth(float.Parse(value), j)
             );
 
-            // the rotSource input
+            // the bumper thickness input
             GameObject thicknessInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
             thicknessInput.transform.SetParent(window.transform.GetChild(4));
-            thicknessInput.transform.localPosition = new Vector3(0, -375, 0);
+            thicknessInput.transform.localPosition = new Vector3(-180, -350, 0);
             thicknessInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
                 (value) => SetRobotThickness(float.Parse(value), j)
             );
@@ -208,7 +208,7 @@ public class Node_Field2D : MonoBehaviour
             // the xSource input
             GameObject xInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
             xInput.transform.SetParent(window.transform.GetChild(4));
-            xInput.transform.localPosition = new Vector3(0, -450, 0);
+            xInput.transform.localPosition = new Vector3(180, -50, 0);
             xInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
                 (value) => SetMarkerX(value, j)
             );
@@ -216,23 +216,23 @@ public class Node_Field2D : MonoBehaviour
             // the ySource input
             GameObject yInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
             yInput.transform.SetParent(window.transform.GetChild(4));
-            yInput.transform.localPosition = new Vector3(0, -500, 0);
+            yInput.transform.localPosition = new Vector3(180, -125, 0);
             yInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
                 (value) => SetMarkerY(value, j)
             );
 
-            // the rotSource input
+            // the rotation input
             GameObject zInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
             zInput.transform.SetParent(window.transform.GetChild(4));
-            zInput.transform.localPosition = new Vector3(0, -550, 0);
+            zInput.transform.localPosition = new Vector3(180, -200, 0);
             zInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
                 (value) => SetMarkerRot(value, j)
             );
 
-            // the rotSource input
+            // the size input
             GameObject sizeInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
             sizeInput.transform.SetParent(window.transform.GetChild(4));
-            sizeInput.transform.localPosition = new Vector3(0, -600, 0);
+            sizeInput.transform.localPosition = new Vector3(180, -275, 0);
             sizeInput.GetComponent<TMP_InputField>().onEndEdit.AddListener(
                 (value) => SetMarkerSize(float.Parse(value), j)
             );
@@ -240,7 +240,7 @@ public class Node_Field2D : MonoBehaviour
             // a button to select what image to use for the marker
             GameObject imageButton = Instantiate(UIPrefabs.Instance.buttonPrefab, Vector3.zero, Quaternion.identity);
             imageButton.transform.SetParent(window.transform.GetChild(4));
-            imageButton.transform.localPosition = new Vector3(200, -600, 0);
+            imageButton.transform.localPosition = new Vector3(200, -350, 0);
             imageButton.GetComponent<UI_Button>().onPress.AddListener(
                 () => UIManager.Instance.GrabAssetName(
                     (imageName) => SetMarkerImage(imageName, j)

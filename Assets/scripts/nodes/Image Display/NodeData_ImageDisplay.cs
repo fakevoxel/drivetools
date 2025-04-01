@@ -5,4 +5,8 @@ public class NodeData_ImageDisplay
     public GenericNodeData generic;
     public ImageDisplayLayer[] layers;
     public string sourceString;
+    
+    // what data type the display node is using, 
+    // see TextDisplayMode (Node_TextDisplay.cs) for more detail
+    public int mode;
 }

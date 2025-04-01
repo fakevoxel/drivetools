@@ -12,6 +12,8 @@ public class Node_ImageDisplay : MonoBehaviour
     // string value been taken from NT
     // represents the 'current state', which is compared to states defined by the user
     public string dataValue;
+    // the mode (rn either Double or Boolean or String, see NodeDisplayMode) that the node is using rn
+    public int mode;
 
     // display layers
     // the system is split into layers so you can stack image files on top of each other
@@ -27,6 +29,8 @@ public class Node_ImageDisplay : MonoBehaviour
     // the transform object that has all the image objects as its children
     // hence the name 'container'
     public Transform dataContainer;
+    // dropdown menu that the user uses to select data mode
+    public TMP_Dropdown modeDropdown;
 
     void Awake() {
         // getting the interactionHandler component
@@ -73,6 +77,7 @@ public class Node_ImageDisplay : MonoBehaviour
     public void PopulateDataClass() {
         data.sourceString = sourceString;
         data.layers = layers.ToArray();
+        data.mode = mode;
         
         data.generic = new GenericNodeData(
             transform.position.x,
@@ -87,10 +92,41 @@ public class Node_ImageDisplay : MonoBehaviour
     // so, I moved most of the logic for different node types to their respective scripts
     // anyways this is called in UIManager when the user hits 'edit' on this node
     public void PopulateConfigMenu(GameObject window) {
+
+        window.transform.GetChild(2).GetComponent<TextMeshProUGUI>().text = "Configure Node: Image Display";
+
+        // dropdown for changing the mode (data type to use)
+        // --------------
+        GameObject modeSelector = Instantiate(UIPrefabs.Instance.dropDownPrefab, Vector3.zero, Quaternion.identity);
+        // parent, position
+        modeSelector.transform.SetParent(window.transform.GetChild(4));
+        modeSelector.transform.localPosition = new Vector3(0, 200, 0);
+
+        modeSelector.GetComponent<TMP_Dropdown>().ClearOptions();
+
+        List<TMP_Dropdown.OptionData> optionData = new List<TMP_Dropdown.OptionData>();
+
+        optionData.Add(new TMP_Dropdown.OptionData("Double"));
+        optionData.Add(new TMP_Dropdown.OptionData("String"));
+        optionData.Add(new TMP_Dropdown.OptionData("Boolean"));
+
+        modeSelector.GetComponent<TMP_Dropdown>().AddOptions(optionData);
+
+        modeDropdown = modeSelector.GetComponent<TMP_Dropdown>();
+        modeDropdown.SetValueWithoutNotify(mode);
+        // --------------
+
+        GameObject sourceLabel = Instantiate(UIPrefabs.Instance.textPrefab, Vector3.zero, Quaternion.identity);
+        // parent, position
+        sourceLabel.transform.SetParent(window.transform.GetChild(4));
+        sourceLabel.transform.localPosition = new Vector3(0, 125, 0);
+
+        sourceLabel.GetComponent<TextMeshProUGUI>().text = "NT Address:";
+
         // create an input field for the source string
         GameObject sourceInput = Instantiate(UIPrefabs.Instance.inputFieldPrefab, Vector3.zero, Quaternion.identity);
         sourceInput.transform.SetParent(window.transform.GetChild(4));
-        sourceInput.transform.localPosition = new Vector3(0, 200, 0);
+        sourceInput.transform.localPosition = new Vector3(0, 75, 0);
         
         // we set the text of the input field to show the user the current source string
         sourceInput.GetComponent<TMP_InputField>().text = sourceString;
@@ -105,18 +141,23 @@ public class Node_ImageDisplay : MonoBehaviour
         layerTabs.transform.localPosition = Vector3.zero;
 
         layerTabs.GetComponent<UI_Tabs>().InitializeTabs(layers.Count, 125);
+        // multiple layers not supported, so we don't need to see these
+        layerTabs.SetActive(false);
 
-        GameObject newLayerButton = Instantiate(UIPrefabs.Instance.buttonPrefab, Vector3.zero, Quaternion.identity);
-        newLayerButton.transform.SetParent(window.transform.GetChild(4));
-        newLayerButton.transform.localPosition = new Vector3(0, 400, 0);
+        // NO NEW LAYER BUTTON RIGHT NOW, MULTIPLE LAYERS NOT SUPPORTED
+        // ===================================
+        // GameObject newLayerButton = Instantiate(UIPrefabs.Instance.buttonPrefab, Vector3.zero, Quaternion.identity);
+        // newLayerButton.transform.SetParent(window.transform.GetChild(4));
+        // newLayerButton.transform.localPosition = new Vector3(0, 400, 0);
 
-        newLayerButton.GetComponent<UI_Button>().onPress.AddListener(
-            () => {
-                layers.Add(new ImageDisplayLayer());
-                CanvasUtils.DestroyChildren(window.transform.GetChild(4).gameObject);
-                this.PopulateConfigMenu(window);
-            }
-        );
+        // newLayerButton.GetComponent<UI_Button>().onPress.AddListener(
+        //     () => {
+        //         layers.Add(new ImageDisplayLayer());
+        //         CanvasUtils.DestroyChildren(window.transform.GetChild(4).gameObject);
+        //         this.PopulateConfigMenu(window);
+        //     }
+        // );
+        // ===================================
 
         // UI_ObjectSetManager is a class to help with turning gameobjects on/off
         // here it's used to toggle the condition and image lists based on what layer tab is selected
@@ -159,7 +200,9 @@ public class Node_ImageDisplay : MonoBehaviour
             // this element list is for the required states
             GameObject newInputList = Instantiate(UIPrefabs.Instance.elementListPrefab, Vector3.zero, Quaternion.identity);
             newInputList.transform.SetParent(window.transform.GetChild(4));
-            newInputList.transform.localPosition = new Vector3(-150, -75, 0);
+            newInputList.transform.localPosition = new Vector3(-150, -50, 0);
+
+            newInputList.GetComponent<UI_InputList>().spacing = 100;
         
             // making sure there is a number of buttons equal to the number of states in this list
             // otherwise when the user added states, then closed and re-opened this menu they wouldn't show up
@@ -191,7 +234,9 @@ public class Node_ImageDisplay : MonoBehaviour
             // this element list is for the resulting images
             GameObject newImageList = Instantiate(UIPrefabs.Instance.elementListPrefab, Vector3.zero, Quaternion.identity);
             newImageList.transform.SetParent(window.transform.GetChild(4));
-            newImageList.transform.localPosition = new Vector3(150, -75, 0);
+            newImageList.transform.localPosition = new Vector3(150, -50, 0);
+
+            newImageList.GetComponent<UI_InputList>().spacing = 100;
 
             // normally an element list uses input fields (per the prefab), but we're telling this one to use buttons
             newImageList.GetComponent<UI_InputList>().inputPrefab = UIPrefabs.Instance.buttonPrefab;
@@ -226,6 +271,9 @@ public class Node_ImageDisplay : MonoBehaviour
 
             // make sure the object set has a reference to this element list
             imageSet.GetComponent<UI_ObjectSetManager>().sets[j] = new UI_ObjectSet(new GameObject[]{newImageList});
+
+            Destroy(newInputList.GetComponent<UI_InputList>().addButton.gameObject);
+            newInputList.GetComponent<UI_InputList>().addButton = newImageList.GetComponent<UI_InputList>().addButton;
         }
 
         // we call onChangeTabs to make sure that the object sets only have one set of objects enabled
@@ -264,6 +312,10 @@ public class Node_ImageDisplay : MonoBehaviour
                 }
             }
         }
+
+        if (modeDropdown != null) {
+            mode = modeDropdown.value;
+        }
     }
 
     // why are these functions? ig in case I want to add code whenever new stuff is added
@@ -288,9 +340,49 @@ public class Node_ImageDisplay : MonoBehaviour
         layers[layerIndex].requiredStates[stateIndex] = value;
     }
 
+    // sometimes you want a float, not a double?
+    public float GetValueAsFloat() {
+        float parsedValue;
+
+        if (mode == (int)NodeDisplayMode.Double && float.TryParse(dataValue, out parsedValue)) {
+            return parsedValue;
+        }
+        else {
+            return (float)NetworkManager.Instance.defaultDouble;
+        }
+    }
+    // for boolean mode
+    public bool GetValueAsBoolean() {
+        bool toReturn = false;
+
+        if (mode == (int)NodeDisplayMode.Boolean) {
+            if (dataValue == true.ToString()) {
+                toReturn = true;
+            }
+            else if (dataValue == false.ToString()) {
+                toReturn = false;
+            }
+        }
+        
+        return toReturn;
+    }
+    // if the mode is string, we can just return whatever dataValue is, no parsing
+    public string GetValueAsString() {
+        return dataValue;
+    }
+
     // called periodically (inside of NetworkManager) to update the data value from networktables
-    // FetchNTDouble() is a very handy function
+    // the function called by NetworkManager to update the data value, based on the mode it looks for different data types
     public void UpdateData() {
-        SetData(NetworkManager.Instance.FetchNTDouble(sourceString).ToString());
+        if (mode == (int)NodeDisplayMode.Double) {
+            dataValue = NetworkManager.Instance.FetchNTDouble(sourceString).ToString();
+        }
+        else if (mode == (int)NodeDisplayMode.String) {
+            // no need to cast here, it's already a string
+            dataValue = NetworkManager.Instance.FetchNTString(sourceString);
+        } else if (mode == (int)NodeDisplayMode.Boolean) {
+            // no need to cast here, it's already a string
+            dataValue = NetworkManager.Instance.FetchNTBoolean(sourceString).ToString();
+        }
     }
 }

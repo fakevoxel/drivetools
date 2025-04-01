@@ -500,6 +500,7 @@ public class UIManager : MonoBehaviour
                 GameObject node = SpawnAndPlaceNewNode((int)NodeType.ImageDisplay, dataClass.generic.GetPosition(), dataClass.generic.GetSize(), dataClass.generic.isTracked, layoutObject);
                 node.GetComponent<Node_ImageDisplay>().sourceString = dataClass.sourceString;
                 node.GetComponent<Node_ImageDisplay>().layers = dataClass.layers.ToList();
+                node.GetComponent<Node_ImageDisplay>().mode = dataClass.mode;
             }
             for (int i = 0; i < AppData.Instance.layouts[layoutIndex].field2DNodes.Length; i++) {
                 NodeData_Field2D dataClass = AppData.Instance.layouts[layoutIndex].field2DNodes[i];

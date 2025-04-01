@@ -21,7 +21,7 @@ using UnityEngine;
 
 // the different modes (types of data) that the node can use
 // is this overkill? yeah prolly but I like enums
-public enum TextDisplayMode {
+public enum NodeDisplayMode {
     Double,
     String,
     Boolean, // usually booleans will be displayed using an ImageDisplay node, but TextDisplay works too (it'll just say "true" or "false")
@@ -40,7 +40,7 @@ public class Node_TextDisplay : MonoBehaviour
     // the data value is stored as a string, 
     // because doubles can be strings and not the other way around
     public string dataValue;
-    // the mode (rn either Double or String, see TextDisplayMode) that the node is using rn
+    // the mode (rn either Double or Boolean or String, see NodeDisplayMode) that the node is using rn
     public int mode;
 
     // UI components for displaying the title and data
@@ -56,7 +56,7 @@ public class Node_TextDisplay : MonoBehaviour
     public string sourceString;
     // the name of the node, seen by the user
     public string titleString;
-
+    // dropdown menu that the user uses to select data mode
     public TMP_Dropdown modeDropdown;
 
     void Awake() {
@@ -200,7 +200,7 @@ public class Node_TextDisplay : MonoBehaviour
     public double GetValueAsDouble() {
         double parsedValue;
 
-        if (mode == (int)TextDisplayMode.Double && double.TryParse(dataValue, out parsedValue)) {
+        if (mode == (int)NodeDisplayMode.Double && double.TryParse(dataValue, out parsedValue)) {
             return parsedValue;
         }
         else {
@@ -211,7 +211,7 @@ public class Node_TextDisplay : MonoBehaviour
     public float GetValueAsFloat() {
         float parsedValue;
 
-        if (mode == (int)TextDisplayMode.Double && float.TryParse(dataValue, out parsedValue)) {
+        if (mode == (int)NodeDisplayMode.Double && float.TryParse(dataValue, out parsedValue)) {
             return parsedValue;
         }
         else {
@@ -222,7 +222,7 @@ public class Node_TextDisplay : MonoBehaviour
     public bool GetValueAsBoolean() {
         bool toReturn = false;
 
-        if (mode == (int)TextDisplayMode.Boolean) {
+        if (mode == (int)NodeDisplayMode.Boolean) {
             if (dataValue == true.ToString()) {
                 toReturn = true;
             }
@@ -240,13 +240,13 @@ public class Node_TextDisplay : MonoBehaviour
 
     // the function called by NetworkManager to update the data value, based on the mode it looks for different data types
     public void UpdateData() {
-        if (mode == (int)TextDisplayMode.Double) {
+        if (mode == (int)NodeDisplayMode.Double) {
             dataValue = NetworkManager.Instance.FetchNTDouble(sourceString).ToString();
         }
-        else if (mode == (int)TextDisplayMode.String) {
+        else if (mode == (int)NodeDisplayMode.String) {
             // no need to cast here, it's already a string
             dataValue = NetworkManager.Instance.FetchNTString(sourceString);
-        } else if (mode == (int)TextDisplayMode.Boolean) {
+        } else if (mode == (int)NodeDisplayMode.Boolean) {
             // no need to cast here, it's already a string
             dataValue = NetworkManager.Instance.FetchNTBoolean(sourceString).ToString();
         }
