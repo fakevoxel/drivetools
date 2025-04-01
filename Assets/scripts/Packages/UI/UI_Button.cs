@@ -57,6 +57,13 @@ public class UI_Button : MonoBehaviour
         disableTooltipAction = action;
     }
 
+    void OnDisable()
+    {
+        if (disableTooltipAction != null) {
+            disableTooltipAction.Invoke();
+        }
+    }
+
     // this all runs in its own function, so I can easily change whether the button is active or not
     void HandleInteraction() {
         // update the boolean variables that trigger events

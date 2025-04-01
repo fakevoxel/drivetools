@@ -52,12 +52,20 @@ public class UI_Slider : MonoBehaviour
     // all this needs to run on Awake(), 
     // because there can be scripts that run on Start() (after Awake()),
     // that require the handleTransform variable among other things
-    void Awake() {
+
+    // split into 2 functions so I can force-init
+    // -----------
+    void Awake()
+    {
+        Initialize();
+    }
+    public void Initialize() {
         if (GetComponent<UI_Value>() != null) {GetComponent<UI_Value>().value = value.ToString();}
 
         defaultScale = GetComponent<RectTransform>().sizeDelta;
         handleTransform = transform.GetChild(0);
     }
+    // -----------
 
     void Update() {
         if (GetComponent<UI_Value>() != null) {

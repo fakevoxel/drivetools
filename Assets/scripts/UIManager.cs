@@ -5,14 +5,15 @@ using UnityEngine;
 using UnityEngine.Events;
 
 public enum NodeType {
-    Double,
-    String,
+    TextDisplay,
     Compass,
     Field2D,
     Graph, // unfinished
     ImageDisplay,
     Boolean, // modified image display node, still uses NodeType.imageDisplay, the unique type is only for spawning it in
     Dropdown,
+    Double, // similar to boolean nodes, double and string nodes are modified TextDisplay, the type is only for spawning
+    String,
 }
 
 public class UIManager : MonoBehaviour
@@ -135,10 +136,9 @@ public class UIManager : MonoBehaviour
 
     // going through EVERY SINGLE active noded and populating its respective NodeData class
     void PopulateNodeData() {
-        AppData.Instance.layouts[activeLayoutIndex].doubleNodes = new NodeData_Double[]{};
+        AppData.Instance.layouts[activeLayoutIndex].textDisplayNodes = new NodeData_TextDisplay[]{};
         AppData.Instance.layouts[activeLayoutIndex].compassNodes = new NodeData_Compass[]{};
         AppData.Instance.layouts[activeLayoutIndex].graphNodes = new NodeData_Graph[]{};
-        AppData.Instance.layouts[activeLayoutIndex].stringNodes = new NodeData_String[]{};
         AppData.Instance.layouts[activeLayoutIndex].imageDisplayNodes = new NodeData_ImageDisplay[]{};
         AppData.Instance.layouts[activeLayoutIndex].field2DNodes = new NodeData_Field2D[]{};
         AppData.Instance.layouts[activeLayoutIndex].dropdownNodes = new NodeData_Dropdown[]{};
@@ -148,16 +148,16 @@ public class UIManager : MonoBehaviour
 
             GameObject currentNode = activeNodes[i];
 
-            if (currentNode.GetComponent<Node_Double>() != null) {
-                List<NodeData_Double> doubleNodeList = new List<NodeData_Double>();
-                for (int j = 0; j < AppData.Instance.layouts[activeLayoutIndex].doubleNodes.Length; j++) {
-                    doubleNodeList.Add(AppData.Instance.layouts[activeLayoutIndex].doubleNodes[j]);
+            if (currentNode.GetComponent<Node_TextDisplay>() != null) {
+                List<NodeData_TextDisplay> doubleNodeList = new List<NodeData_TextDisplay>();
+                for (int j = 0; j < AppData.Instance.layouts[activeLayoutIndex].textDisplayNodes.Length; j++) {
+                    doubleNodeList.Add(AppData.Instance.layouts[activeLayoutIndex].textDisplayNodes[j]);
                 }
 
-                currentNode.GetComponent<Node_Double>().PopulateDataClass();
-                doubleNodeList.Add(currentNode.GetComponent<Node_Double>().data);
+                currentNode.GetComponent<Node_TextDisplay>().PopulateDataClass();
+                doubleNodeList.Add(currentNode.GetComponent<Node_TextDisplay>().data);
 
-                AppData.Instance.layouts[activeLayoutIndex].doubleNodes = doubleNodeList.ToArray();
+                AppData.Instance.layouts[activeLayoutIndex].textDisplayNodes = doubleNodeList.ToArray();
             }
             else if (currentNode.GetComponent<Node_Compass>() != null) {
                 List<NodeData_Compass> compassNodeList = new List<NodeData_Compass>();
@@ -338,8 +338,8 @@ public class UIManager : MonoBehaviour
 
         newNode = Instantiate(AppData.Instance.GetPrefabObject(type), Vector3.zero, Quaternion.identity);
 
-        if (type == (int)NodeType.Double) {
-            newNode.GetComponent<Node_Double>().SetSourceString(sourceString);
+        if (type == (int)NodeType.TextDisplay) {
+            newNode.GetComponent<Node_TextDisplay>().SetSourceString(sourceString);
         }
 
         newNode.transform.SetParent(activeNodeContainer);
@@ -368,20 +368,6 @@ public class UIManager : MonoBehaviour
         return newNode;
     }
 
-    // Checking if a node exists with a certain source string
-    // among other things this is used when grabbing nodes from SmartDashboard, to avoid duplicates
-    public bool HasActiveNodeWithSource(int type, string sourceString) {
-        if (type == (int)NodeType.Double) {
-            for (int i = 0; i < activeNodes.Count; i++) {
-                if (activeNodes[i].GetComponent<Node_Double>().sourceString == sourceString) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
     // opening and setting up the configuration UI for a given node
     public void OpenNodeConfig(NodeInteractionHandler comp) {
         CloseRightClickMenu();
@@ -390,10 +376,8 @@ public class UIManager : MonoBehaviour
         CanvasUtils.DestroyChildren(configWindow.transform.GetChild(4).gameObject);
 
         configWindow.SetActive(true);
-        if (comp.nodeType == (int)NodeType.Double) {
-            comp.GetComponent<Node_Double>().PopulateConfigMenu(configWindow);
-        } else if (comp.nodeType == (int)NodeType.String) {
-            
+        if (comp.nodeType == (int)NodeType.TextDisplay) {
+            comp.GetComponent<Node_TextDisplay>().PopulateConfigMenu(configWindow);
         } else if (comp.nodeType == (int)NodeType.Compass) {
             // compass nodes are simple, they only have a source string
 
@@ -496,12 +480,13 @@ public class UIManager : MonoBehaviour
             // set the name
             layoutObject.name = layout.name;
 
-            for (int i = 0; i < AppData.Instance.layouts[layoutIndex].doubleNodes.Length; i++) {
-                NodeData_Double dataClass = AppData.Instance.layouts[layoutIndex].doubleNodes[i];
+            for (int i = 0; i < AppData.Instance.layouts[layoutIndex].textDisplayNodes.Length; i++) {
+                NodeData_TextDisplay dataClass = AppData.Instance.layouts[layoutIndex].textDisplayNodes[i];
 
-                GameObject node = SpawnAndPlaceNewNode((int)NodeType.Double, dataClass.generic.GetPosition(), dataClass.generic.GetSize(), dataClass.generic.isTracked, layoutObject);
-                node.GetComponent<Node_Double>().sourceString = dataClass.sourceString;
-                node.GetComponent<Node_Double>().titleString = dataClass.titleString;
+                GameObject node = SpawnAndPlaceNewNode((int)NodeType.TextDisplay, dataClass.generic.GetPosition(), dataClass.generic.GetSize(), dataClass.generic.isTracked, layoutObject);
+                node.GetComponent<Node_TextDisplay>().sourceString = dataClass.sourceString;
+                node.GetComponent<Node_TextDisplay>().titleString = dataClass.titleString;
+                node.GetComponent<Node_TextDisplay>().mode = dataClass.mode;
             }
             for (int i = 0; i < AppData.Instance.layouts[layoutIndex].compassNodes.Length; i++) {
                 NodeData_Compass dataClass = AppData.Instance.layouts[layoutIndex].compassNodes[i];

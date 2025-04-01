@@ -35,7 +35,7 @@ public class Node_Compass : MonoBehaviour
         interact = GetComponent<NodeInteractionHandler>();
 
         interact.nodeName = name;
-        interact.nodeType = (int)NodeType.Double;
+        interact.nodeType = (int)NodeType.Compass;
 
         dataDisplay = Instantiate(compassPrefab, transform.position, Quaternion.identity).transform.GetChild(1).GetComponent<RawImage>();
 

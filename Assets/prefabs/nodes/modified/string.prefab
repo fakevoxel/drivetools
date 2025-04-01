@@ -507,9 +507,9 @@ GameObject:
   m_Component:
   - component: {fileID: 5140301210474391323}
   - component: {fileID: 3517776148772089125}
-  - component: {fileID: 3253182798941131709}
+  - component: {fileID: 1313872566168636442}
   m_Layer: 5
-  m_Name: double
+  m_Name: string
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -580,7 +580,7 @@ MonoBehaviour:
   bottomRightTransform: {fileID: 0}
   nodeName: 
   isNodeTracked: 0
---- !u!114 &3253182798941131709
+--- !u!114 &1313872566168636442
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -589,7 +589,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5140301210474391320}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93443b12a84b01f4ab62f552a00936f4, type: 3}
+  m_Script: {fileID: 11500000, guid: 997f92e26089149458b50aa218fb41a5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   genericData:
@@ -598,20 +598,10 @@ MonoBehaviour:
     sizeX: 0
     sizeY: 0
     isTracked: 0
-  data:
-    generic:
-      posX: 0
-      posY: 0
-      sizeX: 0
-      sizeY: 0
-      isTracked: 0
-    sourceString: 
-    titleString: 
-  xPadding: 30
-  yPadding: 30
-  dataValue: 0
+  dataValue: 
+  mode: 1
   dataDisplay: {fileID: 6309075109514398694}
-  titleDisplay: {fileID: 0}
+  titleDisplay: {fileID: 3169332461369866202}
   interact: {fileID: 3517776148772089125}
   sourceString: 
   titleString: 

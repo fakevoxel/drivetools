@@ -262,11 +262,8 @@ public class NodeInteractionHandler : MonoBehaviour
         // and i have no idea why i decided to do this
 
         // the order is arbitrary, else statements because you can't be 2 nodes at once
-        if (GetComponent<Node_Double>() != null) {
-            GetComponent<Node_Double>().PositionUI();
-        }
-        else if (GetComponent<Node_String>() != null) {
-            GetComponent<Node_String>().PositionUI();
+        if (GetComponent<Node_TextDisplay>() != null) {
+            GetComponent<Node_TextDisplay>().PositionUI();
         }
         else if (GetComponent<Node_Compass>() != null) {
             GetComponent<Node_Compass>().PositionUI();

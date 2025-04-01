@@ -86,6 +86,10 @@ public class AppData : MonoBehaviour
     void SetupColorPickers() {
         for (int i = 0; i < colorPickers.Length; i++) {
             int j = i;
+
+            colorPickers[i].Initialize();
+            colorSliders[i].Initialize();
+
             colorPickers[i].onEndInteraction.AddListener((color) => SetColorOfIndex(j, color));
             colorSliders[i].onEndInteraction.AddListener(() => SetColorOfIndex(j, colorPickers[j].GetColor()));
         }
@@ -130,6 +134,8 @@ public class AppData : MonoBehaviour
 
         UpdateTargetFrameRate(60);
         SetTeamNumber(2386);
+        // do SOMETHING with the asset directories
+        LoadColorPalette(colorPalette);
     }
 
     public void SetTeamNumber(TMP_InputField input) {
@@ -252,6 +258,8 @@ public class AppData : MonoBehaviour
                 // sometimes the color index of an object is -1, meaning it should remain unaffected
                 // removing this obv causes an index error
                 if (colorIndices[i] == -1) {continue;}
+
+                if (imageComponentsInScene[i] == null) {continue;}
                 
                 // this reverts back to a given editor color
                 imageComponentsInScene[i].color = editorColors[colorIndices[i]];
@@ -296,6 +304,19 @@ public class AppData : MonoBehaviour
                 imageComponentsInScene[i].GetComponent<UI_Button>().defaultColor = colorPalette[colorIndices[i]] * 0.6f;
                 imageComponentsInScene[i].GetComponent<UI_Button>().hoverColor = colorPalette[colorIndices[i]] * 0.9f;
                 imageComponentsInScene[i].GetComponent<UI_Button>().pressedColor = colorPalette[colorIndices[i]] * 1;
+            }
+
+            // silly layered if statement
+            if (imageComponentsInScene[i].transform.parent != null) {
+                if (imageComponentsInScene[i].transform.parent.parent != null) {
+                    // this if statement was added specifically to deal with the settings tabs,
+                    // but if the parent/child structure is consistent then it will work for all tabs
+                    if (imageComponentsInScene[i].transform.parent.parent.GetComponent<UI_Tabs>() != null) {
+                        imageComponentsInScene[i].transform.parent.parent.GetComponent<UI_Tabs>().defaultColor = colorPalette[colorIndices[i]] * 0.6f;
+                        imageComponentsInScene[i].transform.parent.parent.GetComponent<UI_Tabs>().hoverColor = colorPalette[colorIndices[i]] * 0.7f;
+                        imageComponentsInScene[i].transform.parent.parent.GetComponent<UI_Tabs>().selectedColor = colorPalette[colorIndices[i]] * 0.8f;
+                    }
+                }
             }
 
             if (imageComponentsInScene[i].gameObject.name == "toolbar") {

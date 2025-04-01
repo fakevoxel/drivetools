@@ -28,9 +28,16 @@ public class UI_ColorPicker : MonoBehaviour
     private Transform handleTransform;
     private bool isHandleHeld;
 
-    void Awake() {
+    // split this process into two separate functions so that I can force an initialization
+    // --------------
+    void Awake()
+    {
+        Initialize();
+    }
+    public void Initialize() {
         handleTransform = transform.GetChild(0);
     }
+    // --------------
 
     void Update() {
         // If the cursor is interacting with the object the handle should follow it
